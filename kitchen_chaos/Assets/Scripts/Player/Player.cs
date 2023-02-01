@@ -9,14 +9,43 @@ public class Player : MonoBehaviour
 
     private bool isWalking;
 
+    private Vector2 lastInteractDir;
+
     // Start is called before the first frame update
     private void Start()
     {
-        
     }
 
     // Update is called once per frame
     private void Update()
+    {
+        HandleMovement();
+        HandleInteraction();
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
+    }
+
+    private void HandleInteraction()
+    {
+
+        Vector2 inputVector = gameInput.MovementVectorNormalize();
+
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        if (moveDir != Vector3.zero) lastInteractDir = moveDir;
+
+        float interactDistance = 2f;
+        if(Physics.Raycast(transform.position, lastInteractDir, out RaycastHit hitInfo, interactDistance))
+        {
+            ClearCouter clearCouter = hitInfo.transform.GetComponent<ClearCouter>();
+
+        }
+    }
+
+    private void HandleMovement()
     {
         Vector2 inputVector = gameInput.MovementVectorNormalize();
 
@@ -35,7 +64,7 @@ public class Player : MonoBehaviour
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
             canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance);
 
-            if(canMove)
+            if (canMove)
             {
                 //Can move only on the X
                 moveDir = moveDirX;
@@ -59,7 +88,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(canMove)
+        if (canMove)
             transform.position += moveDir * moveDistance;
 
 
@@ -67,10 +96,5 @@ public class Player : MonoBehaviour
 
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-    }
-
-    public bool IsWalking()
-    {
-        return isWalking;
     }
 }
