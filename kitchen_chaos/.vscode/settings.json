@@ -58,5 +58,8 @@
         "Temp/":true,
         "Logs/":true,
         "logs/":true
-    }
+    },
+    "cSpell.words": [
+        "Slerp"
+    ]
 }
