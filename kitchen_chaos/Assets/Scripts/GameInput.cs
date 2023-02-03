@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameInput : MonoBehaviour
 {
     public event EventHandler OnInteractAction;
+    public event EventHandler OnChopAction;
     private PlayerInputAction playerInputAction;
 
     private void Awake()
@@ -14,6 +15,12 @@ public class GameInput : MonoBehaviour
         playerInputAction.Player.Enable();
 
         playerInputAction.Player.Interaction.performed += Interaction_performed;
+        playerInputAction.Player.Chop.performed += Chop_performed;
+    }
+
+    private void Chop_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnChopAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Interaction_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
