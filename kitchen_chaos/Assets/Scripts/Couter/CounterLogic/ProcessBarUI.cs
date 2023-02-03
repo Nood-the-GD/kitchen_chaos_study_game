@@ -16,11 +16,6 @@ public class ProcessBarUI : MonoBehaviour
         HideBar();
     }
 
-    private void Update()
-    {
-        this.transform.LookAt(Camera.main.transform);
-    }
-
     private void CuttingCounter_OnProcessChanged(object sender, CuttingCounter.OnProcessChangedEvenArgs e)
     {
         barImage.fillAmount = e.processNormalize;
