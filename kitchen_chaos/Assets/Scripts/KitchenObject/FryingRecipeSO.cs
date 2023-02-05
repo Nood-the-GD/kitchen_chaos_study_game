@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CuttingRecipeSO")]
-public class CuttingRecipeSO : ScriptableObject
+[CreateAssetMenu(fileName = "FiringRecipeSO")]
+public class FryingRecipeSO : ScriptableObject
 {
     public KitchenObjectSO input;
     public KitchenObjectSO output;
-    public int processNumber;
+    public int fryingTimerMax;
 }
