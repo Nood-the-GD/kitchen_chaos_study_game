@@ -9,7 +9,7 @@ public class PlateIconTemplate : MonoBehaviour
 
     private void Awake()
     {
-        icon.gameObject.SetActive(false);
+        
     }
 
     public void SetKitchenObjectSO(KitchenObjectSO kitchenObjectSO)

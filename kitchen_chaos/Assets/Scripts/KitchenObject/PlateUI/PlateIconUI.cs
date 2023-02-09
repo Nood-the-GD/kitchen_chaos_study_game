@@ -10,26 +10,18 @@ public class PlateIconUI : MonoBehaviour
     private void Start()
     {
         plateKitchenObject.OnIngredientAdded += plateKitchenObject_OnIngredientAdded;
+        iconTemplate.gameObject.SetActive(false);
     }
 
     private void plateKitchenObject_OnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)
     {
-        UpdateVisual();
+        UpdateVisual(e.addedIngredientKitchenObjectSO);
     }
 
-    private void UpdateVisual()
+    private void UpdateVisual(KitchenObjectSO addedIngredientSO)
     {
-        foreach(Transform child in transform)
-        {
-            if(child == iconTemplate) continue;
-            else Destroy(child.gameObject);
-        }
-
-        foreach (KitchenObjectSO kitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
-        {
-            PlateIconTemplate plateIconTemplate = Instantiate<PlateIconTemplate>(iconTemplate, this.transform);
-            plateIconTemplate.gameObject.SetActive(true);
-            plateIconTemplate.SetKitchenObjectSO(kitchenObjectSO);
-        }
+        PlateIconTemplate plateIconTemplate = Instantiate<PlateIconTemplate>(iconTemplate, this.transform);
+        plateIconTemplate.gameObject.SetActive(true);
+        plateIconTemplate.SetKitchenObjectSO(addedIngredientSO);
     }
 }
