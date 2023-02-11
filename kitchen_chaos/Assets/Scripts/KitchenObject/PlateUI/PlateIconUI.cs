@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlateIconUI : MonoBehaviour
 {
     [SerializeField] private PlateKitchenObject plateKitchenObject;
-    [SerializeField] private PlateIconTemplate iconTemplate;
+    [SerializeField] private IconTemplate iconTemplate;
 
     private void Start()
     {
@@ -20,7 +20,7 @@ public class PlateIconUI : MonoBehaviour
 
     private void UpdateVisual(KitchenObjectSO addedIngredientSO)
     {
-        PlateIconTemplate plateIconTemplate = Instantiate<PlateIconTemplate>(iconTemplate, this.transform);
+        IconTemplate plateIconTemplate = Instantiate<IconTemplate>(iconTemplate, this.transform);
         plateIconTemplate.gameObject.SetActive(true);
         plateIconTemplate.SetKitchenObjectSO(addedIngredientSO);
     }

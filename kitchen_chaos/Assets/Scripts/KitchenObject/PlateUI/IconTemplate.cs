@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlateIconTemplate : MonoBehaviour
+public class IconTemplate : MonoBehaviour
 {
     [SerializeField] private Image icon;
 
