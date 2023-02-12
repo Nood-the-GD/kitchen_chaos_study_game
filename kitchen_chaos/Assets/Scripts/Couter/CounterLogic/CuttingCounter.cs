@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgressBar
 {
+    public static event EventHandler OnCut;
+
+    new public static void ResetStaticData()
+    {
+        OnCut = null;
+    }
+
     public event EventHandler OnCutAction;
     public event EventHandler<IHasProgressBar.OnProcessChangedEvenArgs> OnProcessChanged;
 
@@ -77,6 +84,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
             });
 
             OnCutAction?.Invoke(this, EventArgs.Empty);
+            OnCut?.Invoke(this, EventArgs.Empty);
             if(cuttingProcess >= cuttingProgressNumber)
             {
                 KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());

@@ -5,22 +5,35 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
+    public static GameInput Instance {get; private set;}
+
     public event EventHandler OnInteractAction;
-    public event EventHandler OnChopAction;
+    public event EventHandler OnInteractAlternateAction;
+    public event EventHandler OnPauseAction;
+
+
     private PlayerInputAction playerInputAction;
 
     private void Awake()
     {
+        Instance = this;
+
         playerInputAction = new PlayerInputAction();
         playerInputAction.Player.Enable();
 
         playerInputAction.Player.Interaction.performed += Interaction_performed;
         playerInputAction.Player.Chop.performed += Chop_performed;
+        playerInputAction.Player.Pause.performed += Pause_performed;
+    }
+
+    private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnPauseAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Chop_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnChopAction?.Invoke(this, EventArgs.Empty);
+        OnInteractAlternateAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Interaction_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
