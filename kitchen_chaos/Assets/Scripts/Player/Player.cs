@@ -13,7 +13,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
 
-    [SerializeField] private float moveSpeed = 7f;
+
+    float rotateSpeed = 3f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
@@ -24,20 +26,24 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     
-
-
+    #region Unity functions
     private void Awake()
     {
         if(Instance == null) Instance = this;
     }
-
-    // Start is called before the first frame update
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
-        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
+        gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
     }
+    private void Update()
+    {
+        HandleMovement();
+        HandleInteraction();
+    }
+    #endregion
 
+    #region Events functions
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
     {
         if(!GameManager.Instance.IsGamePlaying()) return;
@@ -51,13 +57,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         if(selectedCounter != null) selectedCounter.Interact(this);
     }
+    #endregion
 
-    // Update is called once per frame
-    private void Update()
-    {
-        HandleMovement();
-        HandleInteraction();
-    }
 
     public bool IsWalking()
     {
@@ -71,7 +72,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        if (moveDir != Vector3.zero) lastInteractDir = moveDir;
+        if (moveDir != Vector3.zero)
+        {
+            // Rotate to player input direction 
+            Vector3 tempDir = Vector3.Slerp(lastInteractDir, moveDir, rotateSpeed * Time.deltaTime);
+            lastInteractDir = tempDir;
+        }
 
         float interactDistance = 2f;
         if(Physics.Raycast(transform.position, lastInteractDir, out RaycastHit hitInfo, interactDistance))
@@ -143,8 +149,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
 
         isWalking = moveDir != Vector3.zero;
-
-        float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
 
