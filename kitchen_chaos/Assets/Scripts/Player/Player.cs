@@ -14,7 +14,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
 
 
-    float rotateSpeed = 3f;
+    float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private Transform kitchenObjectHoldPoint;
