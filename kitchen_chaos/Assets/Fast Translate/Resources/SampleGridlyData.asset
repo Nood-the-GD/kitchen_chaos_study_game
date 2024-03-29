@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c6a5787bc83e242a02426d8fdda104, type: 3}
+  m_Name: GridlyData
+  m_EditorClassIdentifier: 
+  ProjectID: 
+  grids:
+  - databaseID: 
+    nameGrid: DemoScene
+    gridID: 
+    choesenViewID: 
+    records:
+    - recordID: HelloWorld
+      columns:
+      - columnID: enUS
+        text: Hello World
+      - columnID: frFR
+        text: Salut tout le monde
+      - columnID: viVN
+        text: "Ch\xE0o th\u1EBF gi\u1EDBi"
+      pathTag: 
+    - recordID: Next
+      columns:
+      - columnID: enUS
+        text: Next
+      - columnID: frFR
+        text: Prochain
+      - columnID: viVN
+        text: Sau
+      pathTag: 
+    - recordID: Previous
+      columns:
+      - columnID: enUS
+        text: Previous
+      - columnID: frFR
+        text: "Pr\xE9c\xE9dent"
+      - columnID: viVN
+        text: "Tr\u01B0\u1EDBc"
+      pathTag: 
+  langSupports:
+  - languagesSuport: 0
+    name: English (United States)
+    font: {fileID: 0}
+    tmFont: {fileID: 0}
+  - languagesSuport: 2
+    name: French (France)
+    font: {fileID: 0}
+    tmFont: {fileID: 0}
+  - languagesSuport: 141
+    name: Vietnamese (Vietnam)
+    font: {fileID: 0}
+    tmFont: {fileID: 0}
