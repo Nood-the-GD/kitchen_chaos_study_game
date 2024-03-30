@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
+using Photon.Realtime;
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     public static event EventHandler OnSomethingPlacedHere;
-
+    PhotonView photonView;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
@@ -17,6 +18,32 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     public virtual void Interact(Player player){}
     public virtual void Chop(Player player){ }
+
+    protected virtual void Awake(){
+        photonView = GetComponent<PhotonView>();
+    }
+
+    #region Multiplay
+    
+    public void CmdInteract(int id){
+        photonView.RPC("RPCIntertact", RpcTarget.All, id);
+    }
+
+    public void CmdChop(int id){
+        photonView.RPC("RPCChop", RpcTarget.All, id);
+    }
+
+    [PunRPC]
+    void RPCIntertact(int id){
+        var player = PhotonManager.s.GetPlayerView(id);
+        Interact(player);
+    } 
+    [PunRPC]
+    void RPCChop(int id){
+        var player = PhotonManager.s.GetPlayerView(id);
+        Chop(player);
+    }
+    #endregion
 
     public Transform GetKitchenObjectFollowTransform()
     {

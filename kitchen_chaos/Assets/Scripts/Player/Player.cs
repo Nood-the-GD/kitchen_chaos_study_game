@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon.StructWrapping;
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance {get; private set;}
@@ -37,8 +38,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void Start()
     {
+
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+        PhotonManager.s.currentGamePlayers.Add(this);
     }
     private void Update()
     {
@@ -60,7 +63,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(!GameManager.Instance.IsGamePlaying()) return;
 
         if(selectedCounter != null) selectedCounter.Interact(this);
+        //selectedCounter
     }
+
+
     #endregion
 
 
@@ -164,11 +170,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(photonView.IsMine)
             photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
-    
+
+
+    #region Multiplay
     [PunRPC]
     void RPCSetWalking(bool isWalking){
         this.isWalking = isWalking;
     }
+    #endregion
 
 
 

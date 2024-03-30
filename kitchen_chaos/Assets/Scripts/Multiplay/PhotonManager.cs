@@ -34,11 +34,23 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public  Action<string> onJoinRoomFailed;
     public Action<string> onJoinRandomRoomFailed;
     public Action<string> onCreateRoomFailed;
-    public Action<Player> onPlayerLeftRoom;
-    public Action<Player> onPlayerEnteredRoom;
+    public Action<Photon.Realtime.Player> onPlayerLeftRoom;
+    public Action<Photon.Realtime.Player> onPlayerEnteredRoom;
     public bool isJoinedRoom => PhotonNetwork.InRoom;
     public Photon.Realtime.Player myPlayerPhoton => PhotonNetwork.LocalPlayer;
     
+    [ReadOnly]
+    public List<Player> currentGamePlayers;
+
+    public Player GetPlayerView(int viewId){
+        foreach(var player in currentGamePlayers){
+            if(player.photonView.ViewID == viewId)
+                return player;
+        }
+        Debug.Log("Player not found: "+ viewId);
+        return null;
+    }
+
 #endregion
 
     private void Awake(){
