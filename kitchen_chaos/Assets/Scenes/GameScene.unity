@@ -863,6 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipeListSO: {fileID: 11400000, guid: f320975c5e60b5f4e82670a9e345640a, type: 2}
+  recipeDelivered: 0
 --- !u!1001 &173857546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11311,7 +11312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab831e4d73de73428d573e465b2f3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamePlayingTimerMax: 100
+  gamePlayingTimerMax: 1000
   spawnPoints:
   - {fileID: 1062164479}
   - {fileID: 1988034434}

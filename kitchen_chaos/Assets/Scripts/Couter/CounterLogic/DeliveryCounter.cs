@@ -22,7 +22,17 @@ public class DeliveryCounter : BaseCounter
                 {
                     player.GetKitchenObject().DestroySelf();
                 }
+                else{
+                    Debug.Log("Delivery failed");
+                }
             }
+            else{
+                Debug.Log("Player is carrying something not Plate");
+            
+            }
+        }
+        else{
+            Debug.Log("Player is not carrying anything");
         }
     }
 }

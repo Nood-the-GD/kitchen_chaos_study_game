@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
+using Photon.Realtime;
 public class DeliveryManager : MonoBehaviour
 {
     public event EventHandler OnRecipeSpawned;
@@ -18,7 +19,8 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
-    private int recipeDelivered = 0;
+    public int recipeDelivered = 0;
+    public PhotonView photonView;
 
     private void Awake()
     {
@@ -28,6 +30,9 @@ public class DeliveryManager : MonoBehaviour
 
     private void Update()
     {
+        if(!PhotonNetwork.IsMasterClient)
+            return;
+
         spawnRecipeTimer -= Time.deltaTime;
         if(spawnRecipeTimer <= 0f)
         {
@@ -35,12 +40,24 @@ public class DeliveryManager : MonoBehaviour
 
             if(waitingRecipeSOList.Count < waitingRecipeMax)
             {
-                RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
-                waitingRecipeSOList.Add(waitingRecipeSO);
-                OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+                var index = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
+                CmdAddRecipe(index);
             }
         }
     }
+
+    void CmdAddRecipe(int index){
+        photonView.RPC("RPCAddRecipe", RpcTarget.All, index);
+    }
+
+    [PunRPC]
+    void RPCAddRecipe(int index){
+        RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[index];
+        waitingRecipeSOList.Add(waitingRecipeSO);
+        OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+    }
+
+
 
     public bool DeliverRecipe(PlateKitchenObject plateKitchenObject)
     {
