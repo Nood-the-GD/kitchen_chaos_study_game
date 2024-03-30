@@ -156,8 +156,23 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
 
         isWalking = moveDir != Vector3.zero;
+        SetWalking(isWalking);
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
+
+    void SetWalking(bool isWalking){
+        if(photonView.IsMine)
+            photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
+    }
+    
+    [PunRPC]
+    void RPCSetWalking(bool isWalking){
+        this.isWalking = isWalking;
+    }
+
+
+
+
 
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
