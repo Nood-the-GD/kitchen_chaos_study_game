@@ -39,9 +39,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void Start()
     {
-
-        gameInput.OnInteractAction += GameInput_OnInteractAction;
-        gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+        if(photonView.IsMine){
+            gameInput.OnInteractAction += GameInput_OnInteractAction;
+            gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+        }
+        
         PhotonManager.s.currentGamePlayers.Add(this);
     }
     private void Update()
