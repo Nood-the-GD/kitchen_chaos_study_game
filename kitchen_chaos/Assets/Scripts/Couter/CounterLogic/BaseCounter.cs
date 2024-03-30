@@ -34,12 +34,12 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     }
 
     [PunRPC]
-    void RPCIntertact(int id){
+    public void RPCIntertact(int id){
         var player = PhotonManager.s.GetPlayerView(id);
         Interact(player);
     } 
     [PunRPC]
-    void RPCChop(int id){
+    public void RPCChop(int id){
         var player = PhotonManager.s.GetPlayerView(id);
         Chop(player);
     }
