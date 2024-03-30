@@ -5467,6 +5467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _autoConnectToPhoton: 1
   defaultRoomName: TestRoom2
+  currentGamePlayers: []
 --- !u!4 &916560662
 Transform:
   m_ObjectHideFlags: 0

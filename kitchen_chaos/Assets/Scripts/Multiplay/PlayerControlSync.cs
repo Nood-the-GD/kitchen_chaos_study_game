@@ -11,13 +11,13 @@ namespace Photon.Pun.UtilityScripts{
             if (stream.IsWriting)
             {
                 //We own this player: send the others our data
-                Debug.Log("is writing");
+                //Debug.Log("is writing");
                 stream.SendNext(transform.position);
                 stream.SendNext(transform.rotation);
             }
             else
             {
-                Debug.Log("is reading");
+                //Debug.Log("is reading");
                 //Network player, receive data
                 correctPlayerPos = (Vector3)stream.ReceiveNext();
                 correctPlayerRot = (Quaternion)stream.ReceiveNext();

@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance {get; private set;}
     public PhotonView photonView;
+    public int viewId => photonView.ViewID;
     public event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs{
@@ -55,14 +56,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         if(!GameManager.Instance.IsGamePlaying()) return;
 
-        if (selectedCounter != null) selectedCounter.Chop(this);
+        if (selectedCounter != null) selectedCounter.CmdChop(viewId);
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
         if(!GameManager.Instance.IsGamePlaying()) return;
 
-        if(selectedCounter != null) selectedCounter.Interact(this);
+        if(selectedCounter != null) selectedCounter.CmdInteract(viewId);
         //selectedCounter
     }
 
