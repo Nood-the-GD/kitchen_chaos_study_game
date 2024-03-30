@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private bool isGamePause = false;
-
+    public Transform[] spawnPoints;
     private void Awake()
     {
         Instance = this;
@@ -35,10 +35,21 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+        PhotonManager.s.onJoinRoom += OnJoinRoom;
     }
+
+    void OnJoinRoom(){
+        var id =PhotonManager.s.myPlayerPhoton.ActorNumber;
+        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[id-1].position, Quaternion.identity);
+        ob.name = "MainPlayer_"+id;
+    }
+
+    
 
     private void Update()
     {
+        if(!PhotonManager.s.isJoinedRoom) return;
+
         switch(state)
         {
             case State.WaitingToStart:

@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
+using Photon.Realtime;
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance {get; private set;}
-
+    public PhotonView photonView;
     public event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs{
@@ -16,11 +17,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private GameInput gameInput;
+    private GameInput gameInput => GameInput.Instance;
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
 
     private KitchenObject kitchenObject;
+    
     private bool isWalking;
 
     private Vector3 lastInteractDir;
@@ -29,7 +31,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Unity functions
     private void Awake()
     {
-        if(Instance == null) Instance = this;
+        photonView = GetComponent<PhotonView>();
+        if(photonView.IsMine)
+            if(Instance == null) Instance = this;
     }
     private void Start()
     {
@@ -103,6 +107,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleMovement()
     {
+        if(!photonView.IsMine)
+            return;
+
         Vector2 inputVector = gameInput.MovementVectorNormalize();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);

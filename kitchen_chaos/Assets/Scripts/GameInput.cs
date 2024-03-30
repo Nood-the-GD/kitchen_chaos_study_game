@@ -17,7 +17,7 @@ public class GameInput : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
+    
         playerInputAction = new PlayerInputAction();
         playerInputAction.Player.Enable();
 
@@ -55,7 +55,7 @@ public class GameInput : MonoBehaviour
     public Vector2 MovementVectorNormalize()
     {
         Vector2 inputVector = Vector2.zero;
-#if UNITY_STANDALONE 
+#if UNITY_EDITOR 
         inputVector = playerInputAction.Player.Move.ReadValue<Vector2>();
         return inputVector.normalized;
 #else
