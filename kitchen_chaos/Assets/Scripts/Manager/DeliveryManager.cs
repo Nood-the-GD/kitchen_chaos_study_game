@@ -33,6 +33,11 @@ public class DeliveryManager : MonoBehaviour
         if(!PhotonNetwork.IsMasterClient)
             return;
 
+        if(PhotonNetwork.PlayerList.Length <2){
+            return;
+        }
+
+
         spawnRecipeTimer -= Time.deltaTime;
         if(spawnRecipeTimer <= 0f)
         {
