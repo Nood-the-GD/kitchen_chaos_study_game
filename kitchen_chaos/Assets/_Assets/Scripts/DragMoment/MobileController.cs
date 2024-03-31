@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MobileController : MonoBehaviour
 {
-    [SerializeField]  private DragMovement _dragMovement;
+    [SerializeField]  private FloatingJoystick _floatingJoystick;
     [SerializeField]  private Button _interactBtn, _useBtn;
     private Action _onInteract, _onUse;
 
@@ -25,12 +26,11 @@ public class MobileController : MonoBehaviour
 
     void Update()
     {
-
     }
 
     public Vector2 GetPlayerMovementInput()
     {
-        return _dragMovement.GetPlayerInput();
+        return _floatingJoystick.Direction;
     }
 
     public void OnInteractBtnPress(Action onPress)
