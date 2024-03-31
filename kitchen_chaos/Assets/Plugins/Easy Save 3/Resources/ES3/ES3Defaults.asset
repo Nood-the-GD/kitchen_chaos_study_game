@@ -33,6 +33,7 @@ MonoBehaviour:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - Cinemachine
+    - FloatingJoystickPack
     - Game
     - LeTai.TrueShadow
     - LeTai.TrueShadow.Demo
