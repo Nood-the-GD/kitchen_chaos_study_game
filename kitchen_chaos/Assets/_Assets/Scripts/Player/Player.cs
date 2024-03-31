@@ -101,19 +101,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 //Has counter
                 if(baseCounter != selectedCounter)
                 {
-                    Debug.Log("Has counter");
                     SetSelectedCounter(baseCounter);
                 }
             }
             else
             {
                SetSelectedCounter(null);
-                Debug.Log("No counter 1");
             }
         }
         else
         {
-            Debug.Log("No counter 2");
             SetSelectedCounter(null);
         }
     }
@@ -203,6 +200,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public bool IsWalking()
     {
         return isWalking;
+    }
+    public bool IsHolding()
+    {
+        return HasKitchenObject();
     }
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
