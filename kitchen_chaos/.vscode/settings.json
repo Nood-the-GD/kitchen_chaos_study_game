@@ -60,5 +60,6 @@
     "cSpell.words": [
         "Slerp"
     ],
-    "dotnet.defaultSolution": "kitchen_chaos.sln"
+    "dotnet.defaultSolution": "kitchen_chaos.sln",
+    "window.autoDetectColorScheme": true
 }
