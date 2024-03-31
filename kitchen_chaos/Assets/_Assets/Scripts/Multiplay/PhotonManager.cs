@@ -56,7 +56,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private void Awake(){
         if(s == null){
             s = this;
-
+            DontDestroyOnLoad(gameObject);
         }
         else{
             Destroy(gameObject);
@@ -92,7 +92,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     void Init(){
-        PhotonNetwork.OfflineMode = autoConnectToPhoton;
+        //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if(autoConnectToPhoton){
             //Debug.Log("starting offline mode");
              // Set up Photon server settings

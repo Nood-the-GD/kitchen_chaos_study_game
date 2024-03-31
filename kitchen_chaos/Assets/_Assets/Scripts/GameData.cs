@@ -53,6 +53,8 @@ public class GameData : SerializedScriptableObject
             return _s;
         }
     }
+
+    public List<StageData> stages;
   
     #region editor
     bool showEdit;
@@ -162,6 +164,15 @@ public class GameData : SerializedScriptableObject
         }
 
         return res.Replace(".prefab","");
+    }
+    
+
+    public StageData GetStage(int levelId){
+        var find = stages.Find(x=>x.levelId == levelId);
+        if(find == null){
+            Debug.LogError("Cant find stage with levelId: "+ levelId);
+        }
+        return find;
     }
     
     public void AddNewObjectTypeViews(ObjectTypeView objectTypeView)

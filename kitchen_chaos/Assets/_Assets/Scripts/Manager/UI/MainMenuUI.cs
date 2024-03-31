@@ -13,7 +13,8 @@ public class MainMenuUI : MonoBehaviour
     private void Awake()
     {
         playBtn.onClick.AddListener(() => {
-            Loader.Load(Loader.Scene.GameScene);
+            //Loader.Load(Loader.Scene.GameScene);
+            SelectModePopup.ShowPopup();
         });
         exitBtn.onClick.AddListener(() => {
             Application.Quit();
