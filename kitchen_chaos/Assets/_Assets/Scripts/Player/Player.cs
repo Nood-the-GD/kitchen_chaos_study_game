@@ -5,30 +5,38 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon.StructWrapping;
+
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
+    #region Instance
     public static Player Instance {get; private set;}
-    public PhotonView photonView;
-    public int viewId => photonView.ViewID;
+    #endregion
+
+    #region Events
     public event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-    public class OnSelectedCounterChangedEventArgs : EventArgs{
+    #endregion
+
+    #region Variables
+    public PhotonView photonView;
+    public int viewId => photonView.ViewID;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
         public BaseCounter selectedCounter;
     }
-
-
-    float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 5f;
-    private GameInput gameInput => GameInput.Instance;
     [SerializeField] private Transform kitchenObjectHoldPoint;
-
-
+    private GameInput gameInput => GameInput.Instance;
     private KitchenObject kitchenObject;
-    
-    private bool isWalking;
-
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
+    private bool isWalking;
+    private float rotateSpeed = 10f;
+    private float playerSize = 0.7f;
+    private float playerRadius = 2f;
+    private float moveDistance;
+    private Vector3 moveDir = Vector3.zero;
+    #endregion
     
     #region Unity functions
     private void Awake()
@@ -39,9 +47,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void Start()
     {
-        if(photonView.IsMine){
+        if(photonView.IsMine)
+        {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+            CameraController.Instance.SetFollowTarget(this.transform);
         }
         
         PhotonManager.s.currentGamePlayers.Add(this);
@@ -68,20 +78,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(selectedCounter != null) selectedCounter.CmdInteract(viewId);
         //selectedCounter
     }
-
-
     #endregion
 
-
-    public bool IsWalking()
-    {
-        return isWalking;
-    }
-
+    #region Interactions
     private void HandleInteraction()
     {
 
-        Vector2 inputVector = gameInput.MovementVectorNormalize();
+        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
@@ -113,28 +116,42 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             SetSelectedCounter(null);
         }
     }
+    #endregion
 
+    #region Movement
     private void HandleMovement()
+    {
+        GetMovementInput();
+        if(MovementTypeController.Instance.isMobileController)
+        {
+            HandleMobileMovement();
+        }
+        else
+        {
+            HandlePCMovement();
+        }
+    }
+    private void GetMovementInput()
     {
         if(!photonView.IsMine)
             return;
 
-        Vector2 inputVector = gameInput.MovementVectorNormalize();
+        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
 
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        moveDistance = moveSpeed * Time.deltaTime;
+    }
+    private void HandlePCMovement()
+    {
         bool canMove;
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance); // if any block on the way
 
-        float moveDistance = moveSpeed * Time.deltaTime;
-        float playerSize = 0.7f;
-        float playerRadius = 2f;
-        canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance);
-   
         if (!canMove)
         {
             //Cannot move toward moveDir
             //Try to move on X direction
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance);
+            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance); // Check raycast on direction x
 
             if (canMove)
             {
@@ -146,7 +163,60 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 //Cannot move on the X
                 //Try to move on the Z
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirZ, moveDistance);
+                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirZ, moveDistance); // check raycast on direction z
+
+                if (canMove)
+                {
+                    //Can move on the Z
+                    moveDir = moveDirZ;
+                }
+                else
+                {
+                    //Cannot move any direction
+                }
+            }
+        }
+
+        if (canMove)
+            transform.position += moveDir * moveDistance;
+
+
+        isWalking = moveDir != Vector3.zero;
+        SetWalking(isWalking);
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+    }
+    private void HandleMobileMovement()
+    {
+        if(!photonView.IsMine)
+            return;
+
+        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
+
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        bool canMove;
+
+        float moveDistance = moveSpeed * Time.deltaTime;
+        float playerSize = 0.7f;
+        float playerRadius = 2f;
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance);
+        Debug.Log(moveDir);
+
+        if(!canMove)
+        {
+
+            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
+            canMove = !moveDir.x.IsInRange(-0.4f, 0.4f) && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance); // Check raycast on direction x
+            if (canMove)
+            {
+                //Can move only on the X
+                moveDir = moveDirX;
+            }
+            else
+            {
+                //Cannot move on the X
+                //Try to move on the Z
+                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+                canMove = !moveDir.z.IsInRange(-0.4f, 0.4f) && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirZ, moveDistance); // check raycast on direction z
 
                 if (canMove)
                 {
@@ -173,7 +243,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(photonView.IsMine)
             photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
-
+    #endregion
 
     #region Multiplay
     [PunRPC]
@@ -182,10 +252,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     #endregion
 
-
-
-
-
+    #region Supports
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
@@ -194,12 +261,18 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             selectedCounter = selectedCounter
         });
     }
-
     public Transform GetKitchenObjectFollowTransform()
     {
         return kitchenObjectHoldPoint;
     } 
-
+    public bool IsWalking()
+    {
+        return isWalking;
+    }
+    public bool IsHolding()
+    {
+        return HasKitchenObject();
+    }
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
@@ -209,19 +282,17 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             OnPickupSomething?.Invoke(this, EventArgs.Empty);
         }
     }
-
     public KitchenObject GetKitchenObject()
     {
         return this.kitchenObject;
     }
-
     public void ClearKitchenObject()
     {
         this.kitchenObject = null;
     }
-
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
     }
+    #endregion
 }

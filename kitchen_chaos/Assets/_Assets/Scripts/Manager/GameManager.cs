@@ -5,12 +5,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region Events
     public event EventHandler OnStateChanged;
     public event EventHandler OnGamePause;
     public event EventHandler OnGameUnPause;
+    public event EventHandler<Player> OnPlayerSpawn;
+    #endregion
 
+    #region Instance
     public static GameManager Instance {get; private set;}
+    #endregion
 
+    #region Enum
     private enum State
     {
         WaitingToStart,
@@ -18,7 +24,9 @@ public class GameManager : MonoBehaviour
         GamePlaying,
         GameOver
     }
+    #endregion
 
+    #region Variables
     [SerializeField] private float gamePlayingTimerMax = 10f;
     private float gamePlayingTimer = 100;
     private State state;
@@ -26,26 +34,19 @@ public class GameManager : MonoBehaviour
     private float countdownToStartTimer = 3f;
     private bool isGamePause = false;
     public Transform[] spawnPoints;
+    #endregion
+
+    #region Unity events
     private void Awake()
     {
         Instance = this;
         state = State.WaitingToStart;
     }
-
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         PhotonManager.s.onJoinRoom += OnJoinRoom;
     }
-
-    void OnJoinRoom(){
-        var id =PhotonManager.s.myPlayerPhoton.ActorNumber;
-        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[id-1].position, Quaternion.identity);
-        ob.name = "MainPlayer_"+id;
-    }
-
-    
-
     private void Update()
     {
         if(!PhotonManager.s.isJoinedRoom) return;
@@ -78,43 +79,47 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Event functions
+    void OnJoinRoom(){
+        var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
+        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[id-1].position, Quaternion.identity);
+        ob.name = "MainPlayer_"+id;
+        OnPlayerSpawn?.Invoke(this, ob.GetComponent<Player>());
+    }
     private void GameInput_OnPauseAction(object sender, System.EventArgs e)
     {
         PauseGame();
     }
+    #endregion
 
+    #region Support
     private void ChangeState(State state)
     {
         this.state = state;
         this.OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
-
     public float GetCountdownToStartTimer()
     {
         return countdownToStartTimer;
     }
-
-    public bool IsGamePlaying()
-    {
-        return state == State.GamePlaying;
-    }
-
-    public bool IsCountdownToStartActive()
-    {
-        return state == State.CountdownToStart;
-    }
-
-    public bool IsGameOver()
-    {
-        return state == State.GameOver;
-    }
-
     public float GetPlayingTimerNormalized()
     {
         return 1 - (gamePlayingTimer/gamePlayingTimerMax);
     }
-
+    public bool IsGamePlaying()
+    {
+        return state == State.GamePlaying;
+    }
+    public bool IsCountdownToStartActive()
+    {
+        return state == State.CountdownToStart;
+    }
+    public bool IsGameOver()
+    {
+        return state == State.GameOver;
+    }
     public void PauseGame()
     {
         isGamePause = !isGamePause;
@@ -129,4 +134,5 @@ public class GameManager : MonoBehaviour
             OnGameUnPause?.Invoke(this, EventArgs.Empty);
         }
     }
+    #endregion
 }
