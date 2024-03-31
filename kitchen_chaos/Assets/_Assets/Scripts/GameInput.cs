@@ -55,10 +55,20 @@ public class GameInput : MonoBehaviour
     public Vector2 MovementVectorNormalize()
     {
         Vector2 inputVector = Vector2.zero;
-#if UNITY_EDITOR 
+#if UNITY_STANDALONE // for pc
         inputVector = playerInputAction.Player.Move.ReadValue<Vector2>();
         return inputVector.normalized;
-#else
+#elif UNITY_EDITOR
+        if(MovementTypeController.Instance.isMobileController)
+        {
+            inputVector = mobileController.GetPlayerMovementInput();
+        }
+        else
+        {
+            inputVector = playerInputAction.Player.Move.ReadValue<Vector2>();
+        }
+        return inputVector.normalized;
+#elif UNITY_ANDROID || UNITY_IOS
         inputVector = mobileController.GetPlayerMovementInput();
         return inputVector.normalized;
 #endif
