@@ -23,6 +23,12 @@ PrefabInstance:
       propertyPath: visualGameObjectArray.Array.data[0]
       value: 
       objectReference: {fileID: 7469303357487357537}
+    - target: {fileID: 6255108075110145672, guid: e6265501f01a789488682bd611849740,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b7e2863951e37e48b885ac507df22db,
+        type: 3}
     - target: {fileID: 6959951545624782919, guid: e6265501f01a789488682bd611849740,
         type: 3}
       propertyPath: m_Name

@@ -43,9 +43,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void Start()
     {
-        if(photonView.IsMine){
+        if(photonView.IsMine)
+        {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+            CameraController.Instance.SetFollowTarget(this.transform);
         }
         
         PhotonManager.s.currentGamePlayers.Add(this);
