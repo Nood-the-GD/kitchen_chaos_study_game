@@ -4,6 +4,8 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+
+[RequireComponent(typeof(CanvasGroup))]
 public class EnhancePopup : MonoBehaviour
 {
     public float scaleFrom = 0.7f;
@@ -15,6 +17,12 @@ public class EnhancePopup : MonoBehaviour
     [ShowIf("enhanceFadeOut")]
     public float delayFadeOut = 3;
     public GameObject parent;
+
+    [Button]
+    void AutoSetUpScale(){
+        scaleFrom = transform.localScale.x * 0.7f;
+        scaleTo = transform.localScale.x;
+    }
 
     void OnEnable()
     {

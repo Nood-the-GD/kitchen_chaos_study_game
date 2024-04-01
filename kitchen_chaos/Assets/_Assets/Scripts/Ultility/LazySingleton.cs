@@ -11,6 +11,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
+            
             lock(m_Lock){
                 if (_s == null)
                     TryInit();
@@ -18,11 +19,26 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             }
         }
     }
+    
+    public static T ForceGetInstance(){
+        if(_s != null)
+            return _s;
+
+        _s = (T)FindObjectOfType(typeof(T));
+        if(_s == null){
+            GameObject singleton = new GameObject();
+            _s = singleton.AddComponent<T>();
+            singleton.name = typeof(T).ToString();
+            Debug.Log("added " + typeof(T).ToString());
+        }
+        return _s;
+    }
 
     static void TryInit()
     {
         _s = (T)FindObjectOfType(typeof(T));
         if(_s == null) {
+            
             Debug.LogError("Singleton " + typeof(T).ToString() + " not found");
             // GameObject singleton = new GameObject();
             // _s = singleton.AddComponent<T>();

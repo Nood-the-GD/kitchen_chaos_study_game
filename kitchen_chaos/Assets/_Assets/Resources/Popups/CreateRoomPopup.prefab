@@ -2124,6 +2124,7 @@ GameObject:
   - component: {fileID: 3977502919817437773}
   - component: {fileID: 4524070147901440532}
   - component: {fileID: 6052675783333735375}
+  - component: {fileID: 4739474622370085958}
   m_Layer: 5
   m_Name: Popup01_White
   m_TagString: Untagged
@@ -2252,14 +2253,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea5b2da0aa4144d0a60d5ec25df302e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFrom: 0.7
-  scaleTo: 1
+  scaleFrom: 0.3050695
+  scaleTo: 0.4358136
   alphaFrom: 0
   alphaTo: 1
   time: 0.5
   enhanceFadeOut: 0
   delayFadeOut: 3
   parent: {fileID: 7076327349570156153}
+--- !u!225 &4739474622370085958
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528004875276242655}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4554377887346233447
 GameObject:
   m_ObjectHideFlags: 0

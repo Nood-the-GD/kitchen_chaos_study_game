@@ -102,4 +102,13 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  stages:
+  - levelId: 0
+    previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
+  - levelId: 1
+    previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
+  - levelId: 2
+    previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
+  - levelId: 3
+    previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
   inGameProducts: []

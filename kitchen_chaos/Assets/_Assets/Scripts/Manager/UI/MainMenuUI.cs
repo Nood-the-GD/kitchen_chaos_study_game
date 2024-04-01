@@ -22,4 +22,11 @@ public class MainMenuUI : MonoBehaviour
 
         Time.timeScale = 1f;
     }
+
+    void Start(){
+
+        if(!UserData.isInitName){
+            SetUserNamePopup.ShowPopup();
+        }
+    }
 }

@@ -167,7 +167,8 @@ GameObject:
   - component: {fileID: 792560379264658954}
   - component: {fileID: 3175145645786725134}
   - component: {fileID: 1179352234576426148}
-  - component: {fileID: 7613614225197844836}
+  - component: {fileID: 3962359301809452260}
+  - component: {fileID: 1537400726143668393}
   m_Layer: 5
   m_Name: Popup01_White
   m_TagString: Untagged
@@ -282,7 +283,19 @@ MonoBehaviour:
   baked: 0
   modifiedFromInspector: 0
   bakedShadows: []
---- !u!114 &7613614225197844836
+--- !u!225 &3962359301809452260
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497674535947214696}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1537400726143668393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -294,8 +307,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea5b2da0aa4144d0a60d5ec25df302e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFrom: 0.7
-  scaleTo: 1
+  scaleFrom: 0.3050695
+  scaleTo: 0.4358136
   alphaFrom: 0
   alphaTo: 1
   time: 0.5

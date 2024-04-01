@@ -154,7 +154,7 @@ public class BasePopup<T> : MonoBehaviour{
     }
     public static T ShowPopup()
     {
-        return PopupController.s.ShowPopup<T>(null, null).GetComponent<T>();
+        return PopupController.ForceGetInstance().ShowPopup<T>(null, null).GetComponent<T>();
     }
 
     public static T ShowMoveFromLeft(float time){
