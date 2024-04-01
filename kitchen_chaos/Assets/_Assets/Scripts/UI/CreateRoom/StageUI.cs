@@ -40,9 +40,9 @@ public class StageUI : MonoBehaviour
     public Sprite unSelectStageSprite;
 
     public Image stageUI;
-    TextMeshProUGUI stageText;
+    public TextMeshProUGUI stageText;
     Action<StageData> switchStage;
-    [HideInInspector] public StageData stageData;
+    public StageData stageData;
     public void SetData(StageData data, Action<StageData> onSwitchStage){
         stageData = data;
         switchStage = onSwitchStage;

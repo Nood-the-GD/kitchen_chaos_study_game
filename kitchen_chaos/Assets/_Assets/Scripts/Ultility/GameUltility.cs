@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using DG;
 public static class GameUtility
 {
     public static GameObject SpawnMultiplay(this ObjectEnum objectEnum, Vector3 position = default, Quaternion rotation = default){

@@ -16,9 +16,11 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public List<StageUI> stageUIs;
     public Image previewImage;
     public GameObject previewImageParent;
+    public GameObject text;
     [HideInInspector]public StageData selectStage = null;
 
     public GameObject stageParent;
+    const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
 
 
 
@@ -43,13 +45,43 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         base.OnEnable();
         PhotonManager.s.onJoinRoom += RefeshUI;
         PhotonManager.s.onLeaveRoom += OnLeaveRoom;
+        PhotonManager.s.onPlayerEnteredRoom += OnPlayerEnterRoom;
+        PhotonManager.s.onPlayerLeftRoom += OnPlayerLeaveRoom;
+        PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
+    }
 
+    void OnCallAnyCmdFunction(CmdOrder order){
+        if(order.reciver != nameof(CreateRoomPopup)) return;
+
+        if(order.functionName == CMD_SWITCH_STAGE){
+            RpcSwitchStage((int)order.data[0]);
+        }
+    }
+
+    
+
+    void OnPlayerEnterRoom(Photon.Realtime.Player player){
+        RefeshUI();
+
+        
+        if(PhotonNetwork.IsMasterClient){
+            CmdSwitchStage(selectStage.levelId);
+        }
+
+    }
+
+    void OnPlayerLeaveRoom(Photon.Realtime.Player player){
+        RefeshUI();
     }
 
     protected override void OnDisable(){
         base.OnDisable();
         PhotonManager.s.onJoinRoom -= RefeshUI;
         PhotonManager.s.onLeaveRoom -= OnLeaveRoom;
+        PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
+        PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
+        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
+
     }
 
     void OnLeaveRoom(){
@@ -66,6 +98,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
         for(int i = 0; i< stages.Count; i++){
             var stageData = stages[i];
+            Debug.Log("Setup stage "+stageData.levelId);
             stageUIs[i].SetData(stageData, OnSwitchStage);
         }
 
@@ -77,9 +110,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             
         }
 
-
-
-
+        CmdSwitchStage(stages[0].levelId);
     }
 
     void OnSwitchStage(StageData stageData){
@@ -87,12 +118,14 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     }
 
     void CmdSwitchStage(int id){
-        photonView.RPC("RpcSwitchStage", RpcTarget.All, id);
+        Debug.Log("CmdSwitchStage " + id);
+        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_SWITCH_STAGE, id);
+        PhotonManager.s.CmdCallFunction(order);
 
     }
 
-    [PunRPC]
     void RpcSwitchStage(int id){
+        Debug.Log("RpcSwitchStage " + id);
         var stageData = GameData.s.GetStage(id);
         foreach(var stage in stageUIs){
             if(stage.stageData.levelId == stageData.levelId)
@@ -104,9 +137,9 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         previewImage.sprite = stageData.previewImage;
         selectStage = stageData;
 
-        var rootScale = 0.7f;
-        previewImageParent.transform.localScale = new Vector3(rootScale,rootScale,rootScale);
-        previewImageParent.transform.DOScale(1, 0.25f).From().SetEase(Ease.OutBack);
+        var rootScale = 2.225f;
+        
+        previewImageParent.transform.DOScale(rootScale, 0.25f).From(0).SetEase(Ease.OutBack);
     }
 
     
@@ -118,15 +151,20 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             i.gameObject.SetActive(false);
         }
 
-        var roomPlayer = PhotonNetwork.CountOfPlayersInRooms;
+        var roomPlayer = PhotonNetwork.PlayerList.Length;
+        
         for(int i = 0; i< roomPlayer; i++){
             playerUIElements[i].gameObject.SetActive(true);
+            //playerUIElements[i].transform.localScale = Vector3.zero;
+            playerUIElements[i].transform.DOScale(0.3f, 0.25f).From(0).SetEase(Ease.OutBack);
+            
             playerUIElements[i].SetData(PhotonNetwork.PlayerList[i]);
         }
 
         var activateStartButton = roomPlayer == 2 && PhotonNetwork.IsMasterClient;
         startButton.gameObject.SetActive(activateStartButton);
-        roomName.text = "ID:"+PhotonNetwork.CurrentRoom.Name;
+        text.SetActive(!activateStartButton);
+        roomName.text = "ID: "+PhotonNetwork.CurrentRoom.Name;
     }
 
     

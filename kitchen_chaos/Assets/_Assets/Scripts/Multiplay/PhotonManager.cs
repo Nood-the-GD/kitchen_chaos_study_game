@@ -5,21 +5,37 @@ using Sirenix.OdinInspector;
 using Photon.Realtime;
 using Photon.Pun;
 using System;
+
+public class CmdOrder{
+    public string reciver;
+    public string functionName;
+    public object[] data;
+
+    public CmdOrder(string reciver, string functionName, params object[] data){
+        this.reciver = reciver;
+        this.functionName = functionName;
+        this.data = data;
+    }
+}
+
 //using Game;
+[RequireComponent(typeof(PhotonView))]
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager s;
-    [SerializeField]bool _autoConnectToPhoton;
-    [ShowIf(nameof(_autoConnectToPhoton))]public string defaultRoomName = "TestRoom2";
+    [SerializeField]bool _autoConnectToPhotonTest;
+    [ShowIf(nameof(_autoConnectToPhotonTest))]public string defaultRoomName = "TestRoom2";
 
-    public bool autoConnectToPhoton{
+    public bool autoConnectToPhotonTest{
         get{
             if(!Application.isEditor)
                 return false;
 
-            return _autoConnectToPhoton;
+            return _autoConnectToPhotonTest;
         }
     }
+
+    public bool autoConncetToMaster = true;
 
 #region Event
     public Action onCreatedRoom;
@@ -38,7 +54,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Action<Photon.Realtime.Player> onPlayerEnteredRoom;
     public bool isJoinedRoom => PhotonNetwork.InRoom;
     public Photon.Realtime.Player myPlayerPhoton => PhotonNetwork.LocalPlayer;
+
+    public Action<CmdOrder> onCallAnyCmdFunction;
     
+
     [ReadOnly]
     public List<Player> currentGamePlayers;
 
@@ -93,7 +112,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     void Init(){
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
-        if(autoConnectToPhoton){
+        if(autoConnectToPhotonTest){
             //Debug.Log("starting offline mode");
              // Set up Photon server settings
             //PhotonNetwork.PhotonServerSettings.AppSettings.UseNameServer = false; // Disable the default Photon Cloud server
@@ -114,6 +133,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         else{
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = ""; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 0; // Set the port number of the local Photon Server
+            if(autoConncetToMaster){
+                PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
+                ConnectToPhoton();
+            }
+
         }
     }
     
@@ -209,6 +233,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void RPCChangeState(int index){
         //GameManager.s.SetState(index);
     }
+
+    [Button]
+    public void CmdCallFunction(CmdOrder cmdOrder){
+        photonView.RPC(nameof(RPCCallFunction), RpcTarget.All, cmdOrder.reciver,cmdOrder.functionName, cmdOrder.data);
+    }
+
+    [PunRPC]
+    public void RPCCallFunction(string reciver,string functionName, object[] data){
+        //GameManager.s.CallFunction(functionName, data);
+        //Debug.Log("Call function: "+ functionName + " on "+ reciver);
+        var order = new CmdOrder(reciver, functionName, data);
+        onCallAnyCmdFunction?.Invoke(order);
+    }
     
 
 
@@ -261,14 +298,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         base.OnPlayerLeftRoom(otherPlayer);
         Debug.Log("Player Left Room"+ otherPlayer.UserId);
     
-        //onPlayerLeftRoom?.Invoke(otherPlayer);
+        onPlayerLeftRoom?.Invoke(otherPlayer);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
         Debug.Log("Player Entered Room"+ newPlayer.UserId);
-        //onPlayerEnteredRoom?.Invoke(newPlayer);
+        onPlayerEnteredRoom?.Invoke(newPlayer);
     }
 
 
@@ -301,6 +338,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Joined Room");
         onJoinRoom?.Invoke();
     }
+    
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
@@ -315,6 +353,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Join Random Room Failed"+ message);
         onJoinRandomRoomFailed?.Invoke(message);
     }
+    
 
 
 
