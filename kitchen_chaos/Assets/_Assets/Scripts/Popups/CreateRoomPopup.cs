@@ -21,12 +21,16 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
     public GameObject stageParent;
     const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
-
+    const string CMD_NEXT_SCENE = "CmdNextScene";
 
 
     public void OnStartButtonClick(){
-        PhotonNetwork.LoadLevel(Loader.Scene.GameScene.ToString());
+        //PhotonNetwork.AutomaticallySyncScene = true;
+        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_NEXT_SCENE);
+        PhotonManager.s.CmdCallFunction(order);
     }
+
+
 
     public void OnExitButtonClick(){
         PhotonNetwork.LeaveRoom();
@@ -55,6 +59,9 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
         if(order.functionName == CMD_SWITCH_STAGE){
             RpcSwitchStage((int)order.data[0]);
+        }
+        if(order.functionName == CMD_NEXT_SCENE){
+            PhotonNetwork.LoadLevel("GameScene");
         }
     }
 

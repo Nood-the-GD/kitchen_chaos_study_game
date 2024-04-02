@@ -1467,7 +1467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
+  ObservedComponentsFoldoutOpen: 0
   Group: 0
   prefixField: -1
   Synchronization: 3
@@ -2170,6 +2170,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1306969779}
   - {fileID: 504577988}
   - {fileID: 805564857}
   - {fileID: 839491751}
@@ -2179,4 +2180,3 @@ SceneRoots:
   - {fileID: 1732112768}
   - {fileID: 2065405826}
   - {fileID: 328703134}
-  - {fileID: 1306969779}
