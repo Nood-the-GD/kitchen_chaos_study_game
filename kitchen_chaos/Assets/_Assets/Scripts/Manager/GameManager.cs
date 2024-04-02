@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
-        PhotonManager.s.onJoinRoom += OnJoinRoom;
+        OnJoinRoom();
     }
     private void Update()
     {

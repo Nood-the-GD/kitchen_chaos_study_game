@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5484,6 +5484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 916560662}
   - component: {fileID: 916560661}
+  - component: {fileID: 916560663}
   m_Layer: 0
   m_Name: '[Multiplay]'
   m_TagString: Untagged
@@ -5503,8 +5504,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a99696a247f34f38bd34706eec040ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoConnectToPhoton: 1
+  _autoConnectToPhotonTest: 0
   defaultRoomName: TestRoom2
+  autoConncetToMaster: 1
   currentGamePlayers: []
 --- !u!4 &916560662
 Transform:
@@ -5521,6 +5523,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &916560663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916560660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 31
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!4 &918949041 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3948524968277402508, guid: 595d69a9857071b49836576fe0011266,
