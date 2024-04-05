@@ -91,10 +91,12 @@ public class DeliveryManager : MonoBehaviour
                 }
                 if(isTrue == true) 
                 {
+                    // Delivery Success
                     waitingRecipeSOList.RemoveAt(i);
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     recipeDelivered++;
+                    PointUI.Instance.UpdateUI();
                     return true;
                 }
             }

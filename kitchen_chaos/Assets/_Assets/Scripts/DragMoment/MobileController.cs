@@ -35,7 +35,6 @@ public class MobileController : MonoBehaviour
 
     public void OnInteractBtnPress(Action onPress)
     {
-        Debug.Log("Press Interaction");
         _onInteract = onPress;  
     }
     public void OnUseBtnPress(Action onPress)

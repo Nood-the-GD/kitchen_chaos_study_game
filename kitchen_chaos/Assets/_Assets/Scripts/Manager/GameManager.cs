@@ -41,11 +41,12 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         state = State.WaitingToStart;
+        PhotonManager.s.onJoinRoom += OnJoinRoom;
     }
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
-        OnJoinRoom();
+        // OnJoinRoom();
     }
     private void Update()
     {
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
     #region Event functions
     void OnJoinRoom(){
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
-        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[id-1].position, Quaternion.identity);
+        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[0].position, Quaternion.identity);
         ob.name = "MainPlayer_"+id;
         OnPlayerSpawn?.Invoke(this, ob.GetComponent<Player>());
     }
