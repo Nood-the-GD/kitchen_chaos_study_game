@@ -33,9 +33,11 @@ public class DeliveryManager : MonoBehaviour
         if(!PhotonNetwork.IsMasterClient)
             return;
 
-        if(PhotonNetwork.PlayerList.Length <2){
+        //feature only for mobile, because in editor sometime need to test ofline
+        if(PhotonNetwork.PlayerList.Length <2 && !Application.isEditor){
             return;
         }
+
 
 
         spawnRecipeTimer -= Time.deltaTime;

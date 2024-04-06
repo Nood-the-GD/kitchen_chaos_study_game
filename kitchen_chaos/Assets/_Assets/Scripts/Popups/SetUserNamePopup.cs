@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class SetUserNamePopup : BasePopup<SetUserNamePopup>
@@ -13,10 +14,12 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
 
     public void SetName(string name){
         userName = name;
+
     }
 
     public void Next(){
         UserData.userName = userName;
+        PhotonNetwork.NickName = name;
         HidePopup();
     }
 

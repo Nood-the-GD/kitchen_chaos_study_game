@@ -120,7 +120,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 5058; // Set the port number of the local Photon Server
 
             //set name to player
-            PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
+            if(!UserData.isInitName){
+                PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
+            }
+            else{
+                PhotonNetwork.NickName = UserData.userName;
+            }
+            
             ConnectToPhoton();
             onConnectToServer += ()=>{JoinLobby();};
             onJoinLobby += ()=>{

@@ -41,13 +41,17 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         state = State.WaitingToStart;
-        PhotonManager.s.onJoinRoom += OnJoinRoom;
+        //PhotonManager.s.onJoinRoom += OnJoinRoom;
+
     }
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+        OnJoinRoom();
         // OnJoinRoom();
     }
+    
+
     private void Update()
     {
         if(!PhotonManager.s.isJoinedRoom) return;
@@ -84,6 +88,7 @@ public class GameManager : MonoBehaviour
 
     #region Event functions
     void OnJoinRoom(){
+        Debug.Log("OnJoinRoom");
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
         var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[0].position, Quaternion.identity);
         ob.name = "MainPlayer_"+id;

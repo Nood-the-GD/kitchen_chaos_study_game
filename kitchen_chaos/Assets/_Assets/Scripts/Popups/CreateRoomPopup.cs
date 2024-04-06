@@ -7,6 +7,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public TextMeshProUGUI roomName;
@@ -24,6 +25,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     const string CMD_NEXT_SCENE = "CmdNextScene";
 
 
+    [Button("Move to GameScene")]
     public void OnStartButtonClick(){
         //PhotonNetwork.AutomaticallySyncScene = true;
         var order = new CmdOrder(nameof(CreateRoomPopup),CMD_NEXT_SCENE);
@@ -173,6 +175,8 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         text.SetActive(!activateStartButton);
         roomName.text = "ID: "+PhotonNetwork.CurrentRoom.Name;
     }
+
+    
 
     
 
