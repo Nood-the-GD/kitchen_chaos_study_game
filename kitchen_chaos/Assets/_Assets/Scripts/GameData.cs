@@ -65,7 +65,6 @@ public class GameData : SerializedScriptableObject
 #endif
     }
 
-#if UNITY_EDITOR
 
 
     [HideIf(nameof(showEdit))]
@@ -274,7 +273,6 @@ public class GameData : SerializedScriptableObject
     }
     
 
-#endif
     #endregion
 
     public Dictionary<string, string> prefabPaths = new Dictionary<string, string>();
