@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Photon.Pun;
-//using Kinemation.FPSFramework.Runtime.FPSAnimator;
-using System.Threading.Tasks;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
 [System.Serializable]
 public class InGameProduct{
         public string id;
