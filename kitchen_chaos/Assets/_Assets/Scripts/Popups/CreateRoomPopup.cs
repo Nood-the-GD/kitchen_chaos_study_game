@@ -40,7 +40,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
 
     void Start(){
-        RefeshUI();
+        RefreshUI();
         SetupStages();
         stageParent.SetActive(PhotonNetwork.IsMasterClient);
         
@@ -49,7 +49,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     //public void SelectLevel
     protected override void OnEnable(){
         base.OnEnable();
-        PhotonManager.s.onJoinRoom += RefeshUI;
+        PhotonManager.s.onJoinRoom += RefreshUI;
         PhotonManager.s.onLeaveRoom += OnLeaveRoom;
         PhotonManager.s.onPlayerEnteredRoom += OnPlayerEnterRoom;
         PhotonManager.s.onPlayerLeftRoom += OnPlayerLeaveRoom;
@@ -57,7 +57,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     }
 
     void OnCallAnyCmdFunction(CmdOrder order){
-        if(order.reciver != nameof(CreateRoomPopup)) return;
+        if(order.receiver != nameof(CreateRoomPopup)) return;
 
         if(order.functionName == CMD_SWITCH_STAGE){
             RpcSwitchStage((int)order.data[0]);
@@ -70,7 +70,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     
 
     void OnPlayerEnterRoom(Photon.Realtime.Player player){
-        RefeshUI();
+        RefreshUI();
 
         
         if(PhotonNetwork.IsMasterClient){
@@ -80,12 +80,12 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     }
 
     void OnPlayerLeaveRoom(Photon.Realtime.Player player){
-        RefeshUI();
+        RefreshUI();
     }
 
     protected override void OnDisable(){
         base.OnDisable();
-        PhotonManager.s.onJoinRoom -= RefeshUI;
+        PhotonManager.s.onJoinRoom -= RefreshUI;
         PhotonManager.s.onLeaveRoom -= OnLeaveRoom;
         PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
         PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
@@ -155,7 +155,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     
     
     
-    void RefeshUI(){
+    void RefreshUI(){
 
         foreach(var i in playerUIElements){
             i.gameObject.SetActive(false);

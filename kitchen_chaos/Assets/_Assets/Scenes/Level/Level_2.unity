@@ -805,7 +805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipeListSO: {fileID: 11400000, guid: b7d887d36d36d6c4a94416da99b9109e, type: 2}
-  recipeDelivered: 0
+  recipeDeliveredPoint: 0
   photonView: {fileID: 171717802}
 --- !u!114 &171717802
 MonoBehaviour:
@@ -8971,6 +8971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointText: {fileID: 2003416314}
+  pointFeedback: {fileID: 0}
 --- !u!1001 &1573517687
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12097,7 +12098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab831e4d73de73428d573e465b2f3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamePlayingTimerMax: 1000
+  gamePlayingTimerMax: 180
   spawnPoints:
   - {fileID: 1062164479}
   - {fileID: 1988034434}
