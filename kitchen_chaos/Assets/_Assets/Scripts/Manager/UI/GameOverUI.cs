@@ -22,7 +22,7 @@ public class GameOverUI : MonoBehaviour
     {
         if(GameManager.Instance.IsGameOver())
         {
-            recipeDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipeAmount().ToString();
+            recipeDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipePoint().ToString();
             gameObject.SetActive(true);
         }
         else

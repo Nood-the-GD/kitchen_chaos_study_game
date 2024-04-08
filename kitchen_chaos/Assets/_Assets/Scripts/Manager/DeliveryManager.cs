@@ -19,7 +19,7 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
-    public int recipeDelivered = 0;
+    public int recipeDeliveredPoint = 0;
     public PhotonView photonView;
 
     private void Awake()
@@ -97,7 +97,7 @@ public class DeliveryManager : MonoBehaviour
                     waitingRecipeSOList.RemoveAt(i);
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
-                    recipeDelivered++;
+                    recipeDeliveredPoint += waitingRecipeSO.Point;
                     PointUI.Instance.UpdateUI();
                     return true;
                 }
@@ -112,8 +112,8 @@ public class DeliveryManager : MonoBehaviour
         return waitingRecipeSOList;
     }
 
-    public int GetSuccessfulRecipeAmount()
+    public int GetSuccessfulRecipePoint()
     {
-        return recipeDelivered;
+        return recipeDeliveredPoint;
     }
 }
