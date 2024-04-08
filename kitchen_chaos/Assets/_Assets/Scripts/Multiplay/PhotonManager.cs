@@ -7,12 +7,12 @@ using Photon.Pun;
 using System;
 
 public class CmdOrder{
-    public string reciver;
+    public string receiver;
     public string functionName;
     public object[] data;
 
     public CmdOrder(string reciver, string functionName, params object[] data){
-        this.reciver = reciver;
+        this.receiver = reciver;
         this.functionName = functionName;
         this.data = data;
     }
@@ -242,7 +242,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     [Button]
     public void CmdCallFunction(CmdOrder cmdOrder){
-        photonView.RPC(nameof(RPCCallFunction), RpcTarget.All, cmdOrder.reciver,cmdOrder.functionName, cmdOrder.data);
+        photonView.RPC(nameof(RPCCallFunction), RpcTarget.All, cmdOrder.receiver,cmdOrder.functionName, cmdOrder.data);
     }
 
     [PunRPC]

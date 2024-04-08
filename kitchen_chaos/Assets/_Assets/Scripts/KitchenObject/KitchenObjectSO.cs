@@ -7,5 +7,6 @@ public class KitchenObjectSO : ScriptableObject
 {
     public Transform prefab;
     public Sprite sprite;
+    public int point;
     [SerializeField] private string objectName;
 }

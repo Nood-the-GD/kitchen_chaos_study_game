@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -12,6 +13,15 @@ public class CameraController : MonoBehaviour
     {
         Instance = this;
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
+    }
+    void Start()
+    {
+        GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
+    }
+
+    private void GameManager_OnPlayerSpawn(object sender, Player e)
+    {
+        SetFollowTarget(e.transform);
     }
 
     public void SetLookAtTarget(Transform target)

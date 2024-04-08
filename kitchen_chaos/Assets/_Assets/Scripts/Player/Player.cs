@@ -31,7 +31,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     private bool isWalking;
-    private float rotateSpeed = 10f;
+    private float rotateSpeed = 20f;
     private float playerSize = 0.7f;
     private float playerRadius = 2f;
     private float moveDistance;
@@ -198,7 +198,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         float playerSize = 0.7f;
         float playerRadius = 2f;
         canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance);
-        Debug.Log(moveDir);
 
         if(!canMove)
         {
