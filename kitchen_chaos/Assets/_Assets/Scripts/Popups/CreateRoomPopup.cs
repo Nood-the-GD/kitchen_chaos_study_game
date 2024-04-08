@@ -23,7 +23,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public GameObject stageParent;
     const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
     const string CMD_NEXT_SCENE = "CmdNextScene";
-
+    int currentSceneId = 0;
 
     [Button("Move to GameScene")]
     public void OnStartButtonClick(){
@@ -63,7 +63,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             RpcSwitchStage((int)order.data[0]);
         }
         if(order.functionName == CMD_NEXT_SCENE){
-            PhotonNetwork.LoadLevel("GameScene");
+            PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
         }
     }
 
@@ -135,6 +135,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
     void RpcSwitchStage(int id){
         Debug.Log("RpcSwitchStage " + id);
+        currentSceneId = id;
         var stageData = GameData.s.GetStage(id);
         foreach(var stage in stageUIs){
             if(stage.stageData.levelId == stageData.levelId)

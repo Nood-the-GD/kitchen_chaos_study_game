@@ -9,6 +9,7 @@ using System;
 public class StageData{
     
     public int levelId;
+    public string sceneName;
     public int star{
         get{
             return PlayerPrefs.GetInt("level."+levelId, 0);
