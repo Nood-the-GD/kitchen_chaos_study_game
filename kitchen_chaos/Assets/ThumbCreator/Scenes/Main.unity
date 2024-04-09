@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18374561, g: 0.22822289, b: 0.29930645, a: 1}
+  m_IndirectSpecularColor: {r: 0.1780486, g: 0.21666354, b: 0.269018, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -401,6 +401,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TomatoSlices
+      objectReference: {fileID: 0}
+    - target: {fileID: 8671696514171673931, guid: 206d70af57bc2401693feb15986b8e1b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1975,22 +1980,22 @@ PrefabInstance:
     - target: {fileID: 8903764445056552400, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.12718083
+      value: -0.1638173
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552400, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.029362008
+      value: -0.020114236
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552400, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.96603423
+      value: 0.978934
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552400, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.22302656
+      value: -0.12019799
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552400, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
@@ -2040,12 +2045,12 @@ PrefabInstance:
     - target: {fileID: 8903764445056552403, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: RotationX
-      value: 26
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552403, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
       propertyPath: RotationY
-      value: 195
+      value: 199
       objectReference: {fileID: 0}
     - target: {fileID: 8903764445056552403, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
@@ -2079,8 +2084,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
         type: 3}
+      propertyPath: m_Color.b
+      value: 0.62144
+      objectReference: {fileID: 0}
+    - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.8225032
+      objectReference: {fileID: 0}
+    - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.8962264
+      objectReference: {fileID: 0}
+    - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
+        type: 3}
       propertyPath: m_Shadows.m_Type
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8903764446349122845, guid: 3b74f329460b94b4f9ac974de505e159,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
