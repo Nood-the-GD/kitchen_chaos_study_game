@@ -65,6 +65,8 @@ MonoBehaviour:
     - QFSW.QC.UI
     - SingularityGroup.HotReload.Runtime
     - SingularityGroup.HotReload.Runtime.Public
+    - UIEffect
+    - UIEffect_Demo
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

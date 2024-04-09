@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerAnimator : MonoBehaviour
 {
     private const string IS_WALKING = "IsWalking";
@@ -12,6 +12,7 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private GameObject arrowGO;
     private Animator animator;
     private GameInput gameInput => GameInput.Instance;
+    public Text usernameUI;
 
     private void Awake()
     {
@@ -22,6 +23,9 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator.SetBool(IS_WALKING, player.IsWalking());  
         animator.SetBool(IS_HOLDING, player.IsHolding());
-        arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
+        if(player.photonView.IsMine){
+            arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
+        }
+        usernameUI.text = player.photonView.Owner.NickName;
     }
 }

@@ -177,6 +177,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: kitchencounter_straight_A (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 756db1522aaf0524c8fcd35bcb9c97f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
