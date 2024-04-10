@@ -259,7 +259,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Supports
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        Debug.Log("Selected counter: " + selectedCounter);
         this.selectedCounter = selectedCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs

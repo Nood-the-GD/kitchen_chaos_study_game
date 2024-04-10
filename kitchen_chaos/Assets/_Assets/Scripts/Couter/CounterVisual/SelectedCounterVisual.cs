@@ -30,7 +30,6 @@ public class SelectedCounterVisual : MonoBehaviour
     #region Events functions
     private void Player_OnPlayerSpawn(Player e)
     {
-        Debug.Log("Visual Player Spawn " + this.gameObject.name);
         e.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
     private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
@@ -51,7 +50,6 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         foreach(GameObject visualGameObject in visualGameObjectArray)
         {
-            Debug.Log("ShowVisual");
             visualGameObject.SetActive(true);
         }
     }
@@ -59,7 +57,6 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         foreach(GameObject visualGameObject in visualGameObjectArray)
         {
-            Debug.Log("Hide Visual");
             visualGameObject.SetActive(false);
         }
     }
