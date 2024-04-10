@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnStateChanged;
     public event EventHandler OnGamePause;
     public event EventHandler OnGameUnPause;
-    public event EventHandler<Player> OnPlayerSpawn;
+    public Action<Player> OnPlayerSpawn;
     #endregion
 
     #region Instance
@@ -90,7 +90,6 @@ public class GameManager : MonoBehaviour
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
         var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[0].position, Quaternion.identity);
         ob.name = "MainPlayer_"+id;
-        OnPlayerSpawn?.Invoke(this, ob.GetComponent<Player>());
     }
     private void GameInput_OnPauseAction(object sender, System.EventArgs e)
     {

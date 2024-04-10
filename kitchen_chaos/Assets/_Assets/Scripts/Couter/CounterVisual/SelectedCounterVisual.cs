@@ -10,8 +10,12 @@ public class SelectedCounterVisual : MonoBehaviour
     [SerializeField] private BaseCounter baseCounter;
     [SerializeField] private GameObject[] visualGameObjectArray;
     #endregion
+    
 
     #region Unity functions
+    void OnEnable()
+    {
+    }
     private void Start()
     {
         GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
@@ -20,7 +24,7 @@ public class SelectedCounterVisual : MonoBehaviour
     #endregion
 
     #region Events functions
-    private void GameManager_OnPlayerSpawn(object sender, Player e)
+    private void GameManager_OnPlayerSpawn(Player e)
     {
         e.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
@@ -50,6 +54,7 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         foreach(GameObject visualGameObject in visualGameObjectArray)
         {
+            Debug.Log("Hide Visual");
             visualGameObject.SetActive(false);
         }
     }

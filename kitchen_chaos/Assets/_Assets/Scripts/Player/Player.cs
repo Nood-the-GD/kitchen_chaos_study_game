@@ -51,6 +51,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+            GameManager.Instance.OnPlayerSpawn?.Invoke(this);
         }
         
         PhotonManager.s.currentGamePlayers.Add(this);
@@ -82,7 +83,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Interactions
     private void HandleInteraction()
     {
-
         Vector2 inputVector = gameInput.GetMovementVectorNormalize();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
@@ -253,11 +253,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Supports
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        this.selectedCounter = selectedCounter;
+        if(this.selectedCounter != selectedCounter)
+        {
+            this.selectedCounter = selectedCounter;
 
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs{
-            selectedCounter = selectedCounter
-        });
+            OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+            {
+                selectedCounter = selectedCounter
+            });
+        }
     }
     public Transform GetKitchenObjectFollowTransform()
     {

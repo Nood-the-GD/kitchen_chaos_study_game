@@ -26,7 +26,7 @@ public class SoundManager : MonoBehaviour
     #endregion
 
     #region GameManager events
-    private void GameManager_OnPlayerSpawn(object sender, Player e)
+    private void GameManager_OnPlayerSpawn(Player e)
     {
         Player.Instance.OnPickupSomething += Player_OnPickupSomething;
     }

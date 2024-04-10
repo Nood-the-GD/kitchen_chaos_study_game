@@ -18,12 +18,20 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator = GetComponent<Animator>();
     }
+    void Start()
+    {
+        if(!player.photonView.IsMine)
+        {
+            arrowGO.gameObject.SetActive(false);
+        }
+    }
 
     private void Update()
     {
         animator.SetBool(IS_WALKING, player.IsWalking());  
         animator.SetBool(IS_HOLDING, player.IsHolding());
-        if(player.photonView.IsMine){
+        if(player.photonView.IsMine)
+        {
             arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
         }
         usernameUI.text = player.photonView.Owner.NickName;
