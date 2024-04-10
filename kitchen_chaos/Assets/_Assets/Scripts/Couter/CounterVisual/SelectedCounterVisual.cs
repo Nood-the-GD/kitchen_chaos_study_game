@@ -42,6 +42,7 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         foreach(GameObject visualGameObject in visualGameObjectArray)
         {
+            Debug.Log("ShowVisual");
             visualGameObject.SetActive(true);
         }
     }
