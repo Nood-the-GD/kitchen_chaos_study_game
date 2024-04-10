@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     #region Unity events
     private void Awake()
     {
+        Application.targetFrameRate = 60;
         Instance = this;
         state = State.WaitingToStart;
 
