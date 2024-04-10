@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Photon.Pun;
-//using Kinemation.FPSFramework.Runtime.FPSAnimator;
-using System.Threading.Tasks;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
 [System.Serializable]
 public class InGameProduct{
         public string id;
@@ -67,8 +65,6 @@ public class GameData : SerializedScriptableObject
 #endif
     }
 
-
-
     [HideIf(nameof(showEdit))]
     [Button]
     void ShowEdit()
@@ -82,6 +78,8 @@ public class GameData : SerializedScriptableObject
     {
         showEdit = false;
     }
+
+#if UNITY_EDITOR
     [ShowIf(nameof(showEdit))]
     [Button]
     void UpdatePath()
@@ -117,6 +115,7 @@ public class GameData : SerializedScriptableObject
         }
         Save();
     }
+
     [ShowIf(nameof(showEdit))]
     [Button]
     void GenerateConstantFile(){
@@ -165,14 +164,6 @@ public class GameData : SerializedScriptableObject
         return res.Replace(".prefab","");
     }
     
-
-    public StageData GetStage(int levelId){
-        var find = stages.Find(x=>x.levelId == levelId);
-        if(find == null){
-            Debug.LogError("Cant find stage with levelId: "+ levelId);
-        }
-        return find;
-    }
     
     public void AddNewObjectTypeViews(ObjectTypeView objectTypeView)
     {
@@ -273,8 +264,15 @@ public class GameData : SerializedScriptableObject
         UpdatePath();
         Save();
     }
-    
+#endif
 
+    public StageData GetStage(int levelId){
+        var find = stages.Find(x=>x.levelId == levelId);
+        if(find == null){
+            Debug.LogError("Cant find stage with levelId: "+ levelId);
+        }
+        return find;
+    }
     #endregion
 
     public Dictionary<string, string> prefabPaths = new Dictionary<string, string>();

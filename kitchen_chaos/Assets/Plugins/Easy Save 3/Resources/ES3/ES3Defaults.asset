@@ -66,6 +66,7 @@ MonoBehaviour:
     - QFSW.QC.UI
     - SingularityGroup.HotReload.Runtime
     - SingularityGroup.HotReload.Runtime.Public
+    - Tayx.Graphy
     - UIEffect
     - UIEffect_Demo
     showAdvancedSettings: 0

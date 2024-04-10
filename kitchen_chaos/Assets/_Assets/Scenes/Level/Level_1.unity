@@ -186,6 +186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: wall_orderwindow_decorated
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 20d2d5ff8d0aa9349b94f770e8059b4d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -266,6 +271,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -339,6 +349,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -904,6 +919,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (33)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -977,6 +997,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (57)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1329,6 +1354,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (50)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1402,6 +1432,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1554,6 +1589,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (32)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1807,6 +1847,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (59)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2194,6 +2239,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (38)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2268,6 +2318,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (27)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2329,7 +2384,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &398649173
 Transform:
@@ -2629,6 +2684,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2977,6 +3037,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3050,6 +3115,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (42)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3246,6 +3316,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3319,6 +3394,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (58)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3394,6 +3474,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3468,6 +3553,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: wall (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3541,6 +3631,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3800,6 +3895,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (45)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3873,6 +3973,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4081,6 +4186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (21)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4160,6 +4270,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (52)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4369,6 +4484,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (60)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4442,6 +4562,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (22)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4597,6 +4722,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4709,6 +4839,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4967,6 +5102,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5040,6 +5180,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall_half (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b9b9262e4a72664cb76c35d2e02323f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5197,6 +5342,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5474,6 +5624,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (62)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5616,6 +5771,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (39)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5888,6 +6048,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: wall_window_closed_curtains_red
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a7a34cb54629e5b45b0e4331f850067b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6070,6 +6235,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6194,6 +6364,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (51)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6492,6 +6667,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (29)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6565,6 +6745,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7428,6 +7613,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7596,6 +7786,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7805,6 +8000,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (37)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7969,6 +8169,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353217687}
   m_CullTransparentMesh: 1
+--- !u!1001 &1353411912
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Name
+      value: '[Graphy]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
 --- !u!1001 &1363318546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8031,6 +8328,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (28)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8106,6 +8408,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8180,6 +8487,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (46)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8253,6 +8565,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (48)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8515,6 +8832,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (31)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8588,6 +8910,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (43)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8663,6 +8990,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (36)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8736,6 +9068,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall_half
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1b9b9262e4a72664cb76c35d2e02323f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8811,6 +9148,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (44)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8884,6 +9226,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9009,6 +9356,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9167,6 +9519,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9240,6 +9597,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (54)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9315,6 +9677,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (61)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9388,6 +9755,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9658,6 +10030,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: pillar_A
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ffcb21b99d8e07148bf3fe385b029bf0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9731,6 +10108,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (30)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9806,6 +10188,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9879,6 +10266,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9959,6 +10351,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (56)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11052,6 +11449,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (35)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11285,6 +11687,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (26)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11683,6 +12090,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (63)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11852,6 +12264,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11925,6 +12342,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall_window_closed
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 30c590d5d80c8954abfa6a32a9a8c53f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12358,6 +12780,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: wall_window_closed (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 30c590d5d80c8954abfa6a32a9a8c53f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12431,6 +12858,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (53)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12506,6 +12938,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12579,6 +13016,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12654,6 +13096,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (25)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12728,6 +13175,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: wall (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12801,6 +13253,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: floor_kitchen_styleB (34)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12907,6 +13364,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (55)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12932,7 +13394,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1973943088
 Transform:
@@ -13425,6 +13887,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (49)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13598,6 +14065,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_kitchen_styleB (47)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 62d8ebaddb9164c42a1ebc4ccec5a5fc,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13671,6 +14143,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: wall (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9d996ff13f0d4f241806192c0abaab8d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14019,3 +14496,4 @@ SceneRoots:
   - {fileID: 1765138065}
   - {fileID: 395806833}
   - {fileID: 2004570419}
+  - {fileID: 1353411912}

@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
         GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
     }
 
-    private void GameManager_OnPlayerSpawn(object sender, Player e)
+    private void GameManager_OnPlayerSpawn(Player e)
     {
         SetFollowTarget(e.transform);
     }
