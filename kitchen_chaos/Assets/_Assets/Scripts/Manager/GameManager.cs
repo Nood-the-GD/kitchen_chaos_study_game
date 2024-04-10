@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnStateChanged;
     public event EventHandler OnGamePause;
     public event EventHandler OnGameUnPause;
-    public Action<Player> OnPlayerSpawn;
     #endregion
 
     #region Instance

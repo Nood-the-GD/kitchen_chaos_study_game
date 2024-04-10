@@ -14,6 +14,10 @@ public class SoundManager : MonoBehaviour
     {
         if(Instance == null) Instance = this;
     }
+    void OnEnable()
+    {
+        Player.OnPlayerSpawn += GameManager_OnPlayerSpawn;
+    }
     private void Start()
     {
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
@@ -21,7 +25,10 @@ public class SoundManager : MonoBehaviour
         CuttingCounter.OnCut += CuttingCounter_OnCut;
         BaseCounter.OnSomethingPlacedHere += BaseCounter_OnSomethingPlaceHere;
         TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
-        GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
+    }
+    void OnDisable()
+    {
+        Player.OnPlayerSpawn -= GameManager_OnPlayerSpawn;
     }
     #endregion
 

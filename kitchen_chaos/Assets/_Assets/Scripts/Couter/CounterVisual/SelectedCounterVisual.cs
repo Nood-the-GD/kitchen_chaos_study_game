@@ -15,17 +15,22 @@ public class SelectedCounterVisual : MonoBehaviour
     #region Unity functions
     void OnEnable()
     {
+        Player.OnPlayerSpawn += Player_OnPlayerSpawn;
     }
     private void Start()
     {
-        GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
         HideVisual();
+    }
+    void OnDisable()
+    {
+        Player.OnPlayerSpawn -= Player_OnPlayerSpawn;
     }
     #endregion
 
     #region Events functions
-    private void GameManager_OnPlayerSpawn(Player e)
+    private void Player_OnPlayerSpawn(Player e)
     {
+        Debug.Log("Visual Player Spawn " + this.gameObject.name);
         e.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
     private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)

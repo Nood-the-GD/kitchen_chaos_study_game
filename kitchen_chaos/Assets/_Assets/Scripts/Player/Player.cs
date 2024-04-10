@@ -13,6 +13,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #endregion
 
     #region Events
+    public static event Action<Player> OnPlayerSpawn;
     public event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     #endregion
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
-            GameManager.Instance.OnPlayerSpawn?.Invoke(this);
+            OnPlayerSpawn?.Invoke(this);
         }
         
         PhotonManager.s.currentGamePlayers.Add(this);
@@ -114,6 +115,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             SetSelectedCounter(null);
         }
+    }
+
+    void OnGUI()
+    {
+        Debug.DrawRay(transform.position, lastInteractDir, Color.yellow);
     }
     #endregion
 
@@ -253,15 +259,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Supports
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        if(this.selectedCounter != selectedCounter)
-        {
-            this.selectedCounter = selectedCounter;
+        Debug.Log("Selected counter: " + selectedCounter);
+        this.selectedCounter = selectedCounter;
 
-            OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
-            {
-                selectedCounter = selectedCounter
-            });
-        }
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedCounter = selectedCounter
+        });
     }
     public Transform GetKitchenObjectFollowTransform()
     {

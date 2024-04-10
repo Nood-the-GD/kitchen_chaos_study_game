@@ -14,12 +14,19 @@ public class CameraController : MonoBehaviour
         Instance = this;
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
     }
+    void OnEnable()
+    {
+        Player.OnPlayerSpawn += Player_OnPlayerSpawn;
+    }
     void Start()
     {
-        GameManager.Instance.OnPlayerSpawn += GameManager_OnPlayerSpawn;
+    }
+    void OnDisable()
+    {
+        Player.OnPlayerSpawn -= Player_OnPlayerSpawn;
     }
 
-    private void GameManager_OnPlayerSpawn(Player e)
+    private void Player_OnPlayerSpawn(Player e)
     {
         SetFollowTarget(e.transform);
     }
