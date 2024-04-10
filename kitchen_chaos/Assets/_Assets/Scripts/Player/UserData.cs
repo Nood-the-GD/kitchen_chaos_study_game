@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class UserSetting{
+    public static bool volume {
+        get => PlayerPrefs.GetInt("volume", 1) == 1;
+        set => PlayerPrefs.SetInt("volume", value ? 1 : 0);
+    }
+
+}
+
 [System.Serializable]
 public class UserData
 {

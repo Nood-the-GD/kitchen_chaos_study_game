@@ -28,5 +28,10 @@ public class MainMenuUI : MonoBehaviour
         if(!UserData.isInitName){
             SetUserNamePopup.ShowPopup();
         }
+
+    }
+
+    public void OnSettingBtnClick(){
+        SettingPopup.ShowPopup();
     }
 }
