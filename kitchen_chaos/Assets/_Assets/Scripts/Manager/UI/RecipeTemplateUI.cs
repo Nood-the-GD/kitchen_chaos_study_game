@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using static DeliveryManager;
 
-public class RecipeTemplate : MonoBehaviour
+public class RecipeTemplateUI : MonoBehaviour
 {
     #region Variables
     [SerializeField] private TextMeshProUGUI recipeNameText;
@@ -12,7 +12,6 @@ public class RecipeTemplate : MonoBehaviour
     [SerializeField] private IconTemplate iconTemplate;
     [SerializeField] private Slider waitingSlider;
     private List<IconTemplate> iconTemplateList= new List<IconTemplate>();
-    private RecipeSO recipeSO;
     #endregion
 
     #region Unity functions
@@ -22,10 +21,9 @@ public class RecipeTemplate : MonoBehaviour
     }
     #endregion
 
+    #region Public functions
     public void SetRecipeSO(RecipeSO recipeSO)
     {
-        this.recipeSO = recipeSO;
-
         for(int i = 0; i < recipeSO.kitchenObjectSOList.Count; i++)
         {
             if(i == iconTemplateList.Count)
@@ -50,10 +48,10 @@ public class RecipeTemplate : MonoBehaviour
             }
         }
     }
-
     public void UpdateTimer(TimerClass timerClass)
     {
         waitingSlider.maxValue = timerClass.maxTimer;
         waitingSlider.value = timerClass.timer;
     }
+    #endregion
 }

@@ -5,13 +5,22 @@ using UnityEngine;
 
 public class DeliveryManagerUI : MonoBehaviour
 {
+    #region Variables
     [SerializeField] private Transform container;
     [SerializeField] private Transform recipeTemplate;
-    private List<RecipeTemplate> recipeTemplateList= new List<RecipeTemplate>();
+    private List<RecipeTemplateUI> recipeTemplateList= new List<RecipeTemplateUI>();
+    #endregion
 
+    #region Unity functions
     private void Awake()
     {
         recipeTemplate.gameObject.SetActive(false);
+    }
+    private void Start()
+    {
+        DeliveryManager.Instance.OnRecipeAdded += DeliveryManager_OnRecipeSpawned;
+        DeliveryManager.Instance.OnRecipeRemove += DeliveryManager_OnRecipeCompleted;
+        UpdateVisual();
     }
     void Update()
     {
@@ -20,23 +29,20 @@ public class DeliveryManagerUI : MonoBehaviour
             recipeTemplateList[i].UpdateTimer(DeliveryManager.Instance.GetWaitingTimerClassList()[i]);
         }
     }
-    private void Start()
-    {
-        DeliveryManager.Instance.OnRecipeAdded += DeliveryManager_OnRecipeSpawned;
-        DeliveryManager.Instance.OnRecipeRemove += DeliveryManager_OnRecipeCompleted;
-        UpdateVisual();
-    }
+    #endregion
 
+    #region Events
     private void DeliveryManager_OnRecipeSpawned(object sender, System.EventArgs e)
     {
         UpdateVisual();
     }
-
     private void DeliveryManager_OnRecipeCompleted(object sender, System.EventArgs e)
     {
         UpdateVisual();
     }
+    #endregion
 
+    #region Update visual
     private void UpdateVisual()
     {
         List<RecipeSO> waitingRecipeSOList = DeliveryManager.Instance.GetWaitingRecipeSOList();
@@ -60,7 +66,9 @@ public class DeliveryManagerUI : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Private
     private void RemoveRecipeTemplate(int index)
     {
         Destroy(recipeTemplateList[index].gameObject);
@@ -69,9 +77,10 @@ public class DeliveryManagerUI : MonoBehaviour
     private void AddRecipeTemplate(RecipeSO recipeSO)
     {
         Transform recipeTemplateTrans = Instantiate(this.recipeTemplate, container);
-        RecipeTemplate recipeTemplate = recipeTemplateTrans.GetComponent<RecipeTemplate>();
+        RecipeTemplateUI recipeTemplate = recipeTemplateTrans.GetComponent<RecipeTemplateUI>();
         recipeTemplate.SetRecipeSO(recipeSO);
         recipeTemplate.gameObject.SetActive(true);
         recipeTemplateList.Add(recipeTemplate);
     }
+    #endregion
 }

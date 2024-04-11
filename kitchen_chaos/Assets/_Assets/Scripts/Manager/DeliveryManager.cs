@@ -73,15 +73,17 @@ public class DeliveryManager : MonoBehaviour
     }
     #endregion
 
+    #region Multiplay
     void CmdAddRecipe(int index){
         photonView.RPC("RPCAddRecipe", RpcTarget.All, index);
     }
-
     [PunRPC]
     void RPCAddRecipe(int index){
         AddOrder(index);
     }
+    #endregion
 
+    #region Deliver recipe
     public bool DeliverRecipe(PlateKitchenObject plateKitchenObject)
     {
         for(int i = 0; i < waitingRecipeSOList.Count; i++)
@@ -121,7 +123,9 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         return false; 
     }
+    #endregion
 
+    #region Private
     private void AddOrder(int index)
     {
         RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[index];
@@ -140,7 +144,9 @@ public class DeliveryManager : MonoBehaviour
         waitingTimerClassList.RemoveAt(index);
         OnRecipeRemove?.Invoke(this, EventArgs.Empty);
     }
+    #endregion
 
+    #region Get
     public List<RecipeSO> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;
@@ -149,9 +155,9 @@ public class DeliveryManager : MonoBehaviour
     {
         return waitingTimerClassList;
     }
-
     public int GetSuccessfulRecipePoint()
     {
         return recipeDeliveredPoint;
     }
+    #endregion
 }
