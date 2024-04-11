@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LeTai.TrueShadow.Demo
@@ -15,6 +16,7 @@ public class GradientSlider : MonoBehaviour
         image = GetComponent<Image>();
     }
 
+    [Button("Update color")]
     public void Set(float value)
     {
         if (!image) return;

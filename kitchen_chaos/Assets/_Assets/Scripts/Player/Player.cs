@@ -116,11 +116,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             SetSelectedCounter(null);
         }
     }
-
-    void OnGUI()
-    {
-        Debug.DrawRay(transform.position, lastInteractDir, Color.yellow);
-    }
     #endregion
 
     #region Movement
@@ -207,7 +202,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         if(!canMove)
         {
-
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
             canMove = !moveDir.x.IsInRange(-0.4f, 0.4f) && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance); // Check raycast on direction x
             if (canMove)

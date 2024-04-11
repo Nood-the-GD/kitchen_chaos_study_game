@@ -14,6 +14,7 @@ public class DeliveryManager : MonoBehaviour
     public static DeliveryManager Instance{get; private set;}
 
     [SerializeField] private RecipeListSO recipeListSO;
+    [SerializeField] private float waitingTimeForEachRecipe;
 
     private List<RecipeSO> waitingRecipeSOList;
     private float spawnRecipeTimer;
@@ -33,7 +34,7 @@ public class DeliveryManager : MonoBehaviour
         if(!PhotonNetwork.IsMasterClient)
             return;
 
-        //feature only for mobile, because in editor sometime need to test ofline
+        //feature only for mobile, because in editor sometime need to test of line
         if(PhotonNetwork.PlayerList.Length <2 && !Application.isEditor){
             return;
         }
@@ -51,6 +52,15 @@ public class DeliveryManager : MonoBehaviour
                 CmdAddRecipe(index);
             }
         }
+
+        foreach(var recipe in waitingRecipeSOList)
+        {
+            recipe.waitingTime -= Time.deltaTime;
+            if(recipe.waitingTime <= 0f)
+            {
+
+            }
+        }
     }
 
     void CmdAddRecipe(int index){
@@ -60,11 +70,10 @@ public class DeliveryManager : MonoBehaviour
     [PunRPC]
     void RPCAddRecipe(int index){
         RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[index];
+        waitingRecipeSO.waitingTime = this.waitingTimeForEachRecipe;
         waitingRecipeSOList.Add(waitingRecipeSO);
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
-
-
 
     public bool DeliverRecipe(PlateKitchenObject plateKitchenObject)
     {
@@ -110,6 +119,12 @@ public class DeliveryManager : MonoBehaviour
     public List<RecipeSO> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;
+    }
+
+    private void TimeOutRecipe(RecipeSO recipeSO)
+    {
+        // Minus point
+        waitingRecipeSOList.Remove(recipeSO);
     }
 
     public int GetSuccessfulRecipePoint()

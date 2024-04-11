@@ -7,6 +7,7 @@ public class RecipeSO : ScriptableObject
 {
     public List<KitchenObjectSO> kitchenObjectSOList;
     public string recipeName;
+    public float waitingTime;
     public int Point {get 
     {
             int point = 0;
