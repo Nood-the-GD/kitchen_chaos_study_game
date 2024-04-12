@@ -24,7 +24,6 @@ public class DeliveryManagerUI : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log("recipeTemplateList.Count: " + recipeTemplateList.Count);
         for(int i = 0; i < recipeTemplateList.Count; i++)
         {
             recipeTemplateList[i].UpdateTimer(DeliveryManager.Instance.GetWaitingTimerClassList()[i]);

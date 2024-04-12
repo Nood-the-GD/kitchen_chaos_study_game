@@ -63,8 +63,9 @@ public class DeliveryManager : MonoBehaviour
 
         for(int i = 0; i < waitingTimerClassList.Count; i++)
         {
-            Debug.Log("Update timerclass");
             waitingTimerClassList[i].timer -= Time.deltaTime;
+            
+            CmdUpdateTimerClass(i, waitingTimerClassList[i].timer);
             if(waitingTimerClassList[i].timer <= 0f)
             {
                 CmdRemoveRecipe(i);
@@ -82,6 +83,10 @@ public class DeliveryManager : MonoBehaviour
     {
         photonView.RPC("RPCRemoveRecipe", RpcTarget.All, index);
     }
+    void CmdUpdateTimerClass(int index, float value)
+    {
+        photonView.RPC("RPCUpdateTimerClass", RpcTarget.All, new object[] { index, value });
+    }
     [PunRPC]
     void RPCAddRecipe(int recipeIndex)
     {
@@ -91,6 +96,11 @@ public class DeliveryManager : MonoBehaviour
     void RPCRemoveRecipe(int recipeIndex)
     {
         RemoveOrder(recipeIndex);
+    }
+    [PunRPC]
+    void RPCUpdateTimerClass(int index, float timer)
+    {
+        waitingTimerClassList[index].timer = timer;
     }
     #endregion
 

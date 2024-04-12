@@ -65,15 +65,24 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         if(!GameManager.Instance.IsGamePlaying()) return;
 
-        if (selectedCounter != null) selectedCounter.CmdChop(viewId);
+        if (selectedCounter != null) 
+        {
+            selectedCounter.CmdChop(viewId);
+            Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
+            this.transform.forward = direction;
+        }
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
         if(!GameManager.Instance.IsGamePlaying()) return;
 
-        if(selectedCounter != null) selectedCounter.CmdInteract(viewId);
-        //selectedCounter
+        if(selectedCounter != null) 
+        {
+            selectedCounter.CmdInteract(viewId);
+            Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
+            this.transform.forward = direction;
+        }
     }
     #endregion
 
@@ -102,6 +111,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void HandleMovement()
     {
         GetMovementInput();
+        HandleRotation(moveDir);
         if(MovementTypeController.Instance.isMobileController)
         {
             HandleMobileMovement();
@@ -185,11 +195,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         // Set if player is walking or not
         isWalking = direction != Vector3.zero;
         SetWalking(isWalking);
+    }
+
+    private void HandleRotation(Vector3 direction)
+    {
+        if (!photonView.IsMine) return;
 
         // Rotate player to calculated direction
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
     }
-
 
     private bool CanMove(Vector3 direction, float distance)
     {
