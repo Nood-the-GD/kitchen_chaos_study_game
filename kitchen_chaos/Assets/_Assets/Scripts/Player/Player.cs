@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
@@ -34,7 +30,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private bool isWalking;
     private float rotateSpeed = 20f;
     private float playerSize = 0.7f;
-    private float playerRadius = 2f;
+    private float playerRadius = 1f;
     private float moveDistance;
     private Vector3 moveDir = Vector3.zero;
     #endregion
@@ -84,32 +80,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Interactions
     private void HandleInteraction()
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
-
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-
-        if (moveDir != Vector3.zero)
+        Vector3 playerInputDir = gameInput.GetMovementVectorNormalize().ToVector3XZ(transform.position.y);
+        if (playerInputDir != Vector3.zero)
         {
-            // Rotate to player input direction 
-            Vector3 tempDir = Vector3.Slerp(lastInteractDir, moveDir, rotateSpeed * Time.deltaTime);
-            lastInteractDir = tempDir;
+            lastInteractDir = playerInputDir;
         }
 
-        float interactDistance = 2f;
-        if(Physics.Raycast(transform.position, lastInteractDir, out RaycastHit hitInfo, interactDistance))
+        const float maxInteractionDistance = 2;
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit hitInfo, maxInteractionDistance))
         {
-            if(hitInfo.transform.TryGetComponent(out BaseCounter baseCounter))
-            {
-                //Has counter
-                if(baseCounter != selectedCounter)
-                {
-                    SetSelectedCounter(baseCounter);
-                }
-            }
-            else
-            {
-               SetSelectedCounter(null);
-            }
+            SetSelectedCounter(hitInfo.transform.GetComponent<BaseCounter>());
         }
         else
         {
@@ -136,108 +116,88 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(!photonView.IsMine)
             return;
 
-        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
-
-        moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        moveDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
         moveDistance = moveSpeed * Time.deltaTime;
     }
+    /**
+     * Handle player movement on PC platform
+     * Check if movement is possible and make movement if it is
+     */
     private void HandlePCMovement()
     {
-        bool canMove;
-        canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance); // if any block on the way
+        if (!photonView.IsMine) return;
+        // Get normalized direction of movement
+        var direction = moveDir;
 
-        if (!canMove)
+        // Check if movement is possible
+        var movementCheck = CanMove(direction, moveDistance);
+
+        // If movement is not possible
+        if (!movementCheck)
         {
-            //Cannot move toward moveDir
-            //Try to move on X direction
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance); // Check raycast on direction x
+            // Check if movement on X axis is possible
+            bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance);
 
-            if (canMove)
-            {
-                //Can move only on the X
-                moveDir = moveDirX;
-            }
-            else
-            {
-                //Cannot move on the X
-                //Try to move on the Z
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirZ, moveDistance); // check raycast on direction z
+            // Check if movement on Z axis is possible
+            bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance);
 
-                if (canMove)
-                {
-                    //Can move on the Z
-                    moveDir = moveDirZ;
-                }
-                else
-                {
-                    //Cannot move any direction
-                }
-            }
+            // Set direction that is possible
+            direction = xCheck ? new Vector3(direction.x, 0, 0) : zCheck ? new Vector3(0, 0, direction.z) : Vector3.zero;
         }
 
-        if (canMove)
-            transform.position += moveDir * moveDistance;
+        // Make movement on calculated direction
+        transform.position += direction.normalized * moveDistance;
 
-
-        isWalking = moveDir != Vector3.zero;
+        // Set if player is walking or not
+        isWalking = direction != Vector3.zero;
         SetWalking(isWalking);
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+
+        // Rotate player to calculated direction
+        transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
     }
+
     private void HandleMobileMovement()
     {
-        if(!photonView.IsMine)
-            return;
+        if (!photonView.IsMine) return;
 
-        Vector2 inputVector = gameInput.GetMovementVectorNormalize();
+        // Get normalized direction of movement
+        var direction = moveDir;
 
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-        bool canMove;
+        // Check if movement is possible
+        var movementCheck = CanMove(direction, moveDistance);
 
-        float moveDistance = moveSpeed * Time.deltaTime;
-        float playerSize = 0.7f;
-        float playerRadius = 2f;
-        canMove = !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDir, moveDistance);
-
-        if(!canMove)
+        // If movement is not possible
+        if (!movementCheck)
         {
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = !moveDir.x.IsInRange(-0.4f, 0.4f) && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirX, moveDistance); // Check raycast on direction x
-            if (canMove)
-            {
-                //Can move only on the X
-                moveDir = moveDirX;
-            }
-            else
-            {
-                //Cannot move on the X
-                //Try to move on the Z
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = !moveDir.z.IsInRange(-0.4f, 0.4f) && !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, moveDirZ, moveDistance); // check raycast on direction z
+            bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance) && !direction.x.IsInRange(-0.2f, 0.2f);
+            // Check if movement on X axis is possible
 
-                if (canMove)
-                {
-                    //Can move on the Z
-                    moveDir = moveDirZ;
-                }
-                else
-                {
-                    //Cannot move any direction
-                }
-            }
+            // Check if movement on Z axis is possible
+            bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance) && !direction.z.IsInRange(-0.2f, 0.2f);
+
+            // Set direction that is possible
+            direction = xCheck ? new Vector3(direction.x, 0, 0) : zCheck ? new Vector3(0, 0, direction.z) : Vector3.zero;
         }
 
-        if (canMove)
-            transform.position += moveDir * moveDistance;
+        // Make movement on calculated direction
+        transform.position += direction.normalized * moveDistance;
 
-
-        isWalking = moveDir != Vector3.zero;
+        // Set if player is walking or not
+        isWalking = direction != Vector3.zero;
         SetWalking(isWalking);
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+
+        // Rotate player to calculated direction
+        transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
     }
 
-    void SetWalking(bool isWalking){
+
+    private bool CanMove(Vector3 direction, float distance)
+    {
+       return !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, direction, distance);
+    }
+
+    void SetWalking(bool isWalking)
+    {
         if(photonView.IsMine)
             photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }

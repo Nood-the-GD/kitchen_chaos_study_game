@@ -66,7 +66,6 @@ public class DeliveryManager : MonoBehaviour
             waitingTimerClassList[i].timer -= Time.deltaTime;
             if(waitingTimerClassList[i].timer <= 0f)
             {
-                // Debug.Log("Timer out");
                 RemoveOrder(i);
             }
         }
@@ -74,76 +73,114 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Multiplay
-    void CmdAddRecipe(int index){
+    void CmdAddRecipe(int index)
+    {
         photonView.RPC("RPCAddRecipe", RpcTarget.All, index);
     }
     [PunRPC]
-    void RPCAddRecipe(int index){
-        AddOrder(index);
+    void RPCAddRecipe(int recipeIndex)
+    {
+        AddOrder(recipeIndex);
     }
     #endregion
 
     #region Deliver recipe
-    public bool DeliverRecipe(PlateKitchenObject plateKitchenObject)
+    /// <summary>
+    /// Check if the given plate contains a valid recipe
+    /// </summary>
+    /// <param name="plate">The plate that the player try to deliver</param>
+    /// <returns>True if the plate contain a valid recipe, false otherwise</returns>
+    public bool DeliverRecipe(PlateKitchenObject plate)
     {
-        for(int i = 0; i < waitingRecipeSOList.Count; i++)
+        // Go through all the waiting recipes
+        foreach (RecipeSO recipe in waitingRecipeSOList)
         {
-            RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
-
-            if(waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
+            // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
+            if (recipe.kitchenObjectSOList.Count == plate.GetKitchenObjectSOList().Count)
             {
-                bool isTrue = false;
-                //Has the same ingredient number
-                foreach(KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
+                // Set to true until we find a mismatch
+                bool isMatch = true;
+                // Go through all the ingredient in the plate
+                foreach (KitchenObjectSO ingredient in plate.GetKitchenObjectSOList())
                 {
-                    if(waitingRecipeSO.kitchenObjectSOList.Contains(plateKitchenObjectSO))
+                    // Check if the recipe contains the ingredient
+                    if (!recipe.kitchenObjectSOList.Contains(ingredient))
                     {
-                        //Ingredient on plate is in this recipe
-                        isTrue = true;
-                        continue;
-                    }
-                    else
-                    {
-                        //Ingredient on plate is not in this recipe
-                        isTrue = false;
+                        // If not, set isMatch to false and break the loop
+                        isMatch = false;
                         break;
                     }
                 }
-                if(isTrue == true) 
+                // If all the ingredient match
+                if (isMatch)
                 {
-                    // Delivery Success
-                    RemoveOrder(i);
+                    // Remove the recipe from the waiting list
+                    RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
+                    // Invoke the OnRecipeSuccess event
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
-                    recipeDeliveredPoint += waitingRecipeSO.Point;
+                    // Add the point of the recipe to the delivered point
+                    recipeDeliveredPoint += recipe.Point;
+                    // Update the UI
                     PointUI.Instance.UpdateUI();
+                    // Return true
                     return true;
                 }
             }
         }
+        // None of the recipe match
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
-        return false; 
+        // Return false
+        return false;
     }
+
+
     #endregion
 
     #region Private
     private void AddOrder(int index)
     {
-        RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[index];
-        waitingRecipeSOList.Add(waitingRecipeSO);
-        TimerClass timerClass = new TimerClass()
+        // Check that index is valid
+        if (index < 0 || index >= recipeListSO.recipeSOList.Count)
         {
-            maxTimer = this.waitingTimeForEachRecipe,
-            timer = this.waitingTimeForEachRecipe
-        };
-        waitingTimerClassList.Add(timerClass);
+            Debug.LogError($"AddOrder: index {index} is out of range");
+            return;
+        }
+
+        // Add the recipe to the waiting list
+        waitingRecipeSOList.Add(recipeListSO.recipeSOList[index]);
+        // Add a new timer to the list
+        waitingTimerClassList.Add(new TimerClass 
+        { 
+            maxTimer = waitingTimeForEachRecipe, 
+            timer = waitingTimeForEachRecipe 
+        });
+
+        // Invoke the OnRecipeAdded event
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
-    private void RemoveOrder(int index)
+
+
+    private void RemoveOrder(int recipeIndex)
     {
-        waitingRecipeSOList.RemoveAt(index);
-        waitingTimerClassList.RemoveAt(index);
+        // Check that recipeIndex is valid
+        if (recipeIndex < 0 || recipeIndex >= waitingRecipeSOList.Count)
+        {
+            Debug.LogError($"RemoveOrder: recipeIndex {recipeIndex} is out of range");
+            return;
+        }
+        // Check that both lists are the same size
+        if (waitingRecipeSOList.Count != waitingTimerClassList.Count)
+        {
+            Debug.LogError($"RemoveOrder: waitingRecipeSOList and waitingTimerClassList are not the same size");
+            return;
+        }
+
+        waitingRecipeSOList.RemoveAt(recipeIndex);
+        waitingTimerClassList.RemoveAt(recipeIndex);
+        // Invoke the OnRecipeRemove event
         OnRecipeRemove?.Invoke(this, EventArgs.Empty);
     }
+
     #endregion
 
     #region Get

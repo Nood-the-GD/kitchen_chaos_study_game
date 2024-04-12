@@ -684,6 +684,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.04487994
       objectReference: {fileID: 0}
+    - target: {fileID: 6903636775753724371, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 119
+      objectReference: {fileID: 0}
     - target: {fileID: 6957221379377896709, guid: 1c5dda3c7cd3cf742afcade5419faeab,
         type: 3}
       propertyPath: m_LocalRotation.w
