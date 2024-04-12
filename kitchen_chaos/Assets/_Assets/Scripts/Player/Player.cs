@@ -80,7 +80,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Interactions
     private void HandleInteraction()
     {
-        Vector3 playerInputDir = gameInput.GetMovementVectorNormalize().ToVector3XZ(transform.position.y);
+        Vector3 playerInputDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
         if (playerInputDir != Vector3.zero)
         {
             lastInteractDir = playerInputDir;

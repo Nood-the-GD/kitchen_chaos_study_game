@@ -18,12 +18,13 @@ public class DeliveryManagerUI : MonoBehaviour
     }
     private void Start()
     {
-        DeliveryManager.Instance.OnRecipeAdded += DeliveryManager_OnRecipeSpawned;
-        DeliveryManager.Instance.OnRecipeRemove += DeliveryManager_OnRecipeCompleted;
+        DeliveryManager.Instance.OnRecipeAdded += DeliveryManager_OnRecipeAdded;
+        DeliveryManager.Instance.OnRecipeRemove += DeliveryManager_OnRecipeRemoved;
         UpdateVisual();
     }
     void Update()
     {
+        Debug.Log("recipeTemplateList.Count: " + recipeTemplateList.Count);
         for(int i = 0; i < recipeTemplateList.Count; i++)
         {
             recipeTemplateList[i].UpdateTimer(DeliveryManager.Instance.GetWaitingTimerClassList()[i]);
@@ -32,11 +33,11 @@ public class DeliveryManagerUI : MonoBehaviour
     #endregion
 
     #region Events
-    private void DeliveryManager_OnRecipeSpawned(object sender, System.EventArgs e)
+    private void DeliveryManager_OnRecipeAdded(object sender, System.EventArgs e)
     {
         UpdateVisual();
     }
-    private void DeliveryManager_OnRecipeCompleted(object sender, System.EventArgs e)
+    private void DeliveryManager_OnRecipeRemoved(object sender, System.EventArgs e)
     {
         UpdateVisual();
     }

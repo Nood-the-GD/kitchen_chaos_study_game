@@ -45,7 +45,7 @@ public class DeliveryManager : MonoBehaviour
             return;
 
         //feature only for mobile, because in editor sometime need to test of line
-        if(PhotonNetwork.PlayerList.Length <2 && !Application.isEditor){
+        if(PhotonNetwork.PlayerList.Length < 2 && !Application.isEditor){
             return;
         }
 
@@ -63,10 +63,11 @@ public class DeliveryManager : MonoBehaviour
 
         for(int i = 0; i < waitingTimerClassList.Count; i++)
         {
+            Debug.Log("Update timerclass");
             waitingTimerClassList[i].timer -= Time.deltaTime;
             if(waitingTimerClassList[i].timer <= 0f)
             {
-                RemoveOrder(i);
+                CmdRemoveRecipe(i);
             }
         }
     }
@@ -77,10 +78,19 @@ public class DeliveryManager : MonoBehaviour
     {
         photonView.RPC("RPCAddRecipe", RpcTarget.All, index);
     }
+    void CmdRemoveRecipe(int index)
+    {
+        photonView.RPC("RPCRemoveRecipe", RpcTarget.All, index);
+    }
     [PunRPC]
     void RPCAddRecipe(int recipeIndex)
     {
         AddOrder(recipeIndex);
+    }
+    [PunRPC]
+    void RPCRemoveRecipe(int recipeIndex)
+    {
+        RemoveOrder(recipeIndex);
     }
     #endregion
 

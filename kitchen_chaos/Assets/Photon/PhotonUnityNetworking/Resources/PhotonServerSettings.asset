@@ -46,6 +46,7 @@ MonoBehaviour:
   - RPCAddRecipe
   - RpcSwitchStage
   - RPCCallFunction
+  - RPCRemoveRecipe
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
