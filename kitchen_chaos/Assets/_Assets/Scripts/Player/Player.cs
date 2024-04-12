@@ -49,6 +49,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
             OnPlayerSpawn?.Invoke(this);
+            var colorSkin = UserSetting.colorSkin;
+            SetSkinColor(colorSkin);
         }
         
         PhotonManager.s.currentGamePlayers.Add(this);
@@ -215,6 +217,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(photonView.IsMine)
             photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
+
+    void SetSkinColor(ColorSkin colorSkin){
+        if(photonView.IsMine)
+            photonView.RPC("RPCSetColorSkin", RpcTarget.All, colorSkin.colorCode);
+    }
     #endregion
 
     #region Multiplay
@@ -222,6 +229,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     void RPCSetWalking(bool isWalking){
         this.isWalking = isWalking;
     }
+    [PunRPC]
+    void RPCSetColorSkin(string id){
+        var skin = GameData.s.GetColorSkin(id);
+        GetComponentInChildren<SkinnedMeshRenderer>().material = skin.material;
+    }
+
+    
     #endregion
 
     #region Supports

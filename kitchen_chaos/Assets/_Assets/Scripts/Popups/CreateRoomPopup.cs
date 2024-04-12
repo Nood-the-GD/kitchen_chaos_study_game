@@ -177,6 +177,10 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         roomName.text = "ID: "+PhotonNetwork.CurrentRoom.Name;
     }
 
+    public void OnClickChangeColor(){
+        ChoseColorPopup.ShowPopup();
+    }
+
     
 
     

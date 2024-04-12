@@ -287,7 +287,9 @@ public class GameData : SerializedScriptableObject
     [ListDrawerSettings(ShowIndexLabels = true, NumberOfItemsPerPage = 10)]
     public Dictionary<string, ObjectTypeView> objectTypeViews = new Dictionary<string, ObjectTypeView>();
     
-
+    public ColorSkin GetColorSkin(string id){
+        return colorElements.Find(x=>x.colorCode == id);
+    }
 
 
     public List<InGameProduct> inGameProducts;
