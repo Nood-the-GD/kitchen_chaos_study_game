@@ -66,8 +66,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             if(player.photonView.ViewID == viewId)
                 return player;
         }
+        
         Debug.Log("Player not found: "+ viewId);
         return null;
+
     }
 
 #endregion

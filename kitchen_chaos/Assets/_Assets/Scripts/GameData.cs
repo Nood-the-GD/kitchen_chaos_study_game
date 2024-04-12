@@ -32,6 +32,12 @@ public class InGameProduct{
         public bool isRealMoney;
         public bool autoSetPrice = true;
 }
+[System.Serializable]
+public class ColorSkin{
+    public Color color;
+    public string colorCode;
+    public Material material;
+}
 
 [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]
 public class GameData : SerializedScriptableObject
@@ -53,6 +59,7 @@ public class GameData : SerializedScriptableObject
     }
 
     public List<StageData> stages;
+    public List<ColorSkin> colorElements;
   
     #region editor
     bool showEdit;

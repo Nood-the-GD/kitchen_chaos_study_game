@@ -7,7 +7,13 @@ public class UserSetting{
         get => PlayerPrefs.GetInt("volume", 1) == 1;
         set => PlayerPrefs.SetInt("volume", value ? 1 : 0);
     }
-
+    public static ColorSkin colorSkin{
+        get{
+            var colorCode = PlayerPrefs.GetString("colorSkin", "default");
+            return GameData.s.colorElements.Find(x => x.colorCode == colorCode);
+        }
+        set => PlayerPrefs.SetString("colorSkin", value.colorCode);
+    }
 }
 
 [System.Serializable]
