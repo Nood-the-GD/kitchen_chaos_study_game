@@ -12,10 +12,10 @@ public class StageData{
     public string sceneName;
     public int star{
         get{
-            return PlayerPrefs.GetInt("level."+levelId, 0);
+            return PlayerPrefs.GetInt("level." + levelId, 0);
         }
         set{
-            PlayerPrefs.SetInt("level."+levelId, value);
+            PlayerPrefs.SetInt("level." + levelId, value);
         }
     }
 
@@ -44,17 +44,15 @@ public class StageUI : MonoBehaviour
     public TextMeshProUGUI stageText;
     Action<StageData> switchStage;
     public StageData stageData;
+    [SerializeField] private StarController levelStarController;
+
     public void SetData(StageData data, Action<StageData> onSwitchStage){
         stageData = data;
         switchStage = onSwitchStage;
         //Set data to UI
-        for (int i = 0; i < star.Length; i++)
-        {
-            star[i].gameObject.SetActive(i<data.star);
-        }
         stageUI.sprite = data.isUnlocked?unSelectStageSprite:lockStageSprite;
-
         stageText.text = data.levelId.ToString();
+        levelStarController.ShowStar(data.star);
     }
 
     public void Unselect(){
@@ -67,6 +65,5 @@ public class StageUI : MonoBehaviour
 
     public void SelectStage(){
         switchStage?.Invoke(stageData);
-        
     }
 }

@@ -39,8 +39,18 @@ public class DeliveryManager : MonoBehaviour
     {
         if(Instance == null) Instance = this;
     }
+    void Start()
+    {
+        if(PhotonNetwork.IsMasterClient)
+            StartCoroutine(CR_UpdateTimerClass());
+    }
     private void Update()
     {
+        for(int i = 0; i < waitingTimerClassList.Count; i++)
+        {
+            waitingTimerClassList[i].timer -= Time.deltaTime;
+        }
+
         if(!PhotonNetwork.IsMasterClient)
             return;
 
@@ -63,9 +73,6 @@ public class DeliveryManager : MonoBehaviour
 
         for(int i = 0; i < waitingTimerClassList.Count; i++)
         {
-            waitingTimerClassList[i].timer -= Time.deltaTime;
-            
-            CmdUpdateTimerClass(i, waitingTimerClassList[i].timer);
             if(waitingTimerClassList[i].timer <= 0f)
             {
                 CmdRemoveRecipe(i);
@@ -100,7 +107,23 @@ public class DeliveryManager : MonoBehaviour
     [PunRPC]
     void RPCUpdateTimerClass(int index, float timer)
     {
-        waitingTimerClassList[index].timer = timer;
+        if(waitingTimerClassList[index] != null)
+            waitingTimerClassList[index].timer = timer;
+    }
+    #endregion
+
+    #region Delay functions
+    private IEnumerator CR_UpdateTimerClass()
+    {
+        while(GameManager.Instance.IsGameOver() == false)
+        {
+            yield return new WaitForSeconds(1f);
+
+            for(int i = 0; i < waitingTimerClassList.Count; i++)
+            {
+                CmdUpdateTimerClass(i, waitingTimerClassList[i].timer);
+            }
+        }
     }
     #endregion
 

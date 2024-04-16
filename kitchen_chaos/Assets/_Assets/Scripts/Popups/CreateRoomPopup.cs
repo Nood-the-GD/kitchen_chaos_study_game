@@ -18,6 +18,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public Image previewImage;
     public GameObject previewImageParent;
     public GameObject text;
+    [SerializeField] private StarController currentLevelStarController;
     [HideInInspector]public StageData selectStage = null;
 
     public GameObject stageParent;
@@ -60,7 +61,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         if(order.receiver != nameof(CreateRoomPopup)) return;
 
         if(order.functionName == CMD_SWITCH_STAGE){
-            RpcSwitchStage((int)order.data[0]);
+            RpcSwitchStage((int)order.data[0], (int)order.data[1]);
         }
         if(order.functionName == CMD_NEXT_SCENE){
             PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
@@ -74,7 +75,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
         
         if(PhotonNetwork.IsMasterClient){
-            CmdSwitchStage(selectStage.levelId);
+            CmdSwitchStage(selectStage.levelId, selectStage.star);
         }
 
     }
@@ -119,21 +120,20 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             
         }
 
-        CmdSwitchStage(stages[0].levelId);
+        CmdSwitchStage(stages[0].levelId, stages[0].star);
     }
 
     void OnSwitchStage(StageData stageData){
-        CmdSwitchStage(stageData.levelId);
+        CmdSwitchStage(stageData.levelId, stageData.star);
     }
 
-    void CmdSwitchStage(int id){
+    void CmdSwitchStage(int id, int star){
         Debug.Log("CmdSwitchStage " + id);
         var order = new CmdOrder(nameof(CreateRoomPopup),CMD_SWITCH_STAGE, id);
         PhotonManager.s.CmdCallFunction(order);
-
     }
 
-    void RpcSwitchStage(int id){
+    void RpcSwitchStage(int id, int star){
         Debug.Log("RpcSwitchStage " + id);
         currentSceneId = id;
         var stageData = GameData.s.GetStage(id);
@@ -144,6 +144,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
                 stage.Unselect();
         }
 
+        currentLevelStarController.ShowStar(star);
         previewImage.sprite = stageData.previewImage;
         selectStage = stageData;
 
