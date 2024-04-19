@@ -1563,6 +1563,7 @@ MonoBehaviour:
   stageData:
     levelId: 1
     sceneName: Level_2
+    pointTarget: 000000000000000000000000
     previewImage: {fileID: 21300000, guid: dd7f95e4d24fc494988e3a62a5ddb12d, type: 3}
   levelStarController: {fileID: 5792435740466330700}
 --- !u!114 &1751688725533227788
@@ -2174,6 +2175,7 @@ MonoBehaviour:
   stageData:
     levelId: 3
     sceneName: GameScene
+    pointTarget: 000000000000000000000000
     previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
   levelStarController: {fileID: 6659652540161446945}
 --- !u!114 &6984438615919815365
@@ -2886,6 +2888,7 @@ MonoBehaviour:
   stageData:
     levelId: 0
     sceneName: Level_1
+    pointTarget: 000000000000000000000000
     previewImage: {fileID: 21300000, guid: 9213126f41c37f04284c91247e5885a8, type: 3}
   levelStarController: {fileID: 7863027061239448150}
 --- !u!114 &5430501432936720981
@@ -3275,6 +3278,7 @@ MonoBehaviour:
   stageData:
     levelId: 2
     sceneName: GameScene
+    pointTarget: 000000000000000000000000
     previewImage: {fileID: 21300000, guid: d46ca34d7cc6c4ab6b04fc368b780d5c, type: 3}
   levelStarController: {fileID: 4675840159267994219}
 --- !u!114 &1959906318993512256
@@ -4305,9 +4309,9 @@ MonoBehaviour:
   photonView: {fileID: 596262831874706050}
   stageUIs:
   - {fileID: 7032952723288509510}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2486012015666356871}
+  - {fileID: 5785438784529389967}
+  - {fileID: 6399792822446534807}
   previewImage: {fileID: 6683893163181056729}
   previewImageParent: {fileID: 1558494215088044701}
   text: {fileID: 5341771969000161875}
@@ -4315,6 +4319,7 @@ MonoBehaviour:
   selectStage:
     levelId: 0
     sceneName: 
+    pointTarget: 000000000000000000000000
     previewImage: {fileID: 0}
   stageParent: {fileID: 2725029679139810495}
 --- !u!114 &596262831874706050

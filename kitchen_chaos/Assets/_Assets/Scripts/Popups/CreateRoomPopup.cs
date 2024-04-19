@@ -41,6 +41,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
 
     void Start(){
+        currentSceneId = 0;
         RefreshUI();
         SetupStages();
         stageParent.SetActive(PhotonNetwork.IsMasterClient);
@@ -64,6 +65,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             RpcSwitchStage((int)order.data[0], (int)order.data[1]);
         }
         if(order.functionName == CMD_NEXT_SCENE){
+            GameManager.levelId = currentSceneId;
             PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
         }
     }
@@ -129,7 +131,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
     void CmdSwitchStage(int id, int star){
         Debug.Log("CmdSwitchStage " + id);
-        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_SWITCH_STAGE, id);
+        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_SWITCH_STAGE, id, star);
         PhotonManager.s.CmdCallFunction(order);
     }
 

@@ -256,6 +256,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     
 
+    public void CmdEndGame(){
+        photonView.RPC(nameof(RPCEndGame), RpcTarget.All);
+    } 
+
+    [PunRPC]
+    public void RPCEndGame(){
+        TimeupPopup.ShowPopup().SetData(GameManager.getStageData ,DeliveryManager.recipeDeliveredPoint);
+
+    }
+
 
     public void OnSpawnInventory(){
         //photonView.RPC(nameof(RPCOnSpawnInventory), RpcTarget.Others);

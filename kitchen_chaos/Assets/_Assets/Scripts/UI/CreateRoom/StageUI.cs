@@ -19,6 +19,9 @@ public class StageData{
         }
     }
 
+    public int[] pointTarget = new int[3];
+
+
     public bool isUnlocked{
         get{
             return PlayerPrefs.GetInt("level."+levelId+".unlocked", 0) == 1;
@@ -30,6 +33,13 @@ public class StageData{
 
     public Sprite previewImage;
 
+    public void ApplyNewScore(int score){
+        for(int i = 0; i < pointTarget.Length; i++){
+            if(score >= pointTarget[i]){
+                star = i + 1;
+            }
+        }
+    }
 
 }
 

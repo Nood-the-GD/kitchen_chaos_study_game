@@ -30,14 +30,16 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
-    public int recipeDeliveredPoint = 0;
+    public static int recipeDeliveredPoint = 0;
     public PhotonView photonView;
     #endregion
 
     #region Unity functions
     private void Awake()
     {
+        
         if(Instance == null) Instance = this;
+        recipeDeliveredPoint = 0;
         waitingTimeForEachRecipe = recipeListSO.waitingTimeForEachRecipe;
     }
     void Start()

@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPCRemoveRecipe
   - RPCUpdateTimerClass
   - RPCSetColorSkin
+  - RPCEndGame
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

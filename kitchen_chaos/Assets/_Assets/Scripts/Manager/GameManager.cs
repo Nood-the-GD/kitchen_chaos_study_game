@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
     private float countdownToStartTimer = 3f;
     private bool isGamePause = false;
     public Transform[] spawnPoints;
+    public static int levelId;
+    public static StageData getStageData{
+        get{
+            return GameData.s.GetStage(levelId);
+        }
+    }
     #endregion
 
     #region Unity events
@@ -94,7 +100,7 @@ public class GameManager : MonoBehaviour
     private void GameInput_OnPauseAction(object sender, System.EventArgs e)
     {
         PauseGame();
-    }
+}
     #endregion
 
     #region Support
