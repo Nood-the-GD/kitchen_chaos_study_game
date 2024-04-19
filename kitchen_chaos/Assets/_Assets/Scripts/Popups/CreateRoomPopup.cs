@@ -174,9 +174,11 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             playerUIElements[i].SetData(PhotonNetwork.PlayerList[i]);
         }
 
-        var activateStartButton = roomPlayer == 2 && PhotonNetwork.IsMasterClient;
+        var enoughPlayer = roomPlayer == 2;
+        var activateStartButton = enoughPlayer && PhotonNetwork.IsMasterClient;
+        
         startButton.gameObject.SetActive(activateStartButton);
-        text.SetActive(!activateStartButton);
+        text.SetActive(!enoughPlayer);
         roomName.text = "ID: "+PhotonNetwork.CurrentRoom.Name;
     }
 

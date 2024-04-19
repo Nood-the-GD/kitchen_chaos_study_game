@@ -113,6 +113,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     void Init(){
+        PhotonNetwork.NickName = UserData.userName;
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if(autoConnectToPhotonTest){
             //Debug.Log("starting offline mode");

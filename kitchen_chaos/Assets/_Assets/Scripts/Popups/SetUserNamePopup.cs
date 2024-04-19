@@ -19,7 +19,7 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
 
     public void Next(){
         UserData.userName = userName;
-        PhotonNetwork.NickName = name;
+        PhotonNetwork.NickName = userName;
         HidePopup();
     }
 
