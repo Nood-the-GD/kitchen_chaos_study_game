@@ -12,7 +12,6 @@ public class SelectModePopup : BasePopup<SelectModePopup>
     public void RandomMatch(){
         
         PhotonNetwork.JoinRandomRoom();
- 
     }
     public void FindRoom(){
         FindRoomPopup.ShowPopup();
@@ -30,6 +29,7 @@ public class SelectModePopup : BasePopup<SelectModePopup>
 
     void EnterRoom(){
         CreateRoomPopup.ShowPopup();
+        HidePopup();
     }
 
     public void CreateRoom(){
