@@ -105,19 +105,20 @@ MonoBehaviour:
   stages:
   - levelId: 0
     sceneName: Level_1
+    pointTarget: 0a000000140000001e000000
     previewImage: {fileID: 21300000, guid: 178cf650d898d4823a14cbb883c4cd5a, type: 3}
   - levelId: 1
     sceneName: Level_2
+    pointTarget: 0a000000140000001e000000
     previewImage: {fileID: 21300000, guid: 166f27f577c8a49beab4b847beac915b, type: 3}
   - levelId: 2
     sceneName: Level_3
+    pointTarget: 0a000000140000001e000000
     previewImage: {fileID: 21300000, guid: 699644cb3b9f74b119bd114da083b97c, type: 3}
   - levelId: 3
     sceneName: Level_4
+    pointTarget: 0a000000140000001e000000
     previewImage: {fileID: 21300000, guid: eb6b452159474443296dfa2e4956a657, type: 3}
-  - levelId: 4
-    sceneName: Level_5
-    previewImage: {fileID: 21300000, guid: 5cf0d122a107d40ad81520d5f7a8e433, type: 3}
   colorElements:
   - color: {r: 0.40000004, g: 0.49411768, b: 0.59607846, a: 1}
     colorCode: blue
