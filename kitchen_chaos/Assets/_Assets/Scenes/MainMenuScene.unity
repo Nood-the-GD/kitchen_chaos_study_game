@@ -1829,8 +1829,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
-    height: 1
+    width: 2
+    height: 2
 --- !u!222 &1163430591
 CanvasRenderer:
   m_ObjectHideFlags: 0

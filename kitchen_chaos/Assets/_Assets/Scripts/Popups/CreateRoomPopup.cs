@@ -88,12 +88,14 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
     protected override void OnDisable(){
         base.OnDisable();
+        SelectModePopup.HidePopup();
+
         PhotonManager.s.onJoinRoom -= RefreshUI;
         PhotonManager.s.onLeaveRoom -= OnLeaveRoom;
         PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
         PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
         PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
-
+       
     }
 
     void OnLeaveRoom(){
