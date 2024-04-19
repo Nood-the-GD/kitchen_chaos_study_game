@@ -113,7 +113,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     void Init(){
-        PhotonNetwork.NickName = UserData.userName;
+        //set name to player
+        if(!UserData.isInitName){
+            PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
+        }
+        else{
+            PhotonNetwork.NickName = UserData.userName;
+        }
+
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if(autoConnectToPhotonTest){
             //Debug.Log("starting offline mode");
@@ -122,13 +129,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = "127.0.0.1"; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 5058; // Set the port number of the local Photon Server
 
-            //set name to player
-            if(!UserData.isInitName){
-                PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
-            }
-            else{
-                PhotonNetwork.NickName = UserData.userName;
-            }
+
             
             ConnectToPhoton();
             onConnectToServer += ()=>{JoinLobby();};
@@ -143,7 +144,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = ""; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 0; // Set the port number of the local Photon Server
             if(autoConncetToMaster){
-                PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
                 ConnectToPhoton();
             }
 
