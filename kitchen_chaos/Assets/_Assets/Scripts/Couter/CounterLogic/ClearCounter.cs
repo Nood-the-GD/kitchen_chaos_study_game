@@ -6,6 +6,11 @@ public class ClearCounter : BaseCounter
 {
     public override void Interact(Player player)
     {
+        if(player == null){
+            Debug.LogError("player is null");
+            return;
+        }
+
         if(HasKitchenObject())
         {
             //Counter has kitchen object
