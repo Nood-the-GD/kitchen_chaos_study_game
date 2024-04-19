@@ -23,8 +23,8 @@ public class DeliveryManager : MonoBehaviour
     public static DeliveryManager Instance{get; private set;}
 
     [SerializeField] private RecipeListSO recipeListSO;
-    [SerializeField] private float waitingTimeForEachRecipe;
 
+    private float waitingTimeForEachRecipe;
     private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
@@ -38,6 +38,7 @@ public class DeliveryManager : MonoBehaviour
     private void Awake()
     {
         if(Instance == null) Instance = this;
+        waitingTimeForEachRecipe = recipeListSO.waitingTimeForEachRecipe;
     }
     void Start()
     {

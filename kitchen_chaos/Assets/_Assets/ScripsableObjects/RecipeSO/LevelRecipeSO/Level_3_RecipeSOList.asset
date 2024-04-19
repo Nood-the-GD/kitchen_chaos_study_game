@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f92ebee78bf6f304bbdee632be2e5436, type: 3}
-  m_Name: Level_2_RecipeSOList
+  m_Name: Level_3_RecipeSOList
   m_EditorClassIdentifier: 
   recipeSOList:
   - {fileID: 11400000, guid: 78fe52403a06fa841bd3f8c01a910abe, type: 2}
-  - {fileID: 11400000, guid: b130c84b744d87b40a8fa5e851366dd9, type: 2}
+  - {fileID: 11400000, guid: c269646bb192ddb48bb6166a5f12dbe6, type: 2}
   waitingTimeForEachRecipe: 20
