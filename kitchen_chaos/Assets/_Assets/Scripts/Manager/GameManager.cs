@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     private bool isGamePause = false;
     public Transform[] spawnPoints;
     public static int levelId;
+    bool isGameOver = false;
     public static StageData getStageData{
         get{
             return GameData.s.GetStage(levelId);
@@ -58,6 +59,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if(isGameOver) return;
+
         if(!PhotonManager.s.isJoinedRoom) return;
 
         switch(state)
@@ -79,9 +82,11 @@ public class GameManager : MonoBehaviour
                 break;
             case State.GamePlaying:
                 gamePlayingTimer -= Time.deltaTime;
+                isGameOver = true;
                 if(gamePlayingTimer < 0f)
                 {
                     ChangeState(State.GameOver);
+                    PhotonManager.s.RPCEndGame();
                 }
                 break;
             case State.GameOver:
