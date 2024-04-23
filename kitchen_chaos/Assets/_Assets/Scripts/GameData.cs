@@ -328,6 +328,19 @@ public class GameData : SerializedScriptableObject
         }
     }
 
+    public string GetPath(string id)
+    {
+        if (prefabPaths.ContainsKey(id))
+        {
+            return prefabPaths[id];
+        }
+        else
+        {
+            Debug.LogError("Cant find path with id: " + id);
+            return null;
+        }
+    }
+
     
     public InGameProduct GetInGameProduct(string id){
         var inGameProduct = inGameProducts.Find(x=>x.id == id);

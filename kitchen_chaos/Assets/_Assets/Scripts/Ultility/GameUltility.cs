@@ -10,6 +10,10 @@ public static class GameUtility
         return PhotonNetwork.Instantiate(GameData.s.GetPath(objectEnum), position, rotation);
     }
 
+    public static GameObject SpawnMultiplay(this string objectName, Vector3 position = default, Quaternion rotation = default){
+        return PhotonNetwork.Instantiate(GameData.s.GetPath(objectName), position, rotation);
+    }
+
 }
 
 

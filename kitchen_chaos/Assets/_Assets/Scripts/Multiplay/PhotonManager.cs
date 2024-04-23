@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Photon.Realtime;
 using Photon.Pun;
 using System;
+using System.Linq;
 
 public class CmdOrder{
     public string receiver;
@@ -274,6 +275,23 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void RPCSpawnInventory(){
         //GameManager.s.SpawnInventory();
     }
+
+
+
+    public void CmdSpawnKitchenObject(string objectType, int photonId)
+    {
+       photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId);
+    }
+
+    [PunRPC]
+    public void RpcSpawnKitchenObject(string objectType, int photonId)
+    {
+        var kitchenObjectParent = FindObjectsByType<PhotonView>(FindObjectsSortMode.None).ToList().Find(x => x.ViewID == photonId).GetComponent<IKitchenObjectParent>();
+        Transform kitchenObjectTransform = objectType.SpawnMultiplay().transform;
+        kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+    }
+
+
 
 
 #region Callback

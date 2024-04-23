@@ -1,20 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
-
+using System.Linq;
 public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     private IKitchenObjectParent kitchenObjectParent;
-
-    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    PhotonView photonView;
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
-        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
-        kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
-
-        return kitchenObjectTransform.GetComponent<KitchenObject>();
+        // Transform kitchenObjectTransform = kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType.SpawnMultiplay().transform;
+        // kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+        var parentId = kitchenObjectParent.GetKitchenObject().GetComponent<PhotonView>().ViewID;
+        PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
     }
+    
+
+    void Start(){
+        photonView = GetComponent<PhotonView>();
+        StartCoroutine(OnSync());
+    }
+
+    [PunRPC]
+    public void RpcSetParentWithPhotonId(int photonId){
+        var kitchenObjectParent = FindObjectsByType<PhotonView>(FindObjectsSortMode.None).ToList().Find(x => x.ViewID == photonId).GetComponent<IKitchenObjectParent>();
+        SetKitchenObjectParent(kitchenObjectParent);
+    }
+
+
+
+    IEnumerator OnSync(){
+        if(!PhotonNetwork.IsMasterClient)
+            yield break;
+        yield return new WaitForSeconds(1f);
+
+        var parentId = transform.parent.GetComponent<PhotonView>().ViewID;
+        photonView.RPC("RpcSetParentWithPhotonId", RpcTarget.All, parentId);
+    }
+
+
 
     public bool TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject)
     {

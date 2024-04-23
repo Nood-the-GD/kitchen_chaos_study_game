@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2417010048206763156}
   - component: {fileID: 418629025946679106}
+  - component: {fileID: -7175529056743475181}
   m_Layer: 0
   m_Name: TomatoSlices
   m_TagString: Untagged
@@ -46,6 +47,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
+--- !u!114 &-7175529056743475181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8671696514171673931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9a42a52afcb494c9897f8ecbb64058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectType: TomatoSlices
+  isMultiplayObject: 0
+  destroyDelay: 0
+  destroyDelayTime: 0
 --- !u!1001 &313828630512464638
 PrefabInstance:
   m_ObjectHideFlags: 0

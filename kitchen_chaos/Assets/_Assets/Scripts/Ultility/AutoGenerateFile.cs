@@ -8,7 +8,7 @@ using System.IO;
 public static class AutoGenerateFile
 {
     public static void GenerateEnum(string enumName, List<string> values, bool autoRefesh = false){
-        string filePath = Application.dataPath + "/Scripts/Enums/" + enumName + ".cs";
+        string filePath = Application.dataPath + "/_Assets/Scripts/Enums/" + enumName + ".cs";
         using (StreamWriter writer = new StreamWriter(filePath)) {
             writer.WriteLine("public enum " + enumName + " {");
             //add the None option

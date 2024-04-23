@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8626275786131975602}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -109,7 +108,6 @@ RectTransform:
   - {fileID: 3934789059929503128}
   - {fileID: 1897869028602388461}
   m_Father: {fileID: 4145919893010717733}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -160,7 +158,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8626275786131975602}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -241,7 +238,6 @@ RectTransform:
   m_Children:
   - {fileID: 8626275786131975602}
   m_Father: {fileID: 2417010048206763156}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -265,6 +261,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -371,6 +368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2417010048206763156}
   - component: {fileID: -2742956401423526569}
+  - component: {fileID: 7502353502858751676}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Untagged
@@ -385,6 +383,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8671696514171673931}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.47, y: 0, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -394,7 +393,6 @@ Transform:
   - {fileID: 4679562187532313471}
   - {fileID: 4145919893010717733}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-2742956401423526569
 MonoBehaviour:
@@ -416,6 +414,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 39672c3727d5b48ce8e27d13f02cca9e, type: 2}
   - {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
   - {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
+--- !u!114 &7502353502858751676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8671696514171673931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9a42a52afcb494c9897f8ecbb64058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectType: Plate
+  isMultiplayObject: 0
+  destroyDelay: 0
+  destroyDelayTime: 0
 --- !u!1001 &3423700129136653685
 PrefabInstance:
   m_ObjectHideFlags: 0
