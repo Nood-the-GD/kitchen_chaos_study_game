@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2417010048206763156}
   - component: {fileID: 7013136180406429757}
+  - component: {fileID: 3492988916858510848}
+  - component: {fileID: 5268062998444933204}
   m_Layer: 0
   m_Name: Tomato
   m_TagString: Untagged
@@ -24,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8671696514171673931}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.47, y: 0, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,7 +34,6 @@ Transform:
   m_Children:
   - {fileID: 857710809226381342}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7013136180406429757
 MonoBehaviour:
@@ -46,6 +48,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: f32ad0e34362e0844b73b01701b79205, type: 2}
+--- !u!114 &3492988916858510848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8671696514171673931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9a42a52afcb494c9897f8ecbb64058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectType: Tomato
+  isMultiplayObject: 0
+  destroyDelay: 0
+  destroyDelayTime: 0
+--- !u!114 &5268062998444933204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8671696514171673931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &4543354002570157726
 PrefabInstance:
   m_ObjectHideFlags: 0
