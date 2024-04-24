@@ -51,14 +51,17 @@ public class KitchenObject : MonoBehaviour
     IEnumerator OnSync(){
         if(!PhotonNetwork.IsMasterClient)
             yield break;
+
+        while(true){
         yield return new WaitForSeconds(1f);
 
 
-        var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
-        var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-        Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
-        
-        photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
+            var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+            var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
+            Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
+            
+            photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
+        }
     }
 
 
