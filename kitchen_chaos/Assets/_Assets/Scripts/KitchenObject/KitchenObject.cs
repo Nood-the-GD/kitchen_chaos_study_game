@@ -13,7 +13,9 @@ public class KitchenObject : MonoBehaviour
     {
         // Transform kitchenObjectTransform = kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType.SpawnMultiplay().transform;
         // kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
-        var parentId = kitchenObjectParent.GetKitchenObject().GetComponent<PhotonView>().ViewID;
+        //convert interface to gameobject
+        var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+        var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
         PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
     }
     
@@ -25,7 +27,16 @@ public class KitchenObject : MonoBehaviour
 
     [PunRPC]
     public void RpcSetParentWithPhotonId(int photonId){
-        var kitchenObjectParent = FindObjectsByType<PhotonView>(FindObjectsSortMode.None).ToList().Find(x => x.ViewID == photonId).GetComponent<IKitchenObjectParent>();
+        var listPhotonId =  FindObjectsByType<PhotonView>(FindObjectsSortMode.None).ToList();
+        Debug.Log("listPhotonId: " + listPhotonId.Count);
+        var findId = listPhotonId.Find(x => x.ViewID == photonId);
+        if(findId == null)
+            Debug.LogError("cant find id: " + photonId);
+        var kitchenObjectParent = findId.GetComponent<IKitchenObjectParent>();
+        
+        if(kitchenObjectParent == null)
+            Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
+
         SetKitchenObjectParent(kitchenObjectParent);
     }
 
@@ -36,8 +47,12 @@ public class KitchenObject : MonoBehaviour
             yield break;
         yield return new WaitForSeconds(1f);
 
-        var parentId = transform.parent.GetComponent<PhotonView>().ViewID;
-        photonView.RPC("RpcSetParentWithPhotonId", RpcTarget.All, parentId);
+
+        var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+        var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
+        Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
+        
+        photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
     }
 
 

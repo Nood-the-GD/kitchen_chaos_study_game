@@ -55,7 +55,7 @@ MonoBehaviour:
       Data: TomatoSlices
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/TomatoSlices
+      Data: Prefabs_Main/KitchenObjects/TomatoSlices
     - Name: 
       Entry: 8
       Data: 
@@ -67,7 +67,7 @@ MonoBehaviour:
       Data: Tomato
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/Tomato
+      Data: Prefabs_Main/KitchenObjects/Tomato
     - Name: 
       Entry: 8
       Data: 
@@ -79,7 +79,7 @@ MonoBehaviour:
       Data: Plate
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/Plate
+      Data: Prefabs_Main/KitchenObjects/Plate
     - Name: 
       Entry: 8
       Data: 
@@ -91,7 +91,7 @@ MonoBehaviour:
       Data: MeatPattyUncooked
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/MeatPattyUncooked
+      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
     - Name: 
       Entry: 8
       Data: 
@@ -103,7 +103,7 @@ MonoBehaviour:
       Data: MeatPattyCooked
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/MeatPattyCooked
+      Data: Prefabs_Main/KitchenObjects/MeatPattyCooked
     - Name: 
       Entry: 8
       Data: 
@@ -115,7 +115,7 @@ MonoBehaviour:
       Data: MeatPattyBurned
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/MeatPattyBurned
+      Data: Prefabs_Main/KitchenObjects/MeatPattyBurned
     - Name: 
       Entry: 8
       Data: 
@@ -127,7 +127,7 @@ MonoBehaviour:
       Data: CheeseSlices
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/CheeseSlices
+      Data: Prefabs_Main/KitchenObjects/CheeseSlices
     - Name: 
       Entry: 8
       Data: 
@@ -139,7 +139,7 @@ MonoBehaviour:
       Data: Cheese
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/Cheese
+      Data: Prefabs_Main/KitchenObjects/Cheese
     - Name: 
       Entry: 8
       Data: 
@@ -151,7 +151,7 @@ MonoBehaviour:
       Data: CabbageSlices
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/CabbageSlices
+      Data: Prefabs_Main/KitchenObjects/CabbageSlices
     - Name: 
       Entry: 8
       Data: 
@@ -163,7 +163,7 @@ MonoBehaviour:
       Data: Cabbage
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/Cabbage
+      Data: Prefabs_Main/KitchenObjects/Cabbage
     - Name: 
       Entry: 8
       Data: 
@@ -175,7 +175,7 @@ MonoBehaviour:
       Data: Bread
     - Name: $v
       Entry: 1
-      Data: Assets/_Assets/Prefabs/KitchenObjects/Bread
+      Data: Prefabs_Main/KitchenObjects/Bread
     - Name: 
       Entry: 8
       Data: 
