@@ -15,6 +15,14 @@ public class KitchenObject : MonoBehaviour
         // kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
         //convert interface to gameobject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+
+        //--Player Clone are not allowed to spawn object
+        var player = kitchenObjectParent as Player;
+        if(player != null && !player.photonView.IsMine)
+            return;
+        //
+
+
         var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
         PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
     }
@@ -27,9 +35,7 @@ public class KitchenObject : MonoBehaviour
 
     [PunRPC]
     public void RpcSetParentWithPhotonId(int photonId){
-        var listPhotonId =  FindObjectsByType<PhotonView>(FindObjectsSortMode.None).ToList();
-        Debug.Log("listPhotonId: " + listPhotonId.Count);
-        var findId = listPhotonId.Find(x => x.ViewID == photonId);
+        var findId = PhotonNetwork.GetPhotonView(photonId);
         if(findId == null)
             Debug.LogError("cant find id: " + photonId);
         var kitchenObjectParent = findId.GetComponent<IKitchenObjectParent>();
