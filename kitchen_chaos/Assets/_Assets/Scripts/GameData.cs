@@ -315,6 +315,18 @@ public class GameData : SerializedScriptableObject
         }
     }
 
+    public GameObject GetObject(string id){
+        if (objectTypeViews.ContainsKey(id))
+        {
+            return objectTypeViews[id].gameObject;
+        }
+        else
+        {
+            Debug.LogError("Cant find object with id: " + id);
+            return null;
+        }
+    }
+
     public string GetPath(ObjectEnum id)
     {
         if (prefabPaths.ContainsKey(id.ToString()))

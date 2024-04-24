@@ -85,9 +85,9 @@ public class KitchenObject : MonoBehaviour
         }
         this.kitchenObjectParent = kitchenObjectParent;
         
-        if(kitchenObjectParent.HasKitchenObject() && this.kitchenObjectParent == kitchenObjectParent) 
+        if(kitchenObjectParent.HasKitchenObject()) 
         {
-            return;
+            Debug.LogError("clear kitchenObjectParent already had kitchenObject");
         }
 
         kitchenObjectParent.SetKitchenObject(this);
@@ -104,7 +104,7 @@ public class KitchenObject : MonoBehaviour
     public void DestroySelf()
     {
         kitchenObjectParent.ClearKitchenObject();
-        PhotonNetwork.Destroy(this.gameObject);
-        // Destroy(this.gameObject);
+
+        Destroy(this.gameObject);
     }
 }
