@@ -349,6 +349,7 @@ MonoBehaviour:
       m_Calls: []
   isOnlyOne: 1
   addOnEnable: 1
+  starController: {fileID: 5394356287653233868}
   scores:
   - {fileID: 4167132258428810801}
   - {fileID: 7438980260847700040}
