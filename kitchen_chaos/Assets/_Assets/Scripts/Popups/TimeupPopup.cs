@@ -25,6 +25,9 @@ public class TimeupPopup : BasePopup<TimeupPopup>
     protected override void OnDisable() {
         base.OnDisable();
         // Error when return to main screen
-        // SceneManager.LoadScene("MainMenuScene");        
+        //PhotonNetwork.JoinLobby();
+        PhotonManager.s.EndSesstion();
+        SceneManager.LoadScene("MainMenuScene");        
+
     }
 }

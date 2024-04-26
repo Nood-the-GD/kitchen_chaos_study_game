@@ -81,7 +81,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             DontDestroyOnLoad(gameObject);
         }
         else{
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
             return;
         }
     }
@@ -145,10 +145,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = ""; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 0; // Set the port number of the local Photon Server
             if(autoConncetToMaster){
+                onLeaveRoom += () => {JoinLobby();};
                 ConnectToPhoton();
             }
 
         }
+    }
+
+    public void EndSesstion(){
+        s = null;
+        PhotonNetwork.LeaveRoom();
+        
+        Destroy(gameObject);
     }
     
 #region Photon Controll
@@ -257,7 +265,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         onCallAnyCmdFunction?.Invoke(order);
     }
     
-
+    [Button]
     public void CmdEndGame(){
         photonView.RPC(nameof(RPCEndGame), RpcTarget.All);
     } 
