@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using System.Linq;
+using Sirenix.OdinInspector;
 public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
@@ -122,7 +123,8 @@ public class KitchenObject : MonoBehaviour
         photonView.RPC("RpcDestroy", RpcTarget.All);
     }
 
-    public void RpcDestroy(){
+    [Button]
+    void RpcDestroy(){
         kitchenObjectParent.ClearKitchenObject();
         DestroySelf();
     }
