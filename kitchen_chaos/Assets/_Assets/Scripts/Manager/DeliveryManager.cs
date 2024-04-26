@@ -105,7 +105,8 @@ public class DeliveryManager : MonoBehaviour
     [PunRPC]
     void RPCRemoveRecipe(int recipeIndex)
     {
-        RemoveOrder(recipeIndex);
+        if(recipeIndex < waitingRecipeSOList.Count - 1)
+            RemoveOrder(recipeIndex);
     }
     [PunRPC]
     void RPCUpdateTimerClass(int index, float timer)
