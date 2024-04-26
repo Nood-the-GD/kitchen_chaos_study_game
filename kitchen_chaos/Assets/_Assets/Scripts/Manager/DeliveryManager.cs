@@ -110,7 +110,7 @@ public class DeliveryManager : MonoBehaviour
     [PunRPC]
     void RPCUpdateTimerClass(int index, float timer)
     {
-        if(waitingTimerClassList[index] != null)
+        if(waitingTimerClassList[index] != null && index < waitingTimerClassList.Count - 1)
             waitingTimerClassList[index].timer = timer;
     }
     #endregion

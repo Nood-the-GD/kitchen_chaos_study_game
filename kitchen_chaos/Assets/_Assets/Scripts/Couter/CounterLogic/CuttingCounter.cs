@@ -72,6 +72,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
 
     public override void Chop(Player player)
     {
+        if (player.photonView.IsMine == false) return;
         if(HasKitchenObject() && HasRecipeForInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             //There is a kitchenObject on this counter and it can be cut.
