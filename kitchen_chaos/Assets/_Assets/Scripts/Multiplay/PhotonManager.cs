@@ -299,6 +299,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         var kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenObjectParent>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
+        
         kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
     }
 

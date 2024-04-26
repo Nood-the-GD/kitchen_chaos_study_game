@@ -72,7 +72,6 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
 
     public override void Chop(Player player)
     {
-        if (player.photonView.IsMine == false) return;
         if(HasKitchenObject() && HasRecipeForInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             //There is a kitchenObject on this counter and it can be cut.
@@ -88,13 +87,16 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
             OnCut?.Invoke(this, EventArgs.Empty);
             if(cuttingProcess >= cuttingProgressNumber)
             {
-                KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+                if(player.photonView.IsMine){
+                    KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
 
-                //Destroy input kitchenObject.
-                GetKitchenObject().DestroySelf();
+                    //Destroy input kitchenObject.
 
-                //Spawn output kitchenObject
-                KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
+                    GetKitchenObject().DestroySelf();
+
+                    //Spawn output kitchenObject
+                    KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
+                }
             }
         }
         //else

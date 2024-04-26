@@ -113,8 +113,17 @@ public class KitchenObject : MonoBehaviour
 
     public void DestroySelf()
     {
-        kitchenObjectParent.ClearKitchenObject();
+        
+        //PhotonNetwork.Destroy(gameObject);
+        CmdDestroy();
+    }
 
-        Destroy(this.gameObject);
+    public void CmdDestroy(){
+        photonView.RPC("RpcDestroy", RpcTarget.All);
+    }
+
+    public void RpcDestroy(){
+        kitchenObjectParent.ClearKitchenObject();
+        DestroySelf();
     }
 }
