@@ -272,6 +272,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void RPCEndGame(){
+        Debug.Log("called rpc end game");
         TimeupPopup.ShowPopup().SetData(GameManager.getStageData, DeliveryManager.recipeDeliveredPoint);
     }
 
