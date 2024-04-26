@@ -4425,9 +4425,9 @@ MonoBehaviour:
   photonView: {fileID: 596262831874706050}
   stageUIs:
   - {fileID: 7032952723288509510}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 3135174900838002540}
+  - {fileID: 846124777631215496}
+  - {fileID: 8182813336228414265}
   previewImage: {fileID: 6683893163181056729}
   previewImageParent: {fileID: 1558494215088044701}
   text: {fileID: 5341771969000161875}

@@ -388,6 +388,11 @@ PrefabInstance:
       propertyPath: m_Lens.FieldOfView
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 2383039606106545396, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
+        type: 3}
+      propertyPath: gamePlayingTimerMax
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 2567014680715545465, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
         type: 3}
       propertyPath: m_LocalPosition.x

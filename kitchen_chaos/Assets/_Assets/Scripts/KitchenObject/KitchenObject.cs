@@ -43,7 +43,9 @@ public class KitchenObject : MonoBehaviour
         if(kitchenObjectParent == null)
             Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
 
-        SetKitchenObjectParent(kitchenObjectParent);
+        MonoBehaviour monoBehaviour = this.kitchenObjectParent as MonoBehaviour;
+        if(monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
+            SetKitchenObjectParent(kitchenObjectParent);
     }
 
 
@@ -87,7 +89,6 @@ public class KitchenObject : MonoBehaviour
 
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
-
         if(this.kitchenObjectParent != null)
         {
             this.kitchenObjectParent.ClearKitchenObject();

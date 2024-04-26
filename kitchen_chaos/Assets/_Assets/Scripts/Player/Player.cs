@@ -262,12 +262,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
-        this.kitchenObject = kitchenObject;
-
         if(kitchenObject != null)
         {
-            OnPickupSomething?.Invoke(this, EventArgs.Empty);
+            if(this.kitchenObject == null || kitchenObject.gameObject != this.kitchenObject.gameObject)
+                OnPickupSomething?.Invoke(this, EventArgs.Empty);
+            Debug.Log("Sound: " + this.kitchenObject != null);
         }
+        this.kitchenObject = kitchenObject;
     }
     public KitchenObject GetKitchenObject()
     {

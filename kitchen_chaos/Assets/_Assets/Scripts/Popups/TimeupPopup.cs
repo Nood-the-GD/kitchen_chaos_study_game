@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class TimeupPopup : BasePopup<TimeupPopup>
 {
@@ -23,6 +24,7 @@ public class TimeupPopup : BasePopup<TimeupPopup>
 
     protected override void OnDisable() {
         base.OnDisable();
-        SceneManager.LoadScene("MainMenuScene");        
+        // Error when return to main screen
+        // SceneManager.LoadScene("MainMenuScene");        
     }
 }

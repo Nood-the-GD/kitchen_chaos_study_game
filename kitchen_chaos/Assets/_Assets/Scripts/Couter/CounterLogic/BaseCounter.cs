@@ -52,12 +52,13 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
-        this.kitchenObject = kitchenObject;
-
         if(kitchenObject != null)
         {
+            Debug.Log(kitchenObject.gameObject.name);
             OnSomethingPlacedHere?.Invoke(this, EventArgs.Empty);
         }
+
+        this.kitchenObject = kitchenObject;
     }
 
     public KitchenObject GetKitchenObject()

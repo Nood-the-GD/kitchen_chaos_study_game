@@ -82,9 +82,9 @@ public class GameManager : MonoBehaviour
                 break;
             case State.GamePlaying:
                 gamePlayingTimer -= Time.deltaTime;
-                isGameOver = true;
                 if(gamePlayingTimer < 0f)
                 {
+                    isGameOver = true;
                     ChangeState(State.GameOver);
                     PhotonManager.s.RPCEndGame();
                 }
