@@ -95,10 +95,10 @@ public class KitchenObject : MonoBehaviour
         }
         this.kitchenObjectParent = kitchenObjectParent;
         
-        if(kitchenObjectParent.HasKitchenObject()) 
-        {
-            Debug.LogError("clear kitchenObjectParent already had kitchenObject");
-        }
+        // if(kitchenObjectParent.HasKitchenObject()) 
+        // {
+        //     Debug.LogError("clear kitchenObjectParent already had kitchenObject");
+        // }
 
         kitchenObjectParent.SetKitchenObject(this);
 
