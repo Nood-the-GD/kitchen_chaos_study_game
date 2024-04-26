@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
 public class GameOverUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI recipeDeliveredText;
-
-    
     private void Start()
     {
         GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
@@ -20,14 +18,12 @@ public class GameOverUI : MonoBehaviour
 
     private void GameManager_OnStateChanged(object sender, System.EventArgs e)
     {
-        if(GameManager.Instance.IsGameOver())
+        if(GameManager.Instance.IsGameOver() && PhotonNetwork.IsMasterClient)
         {
-            recipeDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipePoint().ToString();
-            gameObject.SetActive(true);
+            PhotonManager.s.CmdEndGame();
         }
         else
         {
-            gameObject.SetActive(false);
         }
     }
 }

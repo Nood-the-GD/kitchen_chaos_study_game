@@ -33,13 +33,10 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         PhotonManager.s.CmdCallFunction(order);
     }
 
-
-
+    #region Unity functions
     public void OnExitButtonClick(){
         PhotonNetwork.LeaveRoom();
     }
-
-
     void Start(){
         currentSceneId = 0;
         RefreshUI();
@@ -47,8 +44,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         stageParent.SetActive(PhotonNetwork.IsMasterClient);
         
     }
-
-    //public void SelectLevel
     protected override void OnEnable(){
         base.OnEnable();
         PhotonManager.s.onJoinRoom += RefreshUI;
@@ -57,6 +52,18 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         PhotonManager.s.onPlayerLeftRoom += OnPlayerLeaveRoom;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
     }
+    protected override void OnDisable(){
+        base.OnDisable();
+
+        PhotonManager.s.onJoinRoom -= RefreshUI;
+        PhotonManager.s.onLeaveRoom -= OnLeaveRoom;
+        PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
+        PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
+        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
+       
+    }
+    #endregion
+
 
     void OnCallAnyCmdFunction(CmdOrder order){
         if(order.receiver != nameof(CreateRoomPopup)) return;
@@ -69,8 +76,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
         }
     }
-
-    
 
     void OnPlayerEnterRoom(Photon.Realtime.Player player){
         RefreshUI();
@@ -86,16 +91,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         RefreshUI();
     }
 
-    protected override void OnDisable(){
-        base.OnDisable();
-
-        PhotonManager.s.onJoinRoom -= RefreshUI;
-        PhotonManager.s.onLeaveRoom -= OnLeaveRoom;
-        PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
-        PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
-        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
-       
-    }
 
     void OnLeaveRoom(){
         HidePopup();
@@ -156,9 +151,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         previewImageParent.transform.DOScale(rootScale, 0.25f).From(0).SetEase(Ease.OutBack);
     }
 
-    
-    
-    
     void RefreshUI(){
 
         foreach(var i in playerUIElements){
@@ -186,10 +178,4 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public void OnClickChangeColor(){
         ChoseColorPopup.ShowPopup();
     }
-
-    
-
-    
-
-
 }

@@ -264,7 +264,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void RPCEndGame(){
-        TimeupPopup.ShowPopup().SetData(GameManager.getStageData ,DeliveryManager.recipeDeliveredPoint);
+        TimeupPopup.ShowPopup().SetData(GameManager.getStageData, DeliveryManager.recipeDeliveredPoint);
     }
 
 

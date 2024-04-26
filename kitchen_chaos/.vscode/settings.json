@@ -58,7 +58,8 @@
         "logs/": true
     },
     "cSpell.words": [
-        "Slerp"
+        "Slerp",
+        "Timeup"
     ],
     "dotnet.defaultSolution": "kitchen_chaos.sln",
     "window.autoDetectColorScheme": true

@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 7837077069595218061}
   - component: {fileID: 5212402689194363759}
   - component: {fileID: 6926851231388433295}
+  - component: {fileID: 5394356287653233868}
   m_Layer: 5
   m_Name: TimeupPopup
   m_TagString: Untagged
@@ -353,6 +354,24 @@ MonoBehaviour:
   - {fileID: 7438980260847700040}
   - {fileID: 9033182943254384922}
   userScoreUI: {fileID: 1572919011579236447}
+--- !u!114 &5394356287653233868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627033216364060376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87478371be7ec4f49a9f7ccc1312c80c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starList:
+  - {fileID: 5524985181383285141}
+  - {fileID: 2822146534660918077}
+  - {fileID: 3354197632510110176}
+  _starSprite: {fileID: 21300000, guid: e546e0fb39bdc4b23b9b6efe1c37aa70, type: 3}
+  _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &1926593258315109888
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,7 +515,7 @@ GameObject:
   - component: {fileID: 7465177199137838449}
   - component: {fileID: 1571110149651085922}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -571,7 +590,7 @@ GameObject:
   - component: {fileID: 8211728647682206661}
   - component: {fileID: 4894511972155460795}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -778,7 +797,7 @@ GameObject:
   - component: {fileID: 7497149379161602303}
   - component: {fileID: 6331827846429493398}
   m_Layer: 5
-  m_Name: Star
+  m_Name: Stars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1326,7 +1345,7 @@ GameObject:
   - component: {fileID: 1039555056551698624}
   - component: {fileID: 2608908948217142225}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
