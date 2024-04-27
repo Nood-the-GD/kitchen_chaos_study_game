@@ -54,8 +54,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Action<Photon.Realtime.Player> onPlayerLeftRoom;
     public Action<Photon.Realtime.Player> onPlayerEnteredRoom;
     public bool isJoinedRoom => PhotonNetwork.InRoom;
+    public bool isServerConnected => PhotonNetwork.IsConnected; 
     public Photon.Realtime.Player myPlayerPhoton => PhotonNetwork.LocalPlayer;
-
     public Action<CmdOrder> onCallAnyCmdFunction;
     
 
