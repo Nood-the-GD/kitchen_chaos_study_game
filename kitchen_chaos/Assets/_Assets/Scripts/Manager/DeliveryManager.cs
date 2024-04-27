@@ -135,20 +135,20 @@ public class DeliveryManager : MonoBehaviour
     /// <summary>
     /// Check if the given plate contains a valid recipe
     /// </summary>
-    /// <param name="plate">The plate that the player try to deliver</param>
+    /// <param name="completeDishKitchenObject">The plate that the player try to deliver</param>
     /// <returns>True if the plate contain a valid recipe, false otherwise</returns>
-    public bool DeliverRecipe(PlateKitchenObject plate)
+    public bool DeliverRecipe(CompleteDishKitchenObject completeDishKitchenObject)
     {
         // Go through all the waiting recipes
         foreach (RecipeSO recipe in waitingRecipeSOList)
         {
             // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
-            if (recipe.kitchenObjectSOList.Count == plate.GetKitchenObjectSOList().Count)
+            if (recipe.kitchenObjectSOList.Count == completeDishKitchenObject.GetKitchenObjectSOList().Count)
             {
                 // Set to true until we find a mismatch
                 bool isMatch = true;
                 // Go through all the ingredient in the plate
-                foreach (KitchenObjectSO ingredient in plate.GetKitchenObjectSOList())
+                foreach (KitchenObjectSO ingredient in completeDishKitchenObject.GetKitchenObjectSOList())
                 {
                     // Check if the recipe contains the ingredient
                     if (!recipe.kitchenObjectSOList.Contains(ingredient))

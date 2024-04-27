@@ -16,17 +16,18 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: -7175529056743475181, guid: 206d70af57bc2401693feb15986b8e1b, type: 3}
-    - {fileID: 3492988916858510848, guid: 580cea5c67f810c4f9bf32b78a2987ee, type: 3}
     - {fileID: 7502353502858751676, guid: e8363954b170347179db2e61abb47cf4, type: 3}
-    - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
-    - {fileID: 1599805354852870132, guid: d00250d3ee698469e94b8251517005db, type: 3}
-    - {fileID: 1609378212798663079, guid: 6058b29e42dcf42d88afef05d95f3efe, type: 3}
     - {fileID: 1817624834693766468, guid: 5e372c0d5a32f4c3e8c787c930f02d5a, type: 3}
-    - {fileID: -6275936465289592617, guid: 39fdad88482a32644aafaab84b4e95df, type: 3}
-    - {fileID: -2441813765035412052, guid: d29bf294e950f437db233e2e4cafbdf5, type: 3}
-    - {fileID: 4438093364599518989, guid: d62396a87c5abce4598a6e8bd5d76d9e, type: 3}
     - {fileID: 7745850432262308927, guid: fe107e29635272f4e9c0c448b17c5edc, type: 3}
+    - {fileID: 1609378212798663079, guid: 6058b29e42dcf42d88afef05d95f3efe, type: 3}
+    - {fileID: -2441813765035412052, guid: d29bf294e950f437db233e2e4cafbdf5, type: 3}
+    - {fileID: -7175529056743475181, guid: 206d70af57bc2401693feb15986b8e1b, type: 3}
+    - {fileID: 1599805354852870132, guid: d00250d3ee698469e94b8251517005db, type: 3}
+    - {fileID: 7502353502858751676, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
+    - {fileID: -6275936465289592617, guid: 39fdad88482a32644aafaab84b4e95df, type: 3}
+    - {fileID: 3492988916858510848, guid: 580cea5c67f810c4f9bf32b78a2987ee, type: 3}
+    - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
+    - {fileID: 4438093364599518989, guid: d62396a87c5abce4598a6e8bd5d76d9e, type: 3}
     - {fileID: 8525692102432909788, guid: 8f51dcb530c1348c4a9c47b9e66b6bb2, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -46,31 +47,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 12
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: TomatoSlices
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/TomatoSlices
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Tomato
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Tomato
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 13
     - Name: 
       Entry: 7
       Data: 
@@ -80,42 +57,6 @@ MonoBehaviour:
     - Name: $v
       Entry: 1
       Data: Prefabs_Main/KitchenObjects/Plate
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyUncooked
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyCooked
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyCooked
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyBurned
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyBurned
     - Name: 
       Entry: 8
       Data: 
@@ -136,10 +77,22 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cheese
+      Data: Bread
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Cheese
+      Data: Prefabs_Main/KitchenObjects/Bread
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MeatPattyBurned
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/MeatPattyBurned
     - Name: 
       Entry: 8
       Data: 
@@ -160,10 +113,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cabbage
+      Data: TomatoSlices
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Cabbage
+      Data: Prefabs_Main/KitchenObjects/TomatoSlices
     - Name: 
       Entry: 8
       Data: 
@@ -172,10 +125,58 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Bread
+      Data: MeatPattyCooked
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Bread
+      Data: Prefabs_Main/KitchenObjects/MeatPattyCooked
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CompleteBurger
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/CompleteBurger
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Cheese
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/Cheese
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MeatPattyUncooked
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Tomato
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/Tomato
     - Name: 
       Entry: 8
       Data: 
@@ -188,6 +189,18 @@ MonoBehaviour:
     - Name: $v
       Entry: 1
       Data: Prefabs/MainPlayer
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Cabbage
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/Cabbage
     - Name: 
       Entry: 8
       Data: 
@@ -210,13 +223,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 12
+      Data: 13
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: TomatoSlices
+      Data: Plate
     - Name: $v
       Entry: 10
       Data: 0
@@ -228,7 +241,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Tomato
+      Data: CheeseSlices
     - Name: $v
       Entry: 10
       Data: 1
@@ -240,7 +253,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Plate
+      Data: Bread
     - Name: $v
       Entry: 10
       Data: 2
@@ -252,7 +265,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyUncooked
+      Data: MeatPattyBurned
     - Name: $v
       Entry: 10
       Data: 3
@@ -264,7 +277,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyCooked
+      Data: CabbageSlices
     - Name: $v
       Entry: 10
       Data: 4
@@ -276,7 +289,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyBurned
+      Data: TomatoSlices
     - Name: $v
       Entry: 10
       Data: 5
@@ -288,7 +301,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CheeseSlices
+      Data: MeatPattyCooked
     - Name: $v
       Entry: 10
       Data: 6
@@ -300,7 +313,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cheese
+      Data: CompleteBurger
     - Name: $v
       Entry: 10
       Data: 7
@@ -312,7 +325,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CabbageSlices
+      Data: Cheese
     - Name: $v
       Entry: 10
       Data: 8
@@ -324,7 +337,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cabbage
+      Data: Tomato
     - Name: $v
       Entry: 10
       Data: 9
@@ -336,7 +349,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Bread
+      Data: MeatPattyUncooked
     - Name: $v
       Entry: 10
       Data: 10
@@ -348,10 +361,22 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MainPlayer
+      Data: Cabbage
     - Name: $v
       Entry: 10
       Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MainPlayer
+    - Name: $v
+      Entry: 10
+      Data: 12
     - Name: 
       Entry: 8
       Data: 

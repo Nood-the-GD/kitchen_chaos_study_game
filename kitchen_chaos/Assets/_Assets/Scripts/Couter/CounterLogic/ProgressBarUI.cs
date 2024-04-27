@@ -18,13 +18,13 @@ public class ProgressBarUI : MonoBehaviour
             Debug.LogError("Game object " + hasProgressBarGameObject.name + " do not implement IHasProgressBar");
         }
 
-        hasProgressBas.OnProcessChanged += HasProgress_OnProcessChanged;
+        hasProgressBas.OnProcessChanged += HasProgress_OnProcessChangedHandler;
         barImage.fillAmount = 0;
 
         HideBar();
     }
 
-    private void HasProgress_OnProcessChanged(object sender, IHasProgressBar.OnProcessChangedEvenArgs e)
+    private void HasProgress_OnProcessChangedHandler(object sender, IHasProgressBar.OnProcessChangedEvenArgs e)
     {
         barImage.fillAmount = e.processNormalize;
 

@@ -3,18 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct KitchenObjectSO_GameObject
+{
+    public KitchenObjectSO kitchenObjectSO;
+    public GameObject gameObject;
+}
+
 public class PlateCompleteVisual : MonoBehaviour
 {
-    [Serializable]
-    public struct KitchenObjectSO_GameObject
-    {
-        public KitchenObjectSO kitchenObjectSO;
-        public GameObject gameObject;
-    }
     
     [SerializeField] private PlateKitchenObject plateKitchenObject;
     [SerializeField] private List<KitchenObjectSO_GameObject> kitchenObjectSO_GameObjectsList;
 
+    void Awake()
+    {
+        plateKitchenObject.OnIngredientAdded += PlateKitchenObject_OnIngredientAdded;
+    }
 
     private void Start()
     {
@@ -22,7 +27,6 @@ public class PlateCompleteVisual : MonoBehaviour
         {
             kitchenObjectSO_GameObject.gameObject.SetActive(false);
         }
-        plateKitchenObject.OnIngredientAdded += PlateKitchenObject_OnIngredientAdded;
     }
 
     private void PlateKitchenObject_OnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)

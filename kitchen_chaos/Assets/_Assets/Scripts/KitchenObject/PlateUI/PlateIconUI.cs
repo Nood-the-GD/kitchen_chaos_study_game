@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class PlateIconUI : MonoBehaviour
 {
-    [SerializeField] private PlateKitchenObject plateKitchenObject;
+    [SerializeField] private CompleteDishKitchenObject plateKitchenObject;
     [SerializeField] private IconTemplate iconTemplate;
+
+    void Awake()
+    {
+        plateKitchenObject.OnIngredientAdded += plateKitchenObject_OnIngredientAdded;
+    }
 
     private void Start()
     {
-        plateKitchenObject.OnIngredientAdded += plateKitchenObject_OnIngredientAdded;
         iconTemplate.gameObject.SetActive(false);
     }
 
-    private void plateKitchenObject_OnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e)
+    private void plateKitchenObject_OnIngredientAdded(object sender, CompleteDishKitchenObject.OnIngredientAddedEventArgs e)
     {
         UpdateVisual(e.addedIngredientKitchenObjectSO);
     }
 
     private void UpdateVisual(KitchenObjectSO addedIngredientSO)
     {
+        if (addedIngredientSO.name == "Plate") return;
+
         IconTemplate plateIconTemplate = Instantiate<IconTemplate>(iconTemplate, this.transform);
         plateIconTemplate.gameObject.SetActive(true);
         plateIconTemplate.SetKitchenObjectSO(addedIngredientSO);

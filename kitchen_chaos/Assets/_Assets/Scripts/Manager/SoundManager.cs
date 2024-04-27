@@ -54,7 +54,6 @@ public class SoundManager : MonoBehaviour
     {
         BaseCounter baseCounter = sender as BaseCounter;
         PlaySound(audioClipRef.objectDrop, baseCounter.transform.position);
-        Debug.Log("Sound: Object drop " + baseCounter.gameObject.name);
     }
     #endregion
 
@@ -62,7 +61,6 @@ public class SoundManager : MonoBehaviour
     private void Player_OnPickupSomething(object sender, System.EventArgs e)
     {
         PlaySound(audioClipRef.objectPickup, Player.Instance.transform.position);
-        Debug.Log("Sound: Player pickup");
     }
     #endregion
 

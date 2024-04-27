@@ -1,36 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using System.Linq;
-using Sirenix.OdinInspector;
+using System;
+
 public class KitchenObject : MonoBehaviour
 {
+    public static Action<KitchenObject> OnAnyKitchenObjectSpawned;
+
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     private IKitchenObjectParent kitchenObjectParent;
     PhotonView photonView;
+
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
-        // Transform kitchenObjectTransform = kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType.SpawnMultiplay().transform;
-        // kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
-        //convert interface to gameobject
+        //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
 
         //--Player Clone are not allowed to spawn object
         var player = kitchenObjectParent as Player;
         if(player != null && !player.photonView.IsMine)
             return;
-        //
 
+        var parentId = -1;
+        if(kitchenObjectParentGameObject != null)
+            parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
 
-        var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
         PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
     }
     
+    void Awake()
+    {
+        photonView = GetComponent<PhotonView>();
+    }
 
     void Start(){
-        photonView = GetComponent<PhotonView>();
         StartCoroutine(OnSync());
     }
 
@@ -61,7 +65,7 @@ public class KitchenObject : MonoBehaviour
 
             var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
             var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
+            // Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
             
             photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
         }
@@ -69,16 +73,16 @@ public class KitchenObject : MonoBehaviour
 
 
 
-    public bool TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject)
+    public bool TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDish)
     {
-        if(this is PlateKitchenObject)
+        if(this is CompleteDishKitchenObject)
         {
-            plateKitchenObject = this as PlateKitchenObject;
+            completeDish = this as CompleteDishKitchenObject;
             return true;
         }
         else
         {
-            plateKitchenObject = null;
+            completeDish = null;
             return false;
         }
     }
@@ -90,19 +94,21 @@ public class KitchenObject : MonoBehaviour
 
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
+        if(kitchenObjectParent == null)
+        {
+            this.transform.position = Vector3.zero;
+            this.transform.parent = null;
+            this.kitchenObjectParent = kitchenObjectParent;
+            return;
+        }
+
         if(this.kitchenObjectParent != null)
         {
             this.kitchenObjectParent.ClearKitchenObject();
         }
         this.kitchenObjectParent = kitchenObjectParent;
-        
-        // if(kitchenObjectParent.HasKitchenObject()) 
-        // {
-        //     Debug.LogError("clear kitchenObjectParent already had kitchenObject");
-        // }
 
         kitchenObjectParent.SetKitchenObject(this);
-
         this.transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
         this.transform.localPosition = Vector3.zero;
     }
@@ -123,7 +129,8 @@ public class KitchenObject : MonoBehaviour
 
     [PunRPC]
     public void RpcDestroy(){
-        kitchenObjectParent.ClearKitchenObject();
+        if(kitchenObjectParent != null)
+            kitchenObjectParent.ClearKitchenObject();
         Destroy(this.gameObject);
     }
 }

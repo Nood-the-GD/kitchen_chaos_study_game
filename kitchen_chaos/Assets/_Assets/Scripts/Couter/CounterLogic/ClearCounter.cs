@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
+    private Player player;
+
     public override void Interact(Player player)
     {
         if(player == null){
@@ -23,26 +27,22 @@ public class ClearCounter : BaseCounter
             else
             {
                 //Player is carrying something
-                if(player.GetKitchenObject() is PlateKitchenObject)
+                if(player.GetKitchenObject() is CompleteDishKitchenObject)
                 {
-                    //Player is holding a plate
-                    if (player.GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
+                    //Player is holding a set of kitchen object
+                    CompleteDishKitchenObject playerCompleteDish = player.GetKitchenObject() as CompleteDishKitchenObject;
+                    // Try add ingredient with the current kitchen object on counter
+                    if(playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
                     {
-                        if(plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
-                        {
-                            GetKitchenObject().DestroySelf();
-                        }
+                        // After adding ingredient, destroy it on counter
+                        GetKitchenObject().DestroySelf();
                     }
-                }
+                }/*  */
                 else
                 {
-                    //Player is holding something not Plate
-                    if(GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
-                    {
-                        //A plate is on this counter
-                        if(plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
-                            player.GetKitchenObject().DestroySelf();
-                    }
+                    //Player is holding an ingredient
+                    this.player = player;
+                    TryAddPlayerIngredient();
                 }
             }
         }
@@ -59,5 +59,44 @@ public class ClearCounter : BaseCounter
             //Player carrying nothing
             //Do no thing
         }
+    }
+
+    private void TryAddPlayerIngredient()
+    {
+        KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
+        if(GetKitchenObject() is CompleteDishKitchenObject)
+        {
+            // Kitchen object on counter is a set of kitchen object
+            CompleteDishKitchenObject counterCompleteDish = GetKitchenObject() as CompleteDishKitchenObject;
+            if(counterCompleteDish.TryAddIngredient(playerKitchenObjectSO))
+            {
+                player.GetKitchenObject().DestroySelf();
+            }
+        }
+        else
+        {
+            // Kitchen object on counter is not a set of kitchen object
+            // Try combine kitchen object on table and player
+            if(CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
+            {
+                KitchenObject.OnAnyKitchenObjectSpawned += KitchenObject_OnAnyKitchenObjectSpawned;
+                KitchenObject.SpawnKitchenObject(resultDishSO, null);
+                KitchenObject.OnAnyKitchenObjectSpawned -= KitchenObject_OnAnyKitchenObjectSpawned;
+            }
+        }
+    }
+
+    private void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
+    {
+        KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+
+        CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
+        completeDishKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
+        completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
+
+        player.GetKitchenObject().DestroySelf();
+        GetKitchenObject().DestroySelf();
+        completeDish.SetKitchenObjectParent(this);
+        this.player = null;
     }
 }
