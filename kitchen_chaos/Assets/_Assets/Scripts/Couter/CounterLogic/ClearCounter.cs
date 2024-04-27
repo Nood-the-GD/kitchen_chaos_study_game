@@ -96,7 +96,7 @@ public class ClearCounter : BaseCounter
 
         player.GetKitchenObject().DestroySelf();
         GetKitchenObject().DestroySelf();
-        completeDish.SetKitchenObjectParent(this);
+        completeDish.SetKitchenObjectParent(player);
         this.player = null;
     }
 }

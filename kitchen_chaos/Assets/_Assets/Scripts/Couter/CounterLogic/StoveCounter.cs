@@ -29,6 +29,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     private BurningRecipeSO burningRecipeSO;
     private float fryingTimer;
     private float burningTimer;
+    private Player player;
 
     private void Start()
     {
@@ -107,9 +108,9 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             else
             {
                 //Player is carrying something
-                if (player.GetKitchenObject() is PlateKitchenObject)
+                if (player.GetKitchenObject() is CompleteDishKitchenObject)
                 {
-                    //Player is holding a plate
+                    //Player is holding a set of kitchen object 
                     if (player.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDish))
                     {
                         if (completeDish.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
@@ -117,6 +118,16 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                             GetKitchenObject().DestroySelf();
                             ChangeState(State.Idle);
                         }
+                    }
+                }
+                else
+                {
+                    //Player is holding an ingredient
+                    if(CompleteDishManager.Instance.TryCombineDish(GetKitchenObject().GetKitchenObjectSO(), player.GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
+                    {
+                        KitchenObject.OnAnyKitchenObjectSpawned += KitchenObject_OnAnyKitchenObjectSpawned;
+                        KitchenObject.SpawnKitchenObject(resultDishSO, null);
+                        KitchenObject.OnAnyKitchenObjectSpawned -= KitchenObject_OnAnyKitchenObjectSpawned;
                     }
                 }
             }
@@ -137,6 +148,20 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             //Player carrying nothing or something can not be cut
             //Do no thing
         }
+    }
+
+    private void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
+    {
+        KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+
+        CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
+        completeDishKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
+        completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
+
+        player.GetKitchenObject().DestroySelf();
+        GetKitchenObject().DestroySelf();
+        completeDish.SetKitchenObjectParent(player);
+        this.player = null;
     }
 
     private void ChangeState(State state)

@@ -116,7 +116,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
 
         player.GetKitchenObject().DestroySelf();
         GetKitchenObject().DestroySelf();
-        completeDish.SetKitchenObjectParent(this);
+        completeDish.SetKitchenObjectParent(player);
         this.player = null;
     }
 
