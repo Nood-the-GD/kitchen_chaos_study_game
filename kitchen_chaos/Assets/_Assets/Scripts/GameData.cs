@@ -37,6 +37,7 @@ public class ColorSkin{
     public Color color;
     public string colorCode;
     public Material material;
+    public Sprite icon;
 }
 
 [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]

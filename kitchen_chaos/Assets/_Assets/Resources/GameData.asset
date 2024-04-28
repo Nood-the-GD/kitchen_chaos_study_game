@@ -23,7 +23,6 @@ MonoBehaviour:
     - {fileID: -2441813765035412052, guid: d29bf294e950f437db233e2e4cafbdf5, type: 3}
     - {fileID: -7175529056743475181, guid: 206d70af57bc2401693feb15986b8e1b, type: 3}
     - {fileID: 1599805354852870132, guid: d00250d3ee698469e94b8251517005db, type: 3}
-    - {fileID: 7502353502858751676, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
     - {fileID: -6275936465289592617, guid: 39fdad88482a32644aafaab84b4e95df, type: 3}
     - {fileID: 3492988916858510848, guid: 580cea5c67f810c4f9bf32b78a2987ee, type: 3}
     - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
@@ -315,8 +314,8 @@ MonoBehaviour:
       Entry: 1
       Data: CompleteBurger
     - Name: $v
-      Entry: 10
-      Data: 7
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -328,7 +327,7 @@ MonoBehaviour:
       Data: Cheese
     - Name: $v
       Entry: 10
-      Data: 8
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -340,7 +339,7 @@ MonoBehaviour:
       Data: Tomato
     - Name: $v
       Entry: 10
-      Data: 9
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -352,7 +351,7 @@ MonoBehaviour:
       Data: MeatPattyUncooked
     - Name: $v
       Entry: 10
-      Data: 10
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -364,7 +363,7 @@ MonoBehaviour:
       Data: Cabbage
     - Name: $v
       Entry: 10
-      Data: 11
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -376,7 +375,7 @@ MonoBehaviour:
       Data: MainPlayer
     - Name: $v
       Entry: 10
-      Data: 12
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -423,16 +422,21 @@ MonoBehaviour:
   - color: {r: 0.40000004, g: 0.49411768, b: 0.59607846, a: 1}
     colorCode: blue
     material: {fileID: 2100000, guid: 26aa1079da2dd134c8ac7748b1ec4319, type: 2}
+    icon: {fileID: 21300000, guid: 9f455a9614c4a6241b064a0f7a8c37c0, type: 3}
   - color: {r: 0.41960788, g: 0.63529414, b: 0.49411768, a: 1}
     colorCode: green
     material: {fileID: 2100000, guid: c70257a05d5898a488173f3d8f4e1069, type: 2}
+    icon: {fileID: 21300000, guid: 891f2bb42d8b22043b583a8fefc44aca, type: 3}
   - color: {r: 0.6392157, g: 0.34509805, b: 0.627451, a: 1}
     colorCode: pink
     material: {fileID: 2100000, guid: b3e91360ee4fdb44ebcf975f88646091, type: 2}
+    icon: {fileID: 21300000, guid: 2ac27a64f7dd16040819fae5419d254e, type: 3}
   - color: {r: 0.6509804, g: 0.31764707, b: 0.32941177, a: 1}
     colorCode: red
     material: {fileID: 2100000, guid: 124c156869871334f884d935502bddeb, type: 2}
+    icon: {fileID: 21300000, guid: e9e6a8cc811922047841fb11ae80ac38, type: 3}
   - color: {r: 0.6901961, g: 0.6901961, b: 0.48627454, a: 1}
     colorCode: yellow
     material: {fileID: 2100000, guid: 5238fd86c7a7c8945ab05a30cbd4754b, type: 2}
+    icon: {fileID: 21300000, guid: a7bb90f4c980d3c489d9c07177fc791a, type: 3}
   inGameProducts: []

@@ -10,7 +10,7 @@ public class ChoseColorElement : MonoBehaviour
     private ColorSkin colorSkin;
     public void Init(ColorSkin colorSkin, Action<ColorSkin> onSelect){
         this.colorSkin = colorSkin;
-        colorImage.color = colorSkin.color;
+        colorImage.sprite = colorSkin.icon;
         this.onSelect= (colorSkin) => {
             onSelect(colorSkin);
         };

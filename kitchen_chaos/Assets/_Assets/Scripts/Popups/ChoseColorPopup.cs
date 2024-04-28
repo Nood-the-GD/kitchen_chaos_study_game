@@ -9,6 +9,11 @@ public class ChoseColorPopup : BasePopup<ChoseColorPopup>
 
     void Start(){
         Init();
+        
+    }
+    protected override void OnDisable(){
+        base.OnDisable();
+        PopupController.s.GetActivePopup<CreateRoomPopup>().RefreshUI();
     }
     void Init(){
         var colorList = GameData.s.colorElements;

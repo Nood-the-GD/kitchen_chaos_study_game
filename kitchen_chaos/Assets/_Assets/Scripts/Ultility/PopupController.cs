@@ -307,6 +307,10 @@ public class PopupController : Singleton<PopupController>
         p.gameObject.SetActive(active);
     }
 
+    public T GetActivePopup<T>(){
+        return GetComponentInChildren<T>();
+    }
+
     IEnumerator DestroyDelay( GameObject go,float time){
         yield return new WaitForSecondsRealtime(time);
         Destroy(go);        

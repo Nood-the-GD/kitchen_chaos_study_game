@@ -4438,6 +4438,7 @@ MonoBehaviour:
     pointTarget: 000000000000000000000000
     previewImage: {fileID: 0}
   stageParent: {fileID: 2725029679139810495}
+  changeSkinColorButtonImage: {fileID: 2205701629150461341}
 --- !u!114 &596262831874706050
 MonoBehaviour:
   m_ObjectHideFlags: 0

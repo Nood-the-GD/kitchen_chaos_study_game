@@ -25,6 +25,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
     const string CMD_NEXT_SCENE = "CmdNextScene";
     int currentSceneId = 0;
+    public Image changeSkinColorButtonImage;
 
     [Button("Move to GameScene")]
     public void OnStartButtonClick(){
@@ -151,8 +152,8 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         previewImageParent.transform.DOScale(rootScale, 0.25f).From(0).SetEase(Ease.OutBack);
     }
 
-    void RefreshUI(){
-
+    public void RefreshUI(){
+        changeSkinColorButtonImage.color = UserSetting.colorSkin.color;
         foreach(var i in playerUIElements){
             i.gameObject.SetActive(false);
         }
