@@ -266,7 +266,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             if(this.kitchenObject == null || kitchenObject.gameObject != this.kitchenObject.gameObject)
                 OnPickupSomething?.Invoke(this, EventArgs.Empty);
-            Debug.Log("Sound: " + this.kitchenObject != null);
+            // Debug.Log("Sound: " + this.kitchenObject != null);
         }
         this.kitchenObject = kitchenObject;
     }
