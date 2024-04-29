@@ -28,6 +28,28 @@ public class KitchenObject : MonoBehaviour
 
         PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
     }
+    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients,IKitchenObjectParent kitchenObjectParent)
+    {
+        //convert interface to gameObject
+        var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+
+        //--Player Clone are not allowed to spawn object
+        var player = kitchenObjectParent as Player;
+        if(player != null && !player.photonView.IsMine)
+            return;
+
+        var parentId = -1;
+        if(kitchenObjectParentGameObject != null)
+            parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
+
+        string[] ingredientString = new string[ingredients.Length];
+        for (int i = 0; i < ingredients.Length; i++)
+        {
+            ingredientString[i] = ingredients[i].objectName;
+        }
+
+        PhotonManager.s.CmdSpawnCompleteDish(completeDishSO.prefab.GetComponent<ObjectTypeView>().objectType, ingredientString, parentId);
+    }
     
     void Awake()
     {

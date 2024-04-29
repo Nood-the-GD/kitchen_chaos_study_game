@@ -127,16 +127,11 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     if(CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
                     {
                         player.GetKitchenObject().DestroySelf();
-                        KitchenObject.SpawnKitchenObject(resultDishSO, player);
+
                         KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+                        KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, counterKitchenObjectSO}, player);
+
                         GetKitchenObject().DestroySelf();
-
-                        CompleteDishKitchenObject completeDishKitchenObject = player.GetKitchenObject() as CompleteDishKitchenObject;
-
-                        Debug.Log(playerKitchenObjectSO.objectName + " " + counterKitchenObjectSO.objectName);
-                        completeDishKitchenObject.TryAddIngredient(playerKitchenObjectSO);
-                        completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
-
                     }
                 }
             }

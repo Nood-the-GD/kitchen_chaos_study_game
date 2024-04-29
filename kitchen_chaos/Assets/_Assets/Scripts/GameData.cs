@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Photon.Pun;
+using System.Linq;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -119,6 +121,19 @@ public class GameData : SerializedScriptableObject
             else
             {
                 prefabPaths.Add(id.ToString(), path);
+            }
+        }
+
+        var kitchenObjectSOs = Resources.FindObjectsOfTypeAll<KitchenObjectSO>();
+        foreach(var kitchenObjectSO in kitchenObjectSOs)
+        {
+            if(kitchenObjectSODic.ContainsKey(kitchenObjectSO.objectName))
+            {
+                kitchenObjectSODic[kitchenObjectSO.objectName] = kitchenObjectSO;
+            }
+            else
+            {
+                kitchenObjectSODic.Add(kitchenObjectSO.objectName, kitchenObjectSO);
             }
         }
         Save();
@@ -284,6 +299,7 @@ public class GameData : SerializedScriptableObject
     #endregion
 
     public Dictionary<string, string> prefabPaths = new Dictionary<string, string>();
+    public Dictionary<string, KitchenObjectSO> kitchenObjectSODic = new Dictionary<string, KitchenObjectSO>();
     [Searchable]
     [ListDrawerSettings(ShowIndexLabels = true, NumberOfItemsPerPage = 10)]
     public Dictionary<string, ObjectTypeView> objectTypeViews = new Dictionary<string, ObjectTypeView>();
@@ -350,6 +366,19 @@ public class GameData : SerializedScriptableObject
         else
         {
             Debug.LogError("Cant find path with id: " + id);
+            return null;
+        }
+    }
+
+    public KitchenObjectSO GetKitchenObjectSO(string objectName)
+    {
+        if (kitchenObjectSODic.ContainsKey(objectName))
+        {
+            return kitchenObjectSODic[objectName];
+        }
+        else
+        {
+            Debug.LogError("Cant find object with name: " + objectName);
             return null;
         }
     }

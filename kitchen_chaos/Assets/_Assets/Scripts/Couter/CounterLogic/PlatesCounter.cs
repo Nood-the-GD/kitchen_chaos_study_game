@@ -62,33 +62,13 @@ public class PlatesCounter : BaseCounter
                 if(CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
                 {
                     player.GetKitchenObject().DestroySelf();
-                    KitchenObject.SpawnKitchenObject(resultDishSO, player);
+
                     KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+                    KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, counterKitchenObjectSO}, player);
+
                     GetKitchenObject().DestroySelf();
-
-                    CompleteDishKitchenObject completeDishKitchenObject = player.GetKitchenObject() as CompleteDishKitchenObject;
-
-                    Debug.Log(playerKitchenObjectSO.objectName + " " + counterKitchenObjectSO.objectName);
-                    completeDishKitchenObject.TryAddIngredient(playerKitchenObjectSO);
-                    completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
-
                 }
             }
         }
-        // void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
-        // {
-        //     if(completeDish is not CompleteDishKitchenObject) return;
-
-        //     KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-
-        //     Debug.Log(playerKitchenObjectSO.objectName + " " + counterKitchenObjectSO.objectName);
-        //     CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
-        //     completeDishKitchenObject.TryAddIngredient(playerKitchenObjectSO);
-        //     completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
-
-        //     GetKitchenObject().DestroySelf();
-        //     // completeDish.SetKitchenObjectParent(player);
-        //     this.player = null;
-        // }
     }
 }
