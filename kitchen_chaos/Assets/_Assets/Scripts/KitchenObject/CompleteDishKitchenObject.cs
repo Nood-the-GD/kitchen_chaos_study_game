@@ -35,7 +35,6 @@ public class CompleteDishKitchenObject : KitchenObject
             return false;
         }
 
-        Debug.Log("On added ingredient source");
         OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
         {
             addedIngredientKitchenObjectSO = kitchenObjectSO

@@ -19,7 +19,7 @@ public class CompleteDishVisual : MonoBehaviour
 
     private void CompleteDish_OnIngredientAdded(object sender, CompleteDishKitchenObject.OnIngredientAddedEventArgs e)
     {
-        Debug.Log("On added ingredient ");
+        // Debug.Log("On added ingredient ");
         foreach(KitchenObjectSO_GameObject kitchenObjectSO_GameObject in kitchenObjectSO_GameObjectsList)
         {
             if(kitchenObjectSO_GameObject.kitchenObjectSO == e.addedIngredientKitchenObjectSO)

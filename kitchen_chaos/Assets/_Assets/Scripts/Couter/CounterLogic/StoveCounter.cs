@@ -95,6 +95,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     public override void Interact(Player player)
     {
+        KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
         if (HasKitchenObject())
         {
             //Counter has kitchen object
@@ -125,6 +126,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     //Player is holding an ingredient
                     if(CompleteDishManager.Instance.TryCombineDish(GetKitchenObject().GetKitchenObjectSO(), player.GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
                     {
+                        player.GetKitchenObject().DestroySelf();
                         KitchenObject.OnAnyKitchenObjectSpawned += KitchenObject_OnAnyKitchenObjectSpawned;
                         KitchenObject.SpawnKitchenObject(resultDishSO, null);
                         KitchenObject.OnAnyKitchenObjectSpawned -= KitchenObject_OnAnyKitchenObjectSpawned;
@@ -148,23 +150,23 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             //Player carrying nothing or something can not be cut
             //Do no thing
         }
+        void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
+        {
+            if(completeDish is not CompleteDishKitchenObject) return;
+
+            KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+
+            Debug.Log(playerKitchenObjectSO.objectName + " " + counterKitchenObjectSO.objectName);
+            CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
+            completeDishKitchenObject.TryAddIngredient(playerKitchenObjectSO);
+            completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
+
+            GetKitchenObject().DestroySelf();
+            // completeDish.SetKitchenObjectParent(player);
+            this.player = null;
+        }
     }
 
-    private void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
-    {
-        if (completeDish is not CompleteDishKitchenObject) return;
-
-        KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-
-        CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
-        completeDishKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
-        completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
-
-        player.GetKitchenObject().DestroySelf();
-        GetKitchenObject().DestroySelf();
-        completeDish.SetKitchenObjectParent(player);
-        this.player = null;
-    }
 
     private void ChangeState(State state)
     {
