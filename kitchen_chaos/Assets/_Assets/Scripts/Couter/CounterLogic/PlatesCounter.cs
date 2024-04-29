@@ -72,6 +72,8 @@ public class PlatesCounter : BaseCounter
 
     private void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
     {
+        if(completeDish is not CompleteDishKitchenObject) return;
+
         CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
         completeDishKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
         completeDishKitchenObject.TryAddIngredient(plateKitchenObjectSO);

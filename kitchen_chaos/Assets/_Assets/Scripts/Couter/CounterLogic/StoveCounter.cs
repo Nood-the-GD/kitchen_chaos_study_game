@@ -152,6 +152,8 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     private void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
     {
+        if (completeDish is not CompleteDishKitchenObject) return;
+
         KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
 
         CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;

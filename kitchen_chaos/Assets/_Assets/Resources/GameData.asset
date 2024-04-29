@@ -28,6 +28,7 @@ MonoBehaviour:
     - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
     - {fileID: 4438093364599518989, guid: d62396a87c5abce4598a6e8bd5d76d9e, type: 3}
     - {fileID: 8525692102432909788, guid: 8f51dcb530c1348c4a9c47b9e66b6bb2, type: 3}
+    - {fileID: 7502353502858751676, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -136,34 +137,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CompleteBurger
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/CompleteBurger
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
       Data: Cheese
     - Name: $v
       Entry: 1
       Data: Prefabs_Main/KitchenObjects/Cheese
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyUncooked
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
     - Name: 
       Entry: 8
       Data: 
@@ -184,10 +161,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MainPlayer
+      Data: MeatPattyUncooked
     - Name: $v
       Entry: 1
-      Data: Prefabs/MainPlayer
+      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
     - Name: 
       Entry: 8
       Data: 
@@ -200,6 +177,30 @@ MonoBehaviour:
     - Name: $v
       Entry: 1
       Data: Prefabs_Main/KitchenObjects/Cabbage
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MainPlayer
+    - Name: $v
+      Entry: 1
+      Data: Prefabs/MainPlayer
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CompleteBurger
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/CompleteBurger
     - Name: 
       Entry: 8
       Data: 
@@ -312,18 +313,6 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CompleteBurger
-    - Name: $v
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
       Data: Cheese
     - Name: $v
       Entry: 10
@@ -376,6 +365,18 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CompleteBurger
+    - Name: $v
+      Entry: 10
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
