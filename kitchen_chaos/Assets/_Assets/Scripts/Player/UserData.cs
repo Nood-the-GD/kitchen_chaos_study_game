@@ -9,7 +9,7 @@ public class UserSetting{
     }
     public static ColorSkin colorSkin{
         get{
-            var colorCode = PlayerPrefs.GetString("colorSkin", "default");
+            var colorCode = PlayerPrefs.GetString("colorSkin", "blue");
             return GameData.s.colorElements.Find(x => x.colorCode == colorCode);
         }
         set => PlayerPrefs.SetString("colorSkin", value.colorCode);
