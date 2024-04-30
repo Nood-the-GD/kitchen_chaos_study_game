@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Sirenix.OdinInspector;
 
 public class DeliveryManager : MonoBehaviour
 {
@@ -44,9 +45,43 @@ public class DeliveryManager : MonoBehaviour
     }
     void Start()
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient){
             StartCoroutine(CR_UpdateTimerClass());
+            StartCoroutine(UpdateOrder());
+        }
     }
+
+    IEnumerator UpdateOrder(){
+        while(true){
+            yield return new WaitForSeconds(1f);
+            var listOfName = new List<string>();
+            foreach(var recipe in waitingRecipeSOList){
+                listOfName.Add(recipe.name);
+            }
+
+            CmdUpdateList(listOfName);
+
+        }
+    }
+
+    void CmdUpdateList(List<string> orders){
+        photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
+    }
+
+    [PunRPC]
+    void RpcUpdateList(List<string> orders){
+
+        waitingRecipeSOList.Clear();
+        waitingTimerClassList.Clear();
+        // Invoke the OnRecipeRemove event
+        OnRecipeRemove?.Invoke(this, EventArgs.Empty);   
+        
+        foreach(var order in orders){
+            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
+            AddOrder(index);
+        }
+    }
+
     private void Update()
     {
         for(int i = 0; i < waitingTimerClassList.Count; i++)
@@ -72,7 +107,7 @@ public class DeliveryManager : MonoBehaviour
             if(waitingRecipeSOList.Count < waitingRecipeMax)
             {
                 var index = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
-                CmdAddRecipe(index);
+                AddOrder(index);
             }
         }
 
@@ -80,36 +115,19 @@ public class DeliveryManager : MonoBehaviour
         {
             if(waitingTimerClassList[i].timer <= 0f)
             {
-                CmdRemoveRecipe(i);
+                RemoveOrder(i);
             }
         }
     }
     #endregion
 
     #region Multiplay
-    void CmdAddRecipe(int index)
-    {
-        photonView.RPC("RPCAddRecipe", RpcTarget.All, index);
-    }
-    void CmdRemoveRecipe(int index)
-    {
-        photonView.RPC("RPCRemoveRecipe", RpcTarget.All, index);
-    }
+
     void CmdUpdateTimerClass(int index, float value)
     {
-        photonView.RPC("RPCUpdateTimerClass", RpcTarget.All, new object[] { index, value });
+        photonView.RPC(nameof(RPCUpdateTimerClass), RpcTarget.All, new object[] { index, value });
     }
-    [PunRPC]
-    void RPCAddRecipe(int recipeIndex)
-    {
-        AddOrder(recipeIndex);
-    }
-    [PunRPC]
-    void RPCRemoveRecipe(int recipeIndex)
-    {
-        if(recipeIndex < waitingRecipeSOList.Count - 1)
-            RemoveOrder(recipeIndex);
-    }
+
     [PunRPC]
     void RPCUpdateTimerClass(int index, float timer)
     {
