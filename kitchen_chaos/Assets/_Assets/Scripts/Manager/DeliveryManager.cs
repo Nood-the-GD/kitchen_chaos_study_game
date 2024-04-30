@@ -59,12 +59,13 @@ public class DeliveryManager : MonoBehaviour
                 listOfName.Add(recipe.name);
             }
 
-            CmdUpdateList(listOfName);
+            CmdUpdateList(listOfName.ToArray());
 
         }
     }
 
-    void CmdUpdateList(List<string> orders){
+
+    void CmdUpdateList(string[] orders){
         photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
     }
 
