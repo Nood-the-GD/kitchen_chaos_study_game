@@ -1723,6 +1723,7 @@ MonoBehaviour:
   - {fileID: 4667909102416076305}
   - {fileID: 8906702632681772180}
   - {fileID: 2726813510594943499}
+  pointList: []
   _starSprite: {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &2725029679139810495
@@ -2561,6 +2562,10 @@ MonoBehaviour:
   - {fileID: 5421791900209908912}
   - {fileID: 3936575140798476824}
   - {fileID: 4691822569185815953}
+  pointList:
+  - {fileID: 4222915452028346139}
+  - {fileID: 7660587096332680063}
+  - {fileID: 8005910590542819307}
   _starSprite: {fileID: 21300000, guid: 53321bd88b96e44b6a22820d87584c9d, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &3885399228625314574
@@ -2923,6 +2928,7 @@ MonoBehaviour:
   - {fileID: 86881585077299592}
   - {fileID: 1900621863939993697}
   - {fileID: 6750877876018168492}
+  pointList: []
   _starSprite: {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &4528004875276242655
@@ -3814,6 +3820,7 @@ MonoBehaviour:
   - {fileID: 578520947387186309}
   - {fileID: 352682467334290499}
   - {fileID: 8610101035095877397}
+  pointList: []
   _starSprite: {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &5421791900209908912
@@ -4128,6 +4135,7 @@ MonoBehaviour:
   - {fileID: 3102323112586129816}
   - {fileID: 1030968721623049374}
   - {fileID: 7542846918025172370}
+  pointList: []
   _starSprite: {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &6596661950400751367

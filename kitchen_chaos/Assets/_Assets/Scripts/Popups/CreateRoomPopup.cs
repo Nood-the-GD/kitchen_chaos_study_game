@@ -143,7 +143,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
                 stage.Unselect();
         }
 
-        currentLevelStarController.ShowStar(star);
+        currentLevelStarController.SetData(stageData);
         previewImage.sprite = stageData.previewImage;
         selectStage = stageData;
 

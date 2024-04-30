@@ -371,6 +371,10 @@ MonoBehaviour:
   - {fileID: 5524985181383285141}
   - {fileID: 2822146534660918077}
   - {fileID: 3354197632510110176}
+  pointList:
+  - {fileID: 4167132258428810801}
+  - {fileID: 7438980260847700040}
+  - {fileID: 9033182943254384922}
   _starSprite: {fileID: 21300000, guid: e546e0fb39bdc4b23b9b6efe1c37aa70, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
 --- !u!1 &1926593258315109888

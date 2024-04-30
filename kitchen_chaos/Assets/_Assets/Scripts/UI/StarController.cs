@@ -1,14 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StarController : MonoBehaviour
 {
-    [SerializeField] List<GameObject> starList = new List<GameObject>();
+    [SerializeField] private List<GameObject> starList = new List<GameObject>();
+    [SerializeField] private List<TextMeshProUGUI> pointList = new List<TextMeshProUGUI>();
     [SerializeField] private Sprite _starSprite, _nonStarSprite;
 
-    public void ShowStar(int star)
+    public void SetData(StageData stageData)
+    {
+        if (starList.Count > 0)
+            ShowStar(stageData.star);
+        if(pointList.Count > 0)
+            UpdatePoint(stageData.pointTarget);
+    }
+
+    private void UpdatePoint(int[] points)
+    {
+        for (int i = 0; i < points.Length; i++)
+        {
+            pointList[i].text = points[i].ToString();
+        }
+    }
+
+    private void ShowStar(int star)
     {
         for (int i = 0; i < starList.Count; i++)
         {

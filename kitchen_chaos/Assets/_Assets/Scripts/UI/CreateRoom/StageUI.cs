@@ -21,7 +21,6 @@ public class StageData{
 
     public int[] pointTarget = new int[3];
 
-
     public bool isUnlocked{
         get{
             return PlayerPrefs.GetInt("level."+levelId+".unlocked", 0) == 1;
@@ -62,7 +61,7 @@ public class StageUI : MonoBehaviour
         //Set data to UI
         stageUI.sprite = data.isUnlocked?unSelectStageSprite:lockStageSprite;
         stageText.text = data.levelId.ToString();
-        levelStarController.ShowStar(data.star);
+        levelStarController.SetData(data);
     }
 
     public void Unselect(){
