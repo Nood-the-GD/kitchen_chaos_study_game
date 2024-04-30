@@ -7,7 +7,8 @@ using System;
 
 [System.Serializable]
 public class StageData{
-    
+
+    public int score;
     public int levelId;
     public string sceneName;
     public int star{
@@ -33,6 +34,7 @@ public class StageData{
     public Sprite previewImage;
 
     public void ApplyNewScore(int score){
+        this.score = score;
         for(int i = 0; i < pointTarget.Length; i++){
             if(score >= pointTarget[i]){
                 star = i + 1;

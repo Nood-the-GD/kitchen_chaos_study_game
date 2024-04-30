@@ -152,14 +152,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void EndSesstion(){
+    public void EndSession(){
         s = null;
         PhotonNetwork.LeaveRoom();
         
         Destroy(gameObject);
     }
     
-#region Photon Controll
+#region Photon Control
     public static void JoinRoom(string name)
     {
         PhotonNetwork.JoinRoom(name);

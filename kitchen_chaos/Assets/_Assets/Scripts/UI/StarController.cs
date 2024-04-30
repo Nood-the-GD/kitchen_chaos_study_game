@@ -15,10 +15,10 @@ public class StarController : MonoBehaviour
         if (starList.Count > 0)
             ShowStar(stageData.star);
         if(pointList.Count > 0)
-            UpdatePoint(stageData.pointTarget);
+            ShowPoint(stageData.pointTarget);
     }
 
-    private void UpdatePoint(int[] points)
+    public void ShowPoint(int[] points)
     {
         for (int i = 0; i < points.Length; i++)
         {
@@ -26,7 +26,7 @@ public class StarController : MonoBehaviour
         }
     }
 
-    private void ShowStar(int star)
+    public void ShowStar(int star)
     {
         for (int i = 0; i < starList.Count; i++)
         {
