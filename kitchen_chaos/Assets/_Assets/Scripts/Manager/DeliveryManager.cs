@@ -55,11 +55,15 @@ public class DeliveryManager : MonoBehaviour
         while(true){
             yield return new WaitForSeconds(1f);
             var listOfName = new List<string>();
+
             foreach(var recipe in waitingRecipeSOList){
                 listOfName.Add(recipe.name);
             }
-
-            CmdUpdateList(listOfName.ToArray());
+            string[] arr= listOfName.ToArray();
+            if(arr == null){
+                Debug.LogError("arr is null");
+            }
+            CmdUpdateList(arr);
 
         }
     }
@@ -70,7 +74,7 @@ public class DeliveryManager : MonoBehaviour
     }
 
     [PunRPC]
-    void RpcUpdateList(List<string> orders){
+    void RpcUpdateList(string[] orders){
 
         waitingRecipeSOList.Clear();
         waitingTimerClassList.Clear();
