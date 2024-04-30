@@ -65,7 +65,10 @@ public class DeliveryManager : MonoBehaviour
             if(listOfName.Count == 0){
                 continue;
             }
-                
+            if(listOfName.Count == 1){
+                listOfName.Add("None");
+            }
+
             string[] arr= new string[listOfName.Count];
             for(int i = 0; i < listOfName.Count; i++){
                 arr[i] = listOfName[i];
@@ -81,7 +84,7 @@ public class DeliveryManager : MonoBehaviour
     }
 
     [PunRPC]
-    void RpcUpdateList(string[] orders){
+    void RpcUpdateList(params string[] orders){
 
         waitingRecipeSOList.Clear();
         waitingTimerClassList.Clear();
@@ -89,6 +92,8 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeRemove?.Invoke(this, EventArgs.Empty);   
         
         foreach(var order in orders){
+            if(order == "None")
+                continue;
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
             AddOrder(index);
         }
