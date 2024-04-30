@@ -94,14 +94,13 @@ public class DeliveryManager : MonoBehaviour
     void CmdUpdateList(string[] orders){
         photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
     }
-
     [PunRPC]
     void RpcUpdateList(params string[] orders){
         foreach(var order in orders){
             if(order == "None")
                 continue;
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
-            UpdateOrder(index, recipeListSO.recipeSOList[index]);
+            UpdateOrder(index, recipeListSO.recipeSOList[index], orders.Length);
         }
     }
 
@@ -233,8 +232,19 @@ public class DeliveryManager : MonoBehaviour
         // Invoke the OnRecipeAdded event
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
-    private void UpdateOrder(int index, RecipeSO recipeSO)
+    private void UpdateOrder(int index, RecipeSO recipeSO, int orderCount)
     {
+        while(waitingRecipeSOList.Count != orderCount)
+        {
+            if(waitingRecipeSOList.Count > orderCount)
+            {
+                RemoveOrder(waitingRecipeSOList.Count - 1);
+            }
+            if(waitingRecipeSOList.Count < orderCount)
+            {
+                AddOrder(index);
+            }
+        }
         recipeListSO.recipeSOList[index] = recipeSO;
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
