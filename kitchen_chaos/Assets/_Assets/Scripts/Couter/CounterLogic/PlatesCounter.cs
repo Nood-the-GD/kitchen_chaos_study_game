@@ -68,8 +68,6 @@ public class PlatesCounter : BaseCounter
 
                     KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, plateKitchenObjectSO}, player);
 
-                    GetKitchenObject().DestroySelf();
-
                     plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
                 }

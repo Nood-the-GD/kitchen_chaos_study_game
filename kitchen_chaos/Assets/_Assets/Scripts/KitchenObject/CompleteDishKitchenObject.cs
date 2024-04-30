@@ -30,7 +30,11 @@ public class CompleteDishKitchenObject : KitchenObject
     }
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
     {
-        if (!ingredientsList.Contains(kitchenObjectSO))
+        if(kitchenObjectSO.objectName == "Plate" && isHasPlate)
+        {
+            return false;
+        }
+        if (!ingredientsList.Contains(kitchenObjectSO) || kitchenObjectSOList.Contains(kitchenObjectSO))
         {
             return false;
         }
