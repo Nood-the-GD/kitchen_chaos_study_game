@@ -96,11 +96,13 @@ public class DeliveryManager : MonoBehaviour
     }
     [PunRPC]
     void RpcUpdateList(params string[] orders){
-        foreach(var order in orders){
+        for (int i = 0; i < orders.Length; i++)
+        {
+            string order = orders[i];
             if(order == "None")
                 continue;
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
-            UpdateOrder(index, recipeListSO.recipeSOList[index], orders.Length);
+            UpdateOrder(i, recipeListSO.recipeSOList[index], orders.Length);
         }
     }
 
