@@ -10,7 +10,7 @@ public class PlatesCounter : BaseCounter
 
     [SerializeReference] private KitchenObjectSO plateKitchenObjectSO;
     private float plateTimer = 0f;
-    private float plateTimerMax = 4f;
+    private float plateTimerMax = 8f;
 
     private int plateNumberMax = 4;
     private int plateNumber = 0;
@@ -34,17 +34,15 @@ public class PlatesCounter : BaseCounter
 
     public override void Interact(Player player)
     {
+        if (plateNumber <= 0) return;
 
         if (!player.HasKitchenObject())
         {
             //Player is hold nothing
-            if(plateNumber > 0)
-            {
-                //PlateCounter has plates
-                plateNumber--;
-                KitchenObject.SpawnKitchenObject(plateKitchenObjectSO, player);
-                OnPlateRemove?.Invoke(this, EventArgs.Empty);
-            }
+            //PlateCounter has plates
+            plateNumber--;
+            KitchenObject.SpawnKitchenObject(plateKitchenObjectSO, player);
+            OnPlateRemove?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -57,6 +55,7 @@ public class PlatesCounter : BaseCounter
                 // Try add ingredient with the current kitchen object on counter
                 if(playerCompleteDish.TryAddIngredient(plateKitchenObjectSO))
                 {
+                    plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -70,6 +69,8 @@ public class PlatesCounter : BaseCounter
                     KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, plateKitchenObjectSO}, player);
 
                     GetKitchenObject().DestroySelf();
+
+                    plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
                 }
             }

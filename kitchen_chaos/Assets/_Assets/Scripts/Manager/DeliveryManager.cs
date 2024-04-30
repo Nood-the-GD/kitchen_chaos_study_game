@@ -28,8 +28,8 @@ public class DeliveryManager : MonoBehaviour
     private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
-    private float spawnRecipeTimerMax = 4f;
-    private int waitingRecipeMax = 4;
+    private float spawnRecipeTimerMax = 6f;
+    private int waitingRecipeMax = 3;
     public static int recipeDeliveredPoint = 0;
     public PhotonView photonView;
     #endregion
