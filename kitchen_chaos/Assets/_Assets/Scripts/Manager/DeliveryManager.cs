@@ -102,7 +102,7 @@ public class DeliveryManager : MonoBehaviour
             if(order == "None")
                 continue;
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
-            UpdateOrder(i, recipeListSO.recipeSOList[index], orders.Length);
+            UpdateOrder(i, index, orders.Length);
         }
     }
 
@@ -234,7 +234,7 @@ public class DeliveryManager : MonoBehaviour
         // Invoke the OnRecipeAdded event
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
-    private void UpdateOrder(int index, RecipeSO recipeSO, int orderCount)
+    private void UpdateOrder(int index, int indexOfRecipe, int orderCount)
     {
         while(waitingRecipeSOList.Count != orderCount)
         {
@@ -244,10 +244,10 @@ public class DeliveryManager : MonoBehaviour
             }
             if(waitingRecipeSOList.Count < orderCount)
             {
-                AddOrder(index);
+                AddOrder(indexOfRecipe);
             }
         }
-        recipeListSO.recipeSOList[index] = recipeSO;
+        recipeListSO.recipeSOList[index] = recipeListSO.recipeSOList[indexOfRecipe];
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
     private void RemoveOrder(int recipeIndex)
