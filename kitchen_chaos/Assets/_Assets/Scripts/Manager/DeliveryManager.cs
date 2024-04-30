@@ -51,54 +51,6 @@ public class DeliveryManager : MonoBehaviour
         }
     }
 
-    IEnumerator UpdateOrder(){
-        while(true){
-            yield return new WaitForSeconds(1f);
-            
-            var listOfName = new List<string>();
-
-
-            foreach(var recipe in waitingRecipeSOList){
-                listOfName.Add(recipe.name);
-            }
-
-            if(listOfName.Count == 0){
-                continue;
-            }
-            if(listOfName.Count == 1){
-                listOfName.Add("None");
-            }
-
-            string[] arr= new string[listOfName.Count];
-            for(int i = 0; i < listOfName.Count; i++){
-                arr[i] = listOfName[i];
-            }
-            CmdUpdateList(arr);
-
-        }
-    }
-
-
-    void CmdUpdateList(string[] orders){
-        photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
-    }
-
-    [PunRPC]
-    void RpcUpdateList(params string[] orders){
-
-        waitingRecipeSOList.Clear();
-        waitingTimerClassList.Clear();
-        // Invoke the OnRecipeRemove event
-        OnRecipeRemove?.Invoke(this, EventArgs.Empty);   
-        
-        foreach(var order in orders){
-            if(order == "None")
-                continue;
-            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
-            AddOrder(index);
-        }
-    }
-
     private void Update()
     {
         for(int i = 0; i < waitingTimerClassList.Count; i++)
@@ -139,6 +91,19 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Multiplay
+    void CmdUpdateList(string[] orders){
+        photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
+    }
+
+    [PunRPC]
+    void RpcUpdateList(params string[] orders){
+        foreach(var order in orders){
+            if(order == "None")
+                continue;
+            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
+            UpdateOrder(index, recipeListSO.recipeSOList[index]);
+        }
+    }
 
     void CmdUpdateTimerClass(int index, float value)
     {
@@ -154,6 +119,32 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Delay functions
+    IEnumerator UpdateOrder(){
+        while(true){
+            yield return new WaitForSeconds(1f);
+            
+            var listOfName = new List<string>();
+
+
+            foreach(var recipe in waitingRecipeSOList){
+                listOfName.Add(recipe.name);
+            }
+
+            if(listOfName.Count == 0){
+                continue;
+            }
+            if(listOfName.Count == 1){
+                listOfName.Add("None");
+            }
+
+            string[] arr= new string[listOfName.Count];
+            for(int i = 0; i < listOfName.Count; i++){
+                arr[i] = listOfName[i];
+            }
+            CmdUpdateList(arr);
+
+        }
+    }
     private IEnumerator CR_UpdateTimerClass()
     {
         while(GameManager.Instance.IsGameOver() == false)
@@ -242,8 +233,11 @@ public class DeliveryManager : MonoBehaviour
         // Invoke the OnRecipeAdded event
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
-
-
+    private void UpdateOrder(int index, RecipeSO recipeSO)
+    {
+        recipeListSO.recipeSOList[index] = recipeSO;
+        OnRecipeAdded?.Invoke(this, EventArgs.Empty);
+    }
     private void RemoveOrder(int recipeIndex)
     {
         // Check that recipeIndex is valid
