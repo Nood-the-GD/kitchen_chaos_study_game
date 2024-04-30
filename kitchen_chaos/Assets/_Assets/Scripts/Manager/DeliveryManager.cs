@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Sirenix.OdinInspector;
+using System.Linq;
 
 public class DeliveryManager : MonoBehaviour
 {
@@ -92,10 +93,16 @@ public class DeliveryManager : MonoBehaviour
 
     #region Multiplay
     void CmdUpdateList(string[] orders){
-        photonView.RPC("RpcUpdateList", RpcTarget.Others, orders);
+        photonView.RPC(nameof(RpcUpdateList), RpcTarget.Others, orders);
     }
     [PunRPC]
     void RpcUpdateList(params string[] orders){
+        if(orders.Contains("None"))
+        {
+            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == orders[0]);
+            UpdateOrder(0, index, 1);
+            return;
+        }
         for (int i = 0; i < orders.Length; i++)
         {
             string order = orders[i];
@@ -121,12 +128,10 @@ public class DeliveryManager : MonoBehaviour
 
     #region Delay functions
     IEnumerator UpdateOrder(){
-        while(true){
+        while(GameManager.Instance.IsGameOver() == false){
             yield return new WaitForSeconds(1f);
             
             var listOfName = new List<string>();
-
-
             foreach(var recipe in waitingRecipeSOList){
                 listOfName.Add(recipe.name);
             }
@@ -138,7 +143,7 @@ public class DeliveryManager : MonoBehaviour
                 listOfName.Add("None");
             }
 
-            string[] arr= new string[listOfName.Count];
+            string[] arr = new string[listOfName.Count];
             for(int i = 0; i < listOfName.Count; i++){
                 arr[i] = listOfName[i];
             }
@@ -234,7 +239,7 @@ public class DeliveryManager : MonoBehaviour
         // Invoke the OnRecipeAdded event
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
-    private void UpdateOrder(int index, int indexOfRecipe, int orderCount)
+    private void UpdateOrder(int indexOfOrder, int indexOfRecipe, int orderCount)
     {
         while(waitingRecipeSOList.Count != orderCount)
         {
@@ -247,7 +252,7 @@ public class DeliveryManager : MonoBehaviour
                 AddOrder(indexOfRecipe);
             }
         }
-        recipeListSO.recipeSOList[index] = recipeListSO.recipeSOList[indexOfRecipe];
+        waitingRecipeSOList[indexOfOrder] = recipeListSO.recipeSOList[indexOfRecipe];
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
     private void RemoveOrder(int recipeIndex)
