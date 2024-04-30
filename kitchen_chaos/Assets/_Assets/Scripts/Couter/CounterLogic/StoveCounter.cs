@@ -95,7 +95,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     public override void Interact(Player player)
     {
-        KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
         if (HasKitchenObject())
         {
             //Counter has kitchen object
@@ -108,6 +107,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             }
             else
             {
+                KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
                 //Player is carrying something
                 if (player.GetKitchenObject() is CompleteDishKitchenObject)
                 {
@@ -152,21 +152,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             //Player carrying nothing or something can not be cut
             //Do no thing
         }
-        // void KitchenObject_OnAnyKitchenObjectSpawned(KitchenObject completeDish)
-        // {
-        //     if(completeDish is not CompleteDishKitchenObject) return;
-
-        //     KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-
-        //     Debug.Log(playerKitchenObjectSO.objectName + " " + counterKitchenObjectSO.objectName);
-        //     CompleteDishKitchenObject completeDishKitchenObject = completeDish as CompleteDishKitchenObject;
-        //     completeDishKitchenObject.TryAddIngredient(playerKitchenObjectSO);
-        //     completeDishKitchenObject.TryAddIngredient(counterKitchenObjectSO);
-
-        //     GetKitchenObject().DestroySelf();
-        //     // completeDish.SetKitchenObjectParent(player);
-        //     this.player = null;
-        // }
     }
 
 
