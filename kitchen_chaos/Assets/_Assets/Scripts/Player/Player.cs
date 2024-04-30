@@ -114,6 +114,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         GetMovementInput();
         HandleRotation(moveDir);
+        #if UNITY_EDITOR
         if(MovementTypeController.Instance.isMobileController)
         {
             HandleMobileMovement();
@@ -122,6 +123,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             HandlePCMovement();
         }
+        #elif UNITY_IPHONE || UNITY_ANDROID
+            HandleMobileMovement();
+        #endif
+
     }
     private void GetMovementInput()
     {
@@ -181,11 +186,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         // If movement is not possible
         if (!movementCheck)
         {
-            bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance) && !direction.x.IsInRange(-0.2f, 0.2f);
+            bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance) && !direction.x.IsInRange(-0.5f, 0.5f);
             // Check if movement on X axis is possible
 
             // Check if movement on Z axis is possible
-            bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance) && !direction.z.IsInRange(-0.2f, 0.2f);
+            bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance) && !direction.z.IsInRange(-0.5f, 0.5f);
 
             // Set direction that is possible
             direction = xCheck ? new Vector3(direction.x, 0, 0) : zCheck ? new Vector3(0, 0, direction.z) : Vector3.zero;
