@@ -54,14 +54,21 @@ public class DeliveryManager : MonoBehaviour
     IEnumerator UpdateOrder(){
         while(true){
             yield return new WaitForSeconds(1f);
+            
             var listOfName = new List<string>();
+
 
             foreach(var recipe in waitingRecipeSOList){
                 listOfName.Add(recipe.name);
             }
-            string[] arr= listOfName.ToArray();
-            if(arr == null){
-                Debug.LogError("arr is null");
+
+            if(listOfName.Count == 0){
+                continue;
+            }
+                
+            string[] arr= new string[listOfName.Count];
+            for(int i = 0; i < listOfName.Count; i++){
+                arr[i] = listOfName[i];
             }
             CmdUpdateList(arr);
 
