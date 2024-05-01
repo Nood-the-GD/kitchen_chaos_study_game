@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class StoveCounter : BaseCounter, IHasProgressBar
@@ -58,9 +59,10 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 {
                     GetKitchenObject().DestroySelf();
 
-
-                    KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
-
+                    if(PhotonNetwork.IsMasterClient){
+                        KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+                    }
+                    
                     ChangeState(State.Fried);
                     burningTimer = 0;
                     burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
