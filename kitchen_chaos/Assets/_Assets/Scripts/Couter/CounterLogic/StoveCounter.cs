@@ -39,6 +39,13 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     private void Update()
     {
+        if(burningRecipeSO == null)
+        {
+            burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+            return;
+        }
+        
+
         switch(currentState)
         {
             case State.Idle:
