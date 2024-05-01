@@ -142,8 +142,8 @@ public class KitchenObject : MonoBehaviour
 
     public void DestroySelf()
     {
-        //CmdDestroy();
-        PhotonNetwork.Destroy(gameObject);
+        CmdDestroy();
+       // PhotonNetwork.Destroy(gameObject);
     }
 
     public void CmdDestroy(){
