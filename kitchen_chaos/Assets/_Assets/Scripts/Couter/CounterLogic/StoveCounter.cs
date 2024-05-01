@@ -57,9 +57,10 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
                 if (fryingTimer >= fryingRecipeSO.fryingTimerMax)
                 {
-                    GetKitchenObject().DestroySelf();
-
                     if(PhotonNetwork.IsMasterClient){
+                        GetKitchenObject().DestroySelf();
+
+
                         KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
                     }
                     
@@ -78,9 +79,12 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
                 if (burningTimer >= burningRecipeSO.burningTimerMax)
                 {
-                    GetKitchenObject().DestroySelf();
 
-                    KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+                    if(PhotonNetwork.IsMasterClient){
+                        GetKitchenObject().DestroySelf();
+
+                        KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+                    }
                     ChangeState(State.Burned);
 
                         
