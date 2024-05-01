@@ -39,12 +39,8 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     private void Update()
     {
-        if(burningRecipeSO == null)
-        {
-            burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
-            return;
-        }
-        
+
+
 
         switch(currentState)
         {
@@ -77,6 +73,11 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 }
                 break;
             case State.Fried:
+                if(burningRecipeSO == null)
+                {
+                    burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    return;
+                }
                 burningTimer += Time.deltaTime;
 
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
