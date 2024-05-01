@@ -132,6 +132,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                         KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, counterKitchenObjectSO}, player);
 
                         GetKitchenObject().DestroySelf();
+                        ChangeState(State.Idle);
                     }
                 }
             }
