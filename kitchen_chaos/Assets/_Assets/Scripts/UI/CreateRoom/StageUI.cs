@@ -42,6 +42,7 @@ public class StageData{
         }
     }
 
+    public List<Sprite> tutorialImages = new List<Sprite>();
 }
 
 public class StageUI : MonoBehaviour

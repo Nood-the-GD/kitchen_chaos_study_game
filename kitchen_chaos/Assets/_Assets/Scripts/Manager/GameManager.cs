@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     #region Enum
     private enum State
     {
+        Tutorial,
         WaitingToStart,
         CountdownToStart,
         GamePlaying,
@@ -34,12 +35,12 @@ public class GameManager : MonoBehaviour
     private bool isGamePause = false;
     public Transform[] spawnPoints;
     public static int levelId;
-    bool isGameOver = false;
     public static StageData getStageData{
         get{
             return GameData.s.GetStage(levelId);
         }
     }
+    bool isGameOver = false;
     #endregion
 
     #region Unity events
@@ -47,15 +48,20 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         Instance = this;
-        state = State.WaitingToStart;
+        state = State.Tutorial;
 
     }
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         OnJoinRoom();
+        TutorialUI.OnTutorialComplete += TutorialUI_OnTutorialComplete;
     }
-    
+
+    private void TutorialUI_OnTutorialComplete()
+    {
+        state = State.WaitingToStart;
+    }
 
     private void Update()
     {
@@ -65,6 +71,8 @@ public class GameManager : MonoBehaviour
 
         switch(state)
         {
+            case State.Tutorial:
+                return;
             case State.WaitingToStart:
                 waitingToStartTimer -= Time.deltaTime;
                 if(waitingToStartTimer < 0f)

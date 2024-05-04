@@ -288,6 +288,7 @@ public class GameData : SerializedScriptableObject
         Save();
     }
 #endif
+    #endregion
 
     public StageData GetStage(int levelId){
         var find = stages.Find(x=>x.levelId == levelId);
@@ -296,7 +297,6 @@ public class GameData : SerializedScriptableObject
         }
         return find;
     }
-    #endregion
 
     public Dictionary<string, string> prefabPaths = new Dictionary<string, string>();
     public Dictionary<string, KitchenObjectSO> kitchenObjectSODic = new Dictionary<string, KitchenObjectSO>();
