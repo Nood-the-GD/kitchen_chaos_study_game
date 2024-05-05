@@ -33,10 +33,22 @@ public class TutorialUI : MonoBehaviour
         });
         _selectedStage = GameManager.getStageData;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
+        if(_selectedStage.tutorialImages.Count == 0)
+        {
+            _tutorialImage.gameObject.SetActive(false);
+            _confirmBtn.gameObject.SetActive(false);
+            StartCoroutine(DelayEvent()); // Make sure all script has subscribe to event
+        }
     }
     void OnDestroy()
     {
         PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
+    }
+    IEnumerator DelayEvent()
+    {
+        yield return new WaitForSeconds(0.5f);
+        OnTutorialComplete?.Invoke();
+        this.gameObject.SetActive(false);
     }
     #endregion
 
@@ -81,6 +93,10 @@ public class TutorialUI : MonoBehaviour
         else
         {
             _tutorialImage.sprite = _tutorialSprites[_tutorialIndex];
+            foreach(Image img in _checkImageList)
+            {
+                Destroy(img.gameObject);
+            }
             _checkImageList.Clear();
             _confirmBtn.gameObject.SetActive(true);
         }
