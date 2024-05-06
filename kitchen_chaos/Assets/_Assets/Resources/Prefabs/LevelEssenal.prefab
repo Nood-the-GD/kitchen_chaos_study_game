@@ -3165,7 +3165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _confirmBtn: {fileID: 7241504400661068606}
   _tutorialSprites: []
-  _tutorialImage: {fileID: 0}
+  _tutorialImage: {fileID: 3939996695709209856}
   _checkImage: {fileID: 7484612483416313982}
   _checkImageHolder: {fileID: 7877007109950319586}
 --- !u!222 &1912406026501420234
