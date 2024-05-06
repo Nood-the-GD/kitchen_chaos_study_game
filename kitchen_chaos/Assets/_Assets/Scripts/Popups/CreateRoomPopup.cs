@@ -14,7 +14,9 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public List<PlayerUIElement> playerUIElements;
     public GameObject startButton;
     public PhotonView photonView;
-    public List<StageUI> stageUIs;
+    public StageUI stageUIPref;
+    public Transform stageContentParent;
+    [HideInInspector] public List<StageUI> stageUIs;
     public Image previewImage;
     public GameObject previewImageParent;
     public GameObject text;
@@ -101,8 +103,20 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     async void SetupStages(){
         var stages = GameData.s.stages;
 
-        foreach(var i in stageUIs){
-            i.gameObject.SetActive(false);
+        stageUIs.Add(stageUIPref);
+        while(stageUIs.Count != stages.Count)
+        {
+            if(stageUIs.Count < stages.Count)
+            {
+                var stageUI = Instantiate(stageUIPref, stageContentParent.transform);
+                stageUIs.Add(stageUI);
+            }
+            else
+            {
+                var stageUI = stageUIs[stageUIs.Count-1];
+                stageUIs.Remove(stageUI);
+                Destroy(stageUI.gameObject);
+            }
         }
 
         for(int i = 0; i< stages.Count; i++){
