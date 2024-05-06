@@ -30,6 +30,7 @@ public class TutorialUI : MonoBehaviour
         _confirmBtn.onClick.AddListener(() =>
         {
             CmdConfirm();
+            _confirmBtn.gameObject.SetActive(false);
         });
         _selectedStage = GameManager.getStageData;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
@@ -65,8 +66,6 @@ public class TutorialUI : MonoBehaviour
         Image checkImage = Instantiate(_checkImage, _checkImageHolder);
         checkImage.gameObject.SetActive(true);
         _checkImageList.Add(checkImage);
-
-        _confirmBtn.gameObject.SetActive(false);
 
         if(_checkImageList.Count == 2)
         {
