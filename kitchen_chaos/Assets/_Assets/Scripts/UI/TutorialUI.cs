@@ -29,17 +29,22 @@ public class TutorialUI : MonoBehaviour
         _checkImage.gameObject.SetActive(false);
         _confirmBtn.onClick.AddListener(() =>
         {
-            CmdConfirm();
             _confirmBtn.gameObject.SetActive(false);
+            CmdConfirm();
         });
         _selectedStage = GameManager.getStageData;
         _tutorialSprites = _selectedStage.tutorialImages;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
+        _tutorialIndex = 0;
         if(_selectedStage.tutorialImages.Count == 0)
         {
             _tutorialImage.gameObject.SetActive(false);
             _confirmBtn.gameObject.SetActive(false);
             StartCoroutine(DelayEvent()); // Make sure all script has subscribe to event
+        }
+        else
+        {
+            _tutorialImage.sprite = _tutorialSprites[_tutorialIndex];
         }
     }
     void OnDestroy()
