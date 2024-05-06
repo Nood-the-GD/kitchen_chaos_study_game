@@ -13,11 +13,11 @@ public class TutorialUI : MonoBehaviour
 
     #region Variables
     [SerializeField] private Button _confirmBtn;
-    [SerializeField] private List<Sprite> _tutorialSprites = new List<Sprite>();
     [SerializeField] private Image _tutorialImage;
     [SerializeField] private Image _checkImage;
     [SerializeField] private Transform _checkImageHolder;
 
+    private List<Sprite> _tutorialSprites = new List<Sprite>();
     private List<Image> _checkImageList = new List<Image>();
     private int _tutorialIndex = 0;
     private StageData _selectedStage;
@@ -33,6 +33,7 @@ public class TutorialUI : MonoBehaviour
             _confirmBtn.gameObject.SetActive(false);
         });
         _selectedStage = GameManager.getStageData;
+        _tutorialSprites = _selectedStage.tutorialImages;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
         if(_selectedStage.tutorialImages.Count == 0)
         {
