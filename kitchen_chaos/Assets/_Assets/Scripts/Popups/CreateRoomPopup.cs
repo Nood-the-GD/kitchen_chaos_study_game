@@ -177,7 +177,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         for(int i = 0; i< roomPlayer; i++){
             playerUIElements[i].gameObject.SetActive(true);
             //playerUIElements[i].transform.localScale = Vector3.zero;
-            playerUIElements[i].transform.DOScale(0.3f, 0.25f).From(0).SetEase(Ease.OutBack);
+            playerUIElements[i].transform.DOScale(1f, 0.25f).From(0).SetEase(Ease.OutBack);
             
             playerUIElements[i].SetData(PhotonNetwork.PlayerList[i]);
         }

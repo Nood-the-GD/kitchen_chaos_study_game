@@ -57,12 +57,6 @@ public class GameManager : MonoBehaviour
         OnJoinRoom();
         TutorialUI.OnTutorialComplete += TutorialUI_OnTutorialComplete;
     }
-
-    private void TutorialUI_OnTutorialComplete()
-    {
-        state = State.WaitingToStart;
-    }
-
     private void Update()
     {
         if(isGameOver) return;
@@ -105,6 +99,10 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Event functions
+    private void TutorialUI_OnTutorialComplete()
+    {
+        state = State.WaitingToStart;
+    }
     void OnJoinRoom(){
         Debug.Log("OnJoinRoom");
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;

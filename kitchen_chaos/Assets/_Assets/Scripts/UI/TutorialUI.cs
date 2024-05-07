@@ -36,7 +36,7 @@ public class TutorialUI : MonoBehaviour
         _tutorialSprites = _selectedStage.tutorialImages;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
         _tutorialIndex = 0;
-        if(_selectedStage.tutorialImages.Count == 0)
+        if(_selectedStage.tutorialImages.Count == 0 || TutorialData.Instance.GetSkipTutorialNumber() == 2)
         {
             _tutorialImage.gameObject.SetActive(false);
             _confirmBtn.gameObject.SetActive(false);
