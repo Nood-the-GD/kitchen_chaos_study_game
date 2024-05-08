@@ -15,4 +15,4 @@ MonoBehaviour:
   recipeSOList:
   - {fileID: 11400000, guid: b130c84b744d87b40a8fa5e851366dd9, type: 2}
   - {fileID: 11400000, guid: 78fe52403a06fa841bd3f8c01a910abe, type: 2}
-  waitingTimeForEachRecipe: 60
+  waitingTimeForEachRecipe: 90

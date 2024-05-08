@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeSOList:
   - {fileID: 11400000, guid: 6a0603b6005cde947b09c8b47763545a, type: 2}
-  waitingTimeForEachRecipe: 50
+  waitingTimeForEachRecipe: 90

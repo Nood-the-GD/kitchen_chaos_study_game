@@ -24,6 +24,7 @@ public class RecipeTemplateUI : MonoBehaviour
     #region Public functions
     public void SetRecipeSO(RecipeSO recipeSO)
     {
+        recipeNameText.text = recipeSO.recipeName;
         for(int i = 0; i < recipeSO.kitchenObjectSOList.Count; i++)
         {
             if(i == iconTemplateList.Count)
