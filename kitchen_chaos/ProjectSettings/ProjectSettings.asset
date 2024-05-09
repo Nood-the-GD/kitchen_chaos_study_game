@@ -160,7 +160,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.VinodyStudios.KitchenChaos
     Standalone: com.UnityTechnologies.com.unity.template-starter-kit
-    iPhone: com.DefaultCompany.kitchen-chaos
+    iPhone: com.Vinody-Studios.Kitchen-Chaos
   buildNumber:
     Standalone: 0
     VisionOS: 0
