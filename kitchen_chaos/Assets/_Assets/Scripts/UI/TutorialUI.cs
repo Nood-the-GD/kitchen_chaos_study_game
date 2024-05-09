@@ -49,6 +49,7 @@ public class TutorialUI : MonoBehaviour
     }
     void OnDestroy()
     {
+        if(PhotonManager.s == null) return;
         PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
     }
     IEnumerator DelayEvent()
