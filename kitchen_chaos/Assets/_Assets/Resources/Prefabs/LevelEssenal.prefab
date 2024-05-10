@@ -4097,7 +4097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab831e4d73de73428d573e465b2f3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamePlayingTimerMax: 30
+  gamePlayingTimerMax: 180
   spawnPoints:
   - {fileID: 870153946975389805}
   - {fileID: 7804049074430590093}
