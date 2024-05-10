@@ -602,7 +602,7 @@ MonoBehaviour:
   - score: 0
     levelId: 4
     sceneName: Level_4
-    pointTarget: b4000000e6000000b4000000
+    pointTarget: b4000000e600000018010000
     previewImage: {fileID: 21300000, guid: eb6b452159474443296dfa2e4956a657, type: 3}
     tutorialImages:
     - {fileID: 21300000, guid: ad8cac566ba250a4ca977e37a04619f9, type: 3}
@@ -611,7 +611,7 @@ MonoBehaviour:
   - score: 0
     levelId: 5
     sceneName: Level_5
-    pointTarget: 140000001e00000028000000
+    pointTarget: 78000000e600000018010000
     previewImage: {fileID: 21300000, guid: 5cf0d122a107d40ad81520d5f7a8e433, type: 3}
     tutorialImages:
     - {fileID: 21300000, guid: ade248bf5707ac94fb603ac246293fae, type: 3}

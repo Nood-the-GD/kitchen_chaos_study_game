@@ -13,8 +13,12 @@ public class TutorialData : MonoBehaviour
         skipTutorialNumber = 0;
         Instance = this;
     }
-    void OnEnable()
+    void Start()
     {
+        if(PhotonManager.s == null){
+            Debug.LogError("PhotonManager is null");
+            return;
+        }
         PhotonManager.s.onJoinRoom += OnJoinRoom;
     }
 
