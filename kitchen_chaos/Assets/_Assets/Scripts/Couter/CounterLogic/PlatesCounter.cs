@@ -7,7 +7,7 @@ public class PlatesCounter : BaseCounter
 {
     public event EventHandler OnPlateSpawn;
     public event EventHandler OnPlateRemove;
-    public static event EventHandler OnAnyPlateSpawn;
+    public static event EventHandler OnAnyPlateRemove;
     [SerializeReference] private KitchenObjectSO plateKitchenObjectSO;
     private float plateTimer = 0f;
     private float plateTimerMax = 8f;
@@ -58,6 +58,7 @@ public class PlatesCounter : BaseCounter
                 {
                     plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
+                    OnAnyPlateRemove?.Invoke(this, EventArgs.Empty);
                 }
             }
             else
@@ -71,6 +72,7 @@ public class PlatesCounter : BaseCounter
 
                     plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
+                    OnAnyPlateRemove?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

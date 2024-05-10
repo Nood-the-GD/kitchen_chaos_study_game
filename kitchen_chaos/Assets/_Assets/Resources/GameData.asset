@@ -575,7 +575,7 @@ MonoBehaviour:
       Entry: 8
       Data: 
   stages:
-  - score: 3
+  - score: 68
     levelId: 1
     sceneName: Level_1
     pointTarget: 3c00000078000000b4000000
@@ -599,7 +599,7 @@ MonoBehaviour:
     tutorialImages:
     - {fileID: 21300000, guid: a76d37883f0609a46b3ee9d1bce0ebaa, type: 3}
     - {fileID: 21300000, guid: 6522d2bc9f6c421448776d0f02429bae, type: 3}
-  - score: 0
+  - score: 75
     levelId: 4
     sceneName: Level_4
     pointTarget: b4000000e600000018010000
@@ -618,22 +618,22 @@ MonoBehaviour:
   colorElements:
   - color: {r: 0.40000004, g: 0.49411768, b: 0.59607846, a: 1}
     colorCode: blue
-    material: {fileID: 2100000, guid: 5536ee1a75919ca42aa177b99bdbbe46, type: 2}
+    material: {fileID: 2100000, guid: 26aa1079da2dd134c8ac7748b1ec4319, type: 2}
     icon: {fileID: 21300000, guid: 9f455a9614c4a6241b064a0f7a8c37c0, type: 3}
   - color: {r: 0.41960788, g: 0.63529414, b: 0.49411768, a: 1}
     colorCode: green
-    material: {fileID: 2100000, guid: 3eed486541602ba419ab605b85abe926, type: 2}
+    material: {fileID: 2100000, guid: c70257a05d5898a488173f3d8f4e1069, type: 2}
     icon: {fileID: 21300000, guid: 891f2bb42d8b22043b583a8fefc44aca, type: 3}
   - color: {r: 0.6392157, g: 0.34509805, b: 0.627451, a: 1}
     colorCode: pink
-    material: {fileID: 2100000, guid: 1b24b8e94d276084e81b54dae3da1447, type: 2}
+    material: {fileID: 2100000, guid: b3e91360ee4fdb44ebcf975f88646091, type: 2}
     icon: {fileID: 21300000, guid: 2ac27a64f7dd16040819fae5419d254e, type: 3}
   - color: {r: 0.6509804, g: 0.31764707, b: 0.32941177, a: 1}
     colorCode: red
-    material: {fileID: 2100000, guid: a1177ed47b8f7164db32917a1f791701, type: 2}
+    material: {fileID: 2100000, guid: 124c156869871334f884d935502bddeb, type: 2}
     icon: {fileID: 21300000, guid: e9e6a8cc811922047841fb11ae80ac38, type: 3}
   - color: {r: 0.6901961, g: 0.6901961, b: 0.48627454, a: 1}
     colorCode: yellow
-    material: {fileID: 2100000, guid: 225fc2a3d73282640a47765df43bc783, type: 2}
+    material: {fileID: 2100000, guid: 5238fd86c7a7c8945ab05a30cbd4754b, type: 2}
     icon: {fileID: 21300000, guid: a7bb90f4c980d3c489d9c07177fc791a, type: 3}
   inGameProducts: []

@@ -25,7 +25,7 @@ public class SoundManager : MonoBehaviour
         CuttingCounter.OnCut += CuttingCounter_OnCut;
         BaseCounter.OnSomethingPlacedHere += BaseCounter_OnSomethingPlaceHere;
         TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
-        PlatesCounter.OnAnyPlateSpawn += PlatesCounter_OnPlateSpawn;
+        PlatesCounter.OnAnyPlateRemove += PlatesCounter_OnPlateSpawn;
 
     }
     void OnDisable()
