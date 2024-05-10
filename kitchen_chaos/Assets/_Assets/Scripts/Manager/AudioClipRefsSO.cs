@@ -14,4 +14,6 @@ public class AudioClipRefSO : ScriptableObject
     public AudioClip stoveSizzle;
     public AudioClip[] trash;
     public AudioClip[] warning;
+    public AudioClip[] plate;
+    
 }

@@ -25,6 +25,8 @@ public class SoundManager : MonoBehaviour
         CuttingCounter.OnCut += CuttingCounter_OnCut;
         BaseCounter.OnSomethingPlacedHere += BaseCounter_OnSomethingPlaceHere;
         TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
+        PlatesCounter.OnAnyPlateSpawn += PlatesCounter_OnPlateSpawn;
+
     }
     void OnDisable()
     {
@@ -45,6 +47,13 @@ public class SoundManager : MonoBehaviour
         TrashCounter trashCounter = sender as TrashCounter;
         PlaySound(audioClipRef.trash, trashCounter.transform.position);
     }
+
+    private void PlatesCounter_OnPlateSpawn(object sender, System.EventArgs e)
+    {
+        PlatesCounter platesCounter = sender as PlatesCounter;
+        PlaySound(audioClipRef.plate, platesCounter.transform.position);
+    }
+
     private void CuttingCounter_OnCut(object sender, System.EventArgs e)
     {
         CuttingCounter cuttingCounter = sender as CuttingCounter;

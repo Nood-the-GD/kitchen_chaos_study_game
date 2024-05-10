@@ -42,3 +42,6 @@ MonoBehaviour:
   warning:
   - {fileID: 8300000, guid: b90d8099bdbf09a40ab1163556d5b5f4, type: 3}
   - {fileID: 8300000, guid: b59c98e0066c41f42b8100f5cb180f5b, type: 3}
+  plate:
+  - {fileID: 8300000, guid: 7af5d5756220e4b6abf18b31b01f07e7, type: 3}
+  - {fileID: 8300000, guid: c2750e85099ca496fb4cc80e6b78be87, type: 3}
