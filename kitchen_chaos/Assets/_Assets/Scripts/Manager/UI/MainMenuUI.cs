@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class MainMenuUI : MonoBehaviour
 {
     [SerializeField] private Button playBtn; 
-    [SerializeField] private Button exitBtn;
     [SerializeField] private GameObject loadingGO;
     [SerializeField] private PhotonManager photonManager;
 
@@ -19,10 +18,6 @@ public class MainMenuUI : MonoBehaviour
             //Loader.Load(Loader.Scene.GameScene);
             SelectModePopup.ShowPopup();
         });
-        exitBtn.onClick.AddListener(() => {
-            Application.Quit();
-        });
-
         Time.timeScale = 1f;
         playBtn.gameObject.GetComponent<Image>().color = Color.gray;
         playBtn.interactable = false;

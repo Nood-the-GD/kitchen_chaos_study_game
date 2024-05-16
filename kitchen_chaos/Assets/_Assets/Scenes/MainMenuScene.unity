@@ -1820,7 +1820,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playBtn: {fileID: 2004432188}
-  exitBtn: {fileID: 1207665290}
   loadingGO: {fileID: 1977906608}
   photonManager: {fileID: 1306969778}
 --- !u!1 &1163430587

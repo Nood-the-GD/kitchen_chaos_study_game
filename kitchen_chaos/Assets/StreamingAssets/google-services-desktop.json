@@ -1,0 +1,31 @@
+{
+  "project_info": {
+    "project_number": "166344716404",
+    "project_id": "kitchen-chaos",
+    "storage_bucket": "kitchen-chaos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166344716404:ios:4764be84570039a2766121",
+        "android_client_info": {
+          "package_name": "com.kitchentogether"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5V4BSM2Ow7RfOdbrNb9OgTCpOeoVrpF0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
