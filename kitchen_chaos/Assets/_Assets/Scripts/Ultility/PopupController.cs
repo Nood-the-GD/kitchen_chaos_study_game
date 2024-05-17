@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using System.Reflection;
 using System;
 using DG.Tweening;
 
@@ -117,7 +115,7 @@ public class BasePopup<T> : MonoBehaviour{
 
     public void AddOnCloseAction(Action action){
         foreach(var i in _closeButton){
-            i.onClick.AddListener(()=> action?.Invoke());
+            i?.onClick.AddListener(()=> action?.Invoke());
         }
     }
 

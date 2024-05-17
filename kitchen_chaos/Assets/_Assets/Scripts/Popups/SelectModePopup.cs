@@ -7,12 +7,19 @@ using System;
 using Sirenix.OdinInspector;
 public class SelectModePopup : BasePopup<SelectModePopup>
 {
+    private void Start() {
+        PhotonManager.s.onJoinRandomRoomFailed += OnJoinRandomRoomFailed;
+    }
+    private void OnJoinRandomRoomFailed(string obj)
+    {
+        NoRoomFoundPopup.ShowPopup();
+    }
 
-    
     public void RandomMatch(){
         
         PhotonNetwork.JoinRandomRoom();
     }
+
     public void FindRoom(){
         FindRoomPopup.ShowPopup();
     }
@@ -25,6 +32,7 @@ public class SelectModePopup : BasePopup<SelectModePopup>
     protected override void OnDisable(){
         base.OnDisable();
         PhotonManager.s.onJoinRoom -= EnterRoom;
+        PhotonManager.s.onJoinRandomRoomFailed -= OnJoinRandomRoomFailed;
     }
 
     void EnterRoom(){
