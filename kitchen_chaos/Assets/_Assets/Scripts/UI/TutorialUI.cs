@@ -30,6 +30,7 @@ public class TutorialUI : MonoBehaviour
         _confirmBtn.onClick.AddListener(() =>
         {
             _confirmBtn.gameObject.SetActive(false);
+            TutorialData.Instance.ConfirmTutorial();
             CmdConfirm();
         });
         _selectedStage = GameManager.getStageData;
@@ -74,7 +75,7 @@ public class TutorialUI : MonoBehaviour
         checkImage.gameObject.SetActive(true);
         _checkImageList.Add(checkImage);
 
-        if(_checkImageList.Count == 2)
+        if(TutorialData.Instance.GetConfirmTutorialNumber() == 2)
         {
             NextTutorial();
         }
@@ -105,6 +106,7 @@ public class TutorialUI : MonoBehaviour
             }
             _checkImageList.Clear();
             _confirmBtn.gameObject.SetActive(true);
+            TutorialData.Instance.ClearConfirmTutorial();
         }
     }
     #endregion

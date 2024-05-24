@@ -10,7 +10,6 @@ public class TestAI : MonoBehaviour
 
     private void Start()
     {
-        // _agent.SetDestination(new Vector3(0, 0, 0));
     }
 
     void Update()

@@ -10,6 +10,9 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 
 public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
+    const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
+    const string CMD_NEXT_SCENE = "CmdNextScene";
+
     public TextMeshProUGUI roomName;
     public List<PlayerUIElement> playerUIElements;
     public GameObject startButton;
@@ -24,8 +27,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     [HideInInspector]public StageData selectStage = null;
 
     public GameObject stageParent;
-    const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
-    const string CMD_NEXT_SCENE = "CmdNextScene";
     int currentSceneId = 0;
     public Image changeSkinColorButtonImage;
 
