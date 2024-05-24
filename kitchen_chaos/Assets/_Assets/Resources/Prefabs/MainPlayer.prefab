@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6169402711737491020}
   - component: {fileID: 8525692102432909788}
   - component: {fileID: 1353064732740629896}
+  - component: {fileID: -1675936570762358435}
   m_Layer: 0
   m_Name: MainPlayer
   m_TagString: Untagged
@@ -148,6 +149,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SmoothingMoveDelay: 5
+--- !u!114 &-1675936570762358435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7467193784833996065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &4708900720876065983
 PrefabInstance:
   m_ObjectHideFlags: 0

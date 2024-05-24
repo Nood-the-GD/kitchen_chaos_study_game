@@ -156,6 +156,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClearCornerCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 5353868734319340515, guid: 598a201f2eb3f4546bc075921709d996,
+        type: 3}
+      propertyPath: m_Carve
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353868734319340515, guid: 598a201f2eb3f4546bc075921709d996,
+        type: 3}
+      propertyPath: m_Extents.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353868734319340515, guid: 598a201f2eb3f4546bc075921709d996,
+        type: 3}
+      propertyPath: m_Extents.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353868734319340515, guid: 598a201f2eb3f4546bc075921709d996,
+        type: 3}
+      propertyPath: m_Extents.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6006032385559332990, guid: 598a201f2eb3f4546bc075921709d996,
         type: 3}
       propertyPath: sceneViewId
