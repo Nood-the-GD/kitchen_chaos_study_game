@@ -6,8 +6,9 @@ using Photon.Pun;
 using Photon.Realtime;
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
+    PhotonView _photonView;
+    public PhotonView photonView => _photonView;
     public static event EventHandler OnSomethingPlacedHere;
-    PhotonView photonView;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
@@ -16,21 +17,21 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform counterTopPoint;
     private KitchenObject kitchenObject;
 
-    public virtual void Interact(Player player){}
-    public virtual void Chop(Player player){ }
+    public virtual void Interact(IKitchenObjectParent KOParent){}
+    public virtual void Chop(IKitchenObjectParent KOParent){ }
 
     protected virtual void Awake(){
-        photonView = GetComponent<PhotonView>();
+        _photonView = GetComponent<PhotonView>();
     }
 
     #region Multiplay
     
     public void CmdInteract(int id){
-        photonView.RPC("RPCIntertact", RpcTarget.All, id);
+        _photonView.RPC("RPCIntertact", RpcTarget.All, id);
     }
 
     public void CmdChop(int id){
-        photonView.RPC("RPCChop", RpcTarget.All, id);
+        _photonView.RPC("RPCChop", RpcTarget.All, id);
     }
 
     [PunRPC]

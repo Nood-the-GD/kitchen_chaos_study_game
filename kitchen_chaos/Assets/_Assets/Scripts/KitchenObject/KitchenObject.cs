@@ -5,8 +5,6 @@ using System;
 
 public class KitchenObject : MonoBehaviour
 {
-    public static Action<KitchenObject> OnAnyKitchenObjectSpawned;
-
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     private IKitchenObjectParent kitchenObjectParent;
@@ -17,16 +15,24 @@ public class KitchenObject : MonoBehaviour
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
 
-        //--Player Clone are not allowed to spawn object
-        var player = kitchenObjectParent as Player;
-        if(player != null && !player.photonView.IsMine)
-            return;
+        if(SectionData.s.isSinglePlay == false)
+        {
+            //--Player Clone are not allowed to spawn object
+            var player = kitchenObjectParent as Player;
+            if(player != null && !player.photonView.IsMine)
+                return;
 
-        var parentId = -1;
-        if(kitchenObjectParentGameObject != null)
-            parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
+            var parentId = -1;
+            if(kitchenObjectParentGameObject != null)
+                parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
 
-        PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
+            PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
+        }
+        else
+        {
+            var obj = Instantiate(kitchenObjectSO.prefab, kitchenObjectParentGameObject.transform);
+            obj.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+        }
     }
     public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients,IKitchenObjectParent kitchenObjectParent)
     {

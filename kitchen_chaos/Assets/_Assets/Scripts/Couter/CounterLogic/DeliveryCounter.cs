@@ -14,11 +14,11 @@ public class DeliveryCounter : BaseCounter
         if(Instance == null) Instance = this;
     }
 
-    public override void Interact(Player player)
+    public override void Interact(IKitchenObjectParent KOParent)
     {
-        if(player.HasKitchenObject())
+        if(KOParent.HasKitchenObject())
         {
-            if(player.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDishKitchenObject))
+            if(KOParent.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDishKitchenObject))
             {
                 if(!completeDishKitchenObject.IsHasPlate())
                 {
@@ -28,7 +28,7 @@ public class DeliveryCounter : BaseCounter
 
                 if(DeliveryManager.Instance.DeliverRecipe(completeDishKitchenObject))
                 {
-                    player.GetKitchenObject().DestroySelf();
+                    KOParent.GetKitchenObject().DestroySelf();
                     deliverFeedback.PlayFeedbacks();
                 }
                 else

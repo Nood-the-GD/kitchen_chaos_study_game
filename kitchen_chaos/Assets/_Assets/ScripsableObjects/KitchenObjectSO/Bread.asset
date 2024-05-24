@@ -16,3 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 254f8ef3928ca8b4babf295f72bc8484, type: 3}
   point: 1
   objectName: Bread
+  kitchenObjectType: 2

@@ -33,7 +33,7 @@ public class PlatesCounter : BaseCounter
     }
 
 
-    public override void Interact(Player player)
+    public override void Interact(IKitchenObjectParent player)
     {
         if (plateNumber <= 0) return;
 

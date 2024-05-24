@@ -39,9 +39,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     private void Update()
     {
-
-
-
         switch(currentState)
         {
             case State.Idle:
@@ -107,7 +104,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         }
     }
 
-    public override void Interact(Player player)
+    public override void Interact(IKitchenObjectParent player)
     {
         if (HasKitchenObject())
         {
@@ -213,5 +210,10 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         FryingRecipeSO outputCuttingRecipe = null;
         outputCuttingRecipe = GetFryingRecipeWithInput(input);
         return outputCuttingRecipe.fryingTimerMax;
+    }
+
+    public FryingRecipeSO[] GetFryingRecipeSOArray()
+    {
+        return firingRecipeSOArray;
     }
 }

@@ -12,7 +12,7 @@ public class TrashCounter : BaseCounter
         OnAnyObjectTrashed = null;
     }
 
-    public override void Interact(Player player)
+    public override void Interact(IKitchenObjectParent player)
     {
         if(player.HasKitchenObject())
         {

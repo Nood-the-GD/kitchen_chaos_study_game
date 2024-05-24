@@ -9,14 +9,19 @@ public class ContainerCounter : BaseCounter
 
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    public override void Interact(Player player)
+    public override void Interact(IKitchenObjectParent KOParent)
     {
-        if(!player.HasKitchenObject())
+        if(!KOParent.HasKitchenObject())
         {
             //Player carrying nothing
-            KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSO, KOParent);
             //Debug.Log("Player grabbed object");
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public KitchenObjectSO GetContainerKitchenObject()
+    {
+        return kitchenObjectSO;
     }
 }

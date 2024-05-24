@@ -16,3 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: aee6ab7448134dd4e95a9727133c3d8c, type: 3}
   point: 1
   objectName: Cabbage
+  kitchenObjectType: 2

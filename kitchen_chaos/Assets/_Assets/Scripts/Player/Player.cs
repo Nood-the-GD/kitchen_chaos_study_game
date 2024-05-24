@@ -15,8 +15,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #endregion
 
     #region Variables
-    public PhotonView photonView;
-    public int viewId => photonView.ViewID;
+    private  PhotonView _photonView;
+    public int viewId => _photonView.ViewID;
+    public PhotonView photonView => _photonView;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
         public BaseCounter selectedCounter;
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private GameInput gameInput => GameInput.Instance;
+
+
     private KitchenObject kitchenObject;
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
@@ -38,13 +41,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     #region Unity functions
     private void Awake()
     {
-        photonView = GetComponent<PhotonView>();
-        if(photonView.IsMine)
+        _photonView = GetComponent<PhotonView>();
+        if(_photonView.IsMine)
             if(Instance == null) Instance = this;
     }
     private void Start()
     {
-        if(photonView.IsMine)
+        if(_photonView.IsMine)
         {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
@@ -130,7 +133,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void GetMovementInput()
     {
-        if(!photonView.IsMine)
+        if(!_photonView.IsMine)
             return;
 
         moveDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
@@ -142,7 +145,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
      */
     private void HandlePCMovement()
     {
-        if (!photonView.IsMine) return;
+        if (!_photonView.IsMine) return;
         // Get normalized direction of movement
         var direction = moveDir;
 
@@ -175,7 +178,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleMobileMovement()
     {
-        if (!photonView.IsMine) return;
+        if (!_photonView.IsMine) return;
 
         // Get normalized direction of movement
         var direction = moveDir;
@@ -206,7 +209,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleRotation(Vector3 direction)
     {
-        if (!photonView.IsMine) return;
+        if (!_photonView.IsMine) return;
 
         // Rotate player to calculated direction
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
@@ -219,13 +222,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     void SetWalking(bool isWalking)
     {
-        if(photonView.IsMine)
-            photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
+        if(_photonView.IsMine)
+            _photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
 
     void SetSkinColor(ColorSkin colorSkin){
-        if(photonView.IsMine)
-            photonView.RPC("RPCSetColorSkin", RpcTarget.All, colorSkin.colorCode);
+        if(_photonView.IsMine)
+            _photonView.RPC("RPCSetColorSkin", RpcTarget.All, colorSkin.colorCode);
     }
     #endregion
 
