@@ -22,24 +22,24 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         Burned,
     }
 
-    [SerializeField] private FryingRecipeSO[] firingRecipeSOArray;
-    [SerializeField] private BurningRecipeSO[] burningRecipeSOArray;
+    [SerializeField] private FryingRecipeSO[] _firingRecipeSOArray;
+    [SerializeField] private BurningRecipeSO[] _burningRecipeSOArray;
 
-    private State currentState;
-    private FryingRecipeSO fryingRecipeSO;
-    private BurningRecipeSO burningRecipeSO;
-    private float fryingTimer;
-    private float burningTimer;
-    private Player player;
+    private State _currentState;
+    private FryingRecipeSO _fryingRecipeSO;
+    private BurningRecipeSO _burningRecipeSO;
+    private float _fryingTimer;
+    private float _burningTimer;
+    private Player _player;
 
     private void Start()
     {
-        currentState = State.Idle;
+        _currentState = State.Idle;
     }
 
     private void Update()
     {
-        switch(currentState)
+        switch(_currentState)
         {
             case State.Idle:
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
@@ -48,47 +48,47 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 });
                 break;
             case State.Frying:
-                fryingTimer += Time.deltaTime;
+                _fryingTimer += Time.deltaTime;
 
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
                 {
-                    processNormalize = fryingTimer / fryingRecipeSO.fryingTimerMax
+                    processNormalize = _fryingTimer / _fryingRecipeSO.fryingTimerMax
                 });
 
-                if (fryingTimer >= fryingRecipeSO.fryingTimerMax)
+                if (_fryingTimer >= _fryingRecipeSO.fryingTimerMax)
                 {
                     if(PhotonNetwork.IsMasterClient){
                         GetKitchenObject().DestroySelf();
 
 
-                        KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+                        KitchenObject.SpawnKitchenObject(_fryingRecipeSO.output, this);
                     }
                     
                     ChangeState(State.Fried);
-                    burningTimer = 0;
-                    burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    _burningTimer = 0;
+                    _burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
                 }
                 break;
             case State.Fried:
-                if(burningRecipeSO == null)
+                if(_burningRecipeSO == null)
                 {
-                    burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    _burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
                     return;
                 }
-                burningTimer += Time.deltaTime;
+                _burningTimer += Time.deltaTime;
 
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
                 {
-                    processNormalize = burningTimer / burningRecipeSO.burningTimerMax
+                    processNormalize = _burningTimer / _burningRecipeSO.burningTimerMax
                 });
 
-                if (burningTimer >= burningRecipeSO.burningTimerMax)
+                if (_burningTimer >= _burningRecipeSO.burningTimerMax)
                 {
 
                     if(PhotonNetwork.IsMasterClient){
                         GetKitchenObject().DestroySelf();
 
-                        KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+                        KitchenObject.SpawnKitchenObject(_burningRecipeSO.output, this);
                     }
                     ChangeState(State.Burned);
 
@@ -156,9 +156,9 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 //Player carrying something that can be fried
                 //Move kitchen object to counter
                 player.GetKitchenObject().SetKitchenObjectParent(this);
-                fryingRecipeSO = GetFryingRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                _fryingRecipeSO = GetFryingRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
                 ChangeState(State.Frying);
-                fryingTimer = 0;
+                _fryingTimer = 0;
             }
             //else
             //Player carrying nothing or something can not be cut
@@ -167,18 +167,27 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     }
 
 
+    public KitchenObjectSO GetFryingInputFromOutput(KitchenObjectSO output)
+    {
+        foreach (FryingRecipeSO recipe in _firingRecipeSOArray)
+        {
+            if (recipe.output == output) return recipe.input;
+        }
+        return null;
+    }
+
     private void ChangeState(State state)
     {
-        currentState = state;
+        _currentState = state;
         OnStateChanged?.Invoke(this, new OnStateChangedEventArg
         {
-            state = currentState
+            state = _currentState
         });
     }
 
     private FryingRecipeSO GetFryingRecipeWithInput(KitchenObjectSO input)
     {
-        foreach (FryingRecipeSO recipe in firingRecipeSOArray)
+        foreach (FryingRecipeSO recipe in _firingRecipeSOArray)
         {
             if (recipe.input == input) return recipe;
         }
@@ -187,7 +196,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     private BurningRecipeSO GetBurningRecipeWithInput(KitchenObjectSO input)
     {
-        foreach (BurningRecipeSO recipe in burningRecipeSOArray)
+        foreach (BurningRecipeSO recipe in _burningRecipeSOArray)
         {
             if (recipe.input == input) return recipe;
         }
@@ -214,6 +223,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
     public FryingRecipeSO[] GetFryingRecipeSOArray()
     {
-        return firingRecipeSOArray;
+        return _firingRecipeSOArray;
     }
 }

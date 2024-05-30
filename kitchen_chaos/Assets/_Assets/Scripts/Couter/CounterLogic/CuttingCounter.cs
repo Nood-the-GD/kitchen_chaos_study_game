@@ -145,6 +145,15 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
         //Do nothing
     }
 
+    public KitchenObjectSO GetCuttingInputForOutput(KitchenObjectSO output)
+    {
+        foreach (CuttingRecipeSO recipe in cuttingRecipeSOArray)
+        {
+            if (recipe.output == output) return recipe.input;
+        }
+        return null;
+    }
+
     private CuttingRecipeSO GetCuttingRecipeForInput(KitchenObjectSO input)
     {
         foreach (CuttingRecipeSO recipe in cuttingRecipeSOArray)

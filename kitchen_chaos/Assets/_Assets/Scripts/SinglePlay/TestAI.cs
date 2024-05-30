@@ -15,7 +15,7 @@ public class TestAI : MonoBehaviour
 
     void Update()
     {
-        if (_agent.botStage == BotStage.Empty)
+        if (_agent.botStage == BotStage.GetOrder)
         {
             _agent.SetRecipeSO(_recipeSO);        
         }
