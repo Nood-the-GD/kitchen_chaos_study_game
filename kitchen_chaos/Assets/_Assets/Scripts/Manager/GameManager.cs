@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Variables
+    public bool isTesting;
     [SerializeField] private float gamePlayingTimerMax = 10f;
     private float gamePlayingTimer = 100;
     private State state;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        if (isTesting) return;
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         OnJoinRoom();
         TutorialUI.OnTutorialComplete += TutorialUI_OnTutorialComplete;

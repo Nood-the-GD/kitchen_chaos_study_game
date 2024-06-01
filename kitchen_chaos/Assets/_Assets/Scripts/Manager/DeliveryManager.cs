@@ -67,7 +67,7 @@ public class DeliveryManager : MonoBehaviour
             return;
         }
 
-        if (GameManager.Instance.IsGamePlaying() == false) return;
+        if (GameManager.Instance.IsGamePlaying() == false || GameManager.Instance.isTesting) return;
         
         spawnRecipeTimer -= Time.deltaTime;
         if(spawnRecipeTimer <= 0f)

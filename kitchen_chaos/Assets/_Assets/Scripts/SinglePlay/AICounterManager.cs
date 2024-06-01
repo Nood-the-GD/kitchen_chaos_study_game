@@ -88,7 +88,6 @@ public class AICounterManager : Singleton<AICounterManager>
         }
         return null;
     }
-
     public CuttingCounter GetCuttingCounter()
     {
         return _allCounters.First(x => x is CuttingCounter) as CuttingCounter;
@@ -96,5 +95,13 @@ public class AICounterManager : Singleton<AICounterManager>
     public StoveCounter GetStoveCounter()
     {
         return _allCounters.First(x => x is StoveCounter) as StoveCounter;
+    }
+    public PlatesCounter GetPlatesCounter()
+    {
+        return _allCounters.First(x => x is PlatesCounter) as PlatesCounter;
+    }
+    public DeliveryCounter GetDeliveryCounter()
+    {
+        return _allCounters.First(x => x is DeliveryCounter) as DeliveryCounter;
     }
 }

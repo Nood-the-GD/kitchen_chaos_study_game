@@ -44,8 +44,10 @@ public class SkipTutorialToggle : MonoBehaviour, IPointerClickHandler
     private void Deselect()
     {
         isSkipTutorial = false;
-        _checkImage.gameObject.SetActive(isSkipTutorial);
-        _description.SetActive(isSkipTutorial);
+        if(_checkImage)
+            _checkImage.gameObject.SetActive(isSkipTutorial);
+        if(_description)
+            _description.SetActive(isSkipTutorial);
         CmdSkipTutorial();
     }
     private void Select()

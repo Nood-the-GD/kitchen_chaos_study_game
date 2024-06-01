@@ -12,6 +12,7 @@ using Sirenix.OdinInspector;
 public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
     const string CMD_NEXT_SCENE = "CmdNextScene";
+    const string CMD_AI_SCENE = "CmdAiScene";
 
     public TextMeshProUGUI roomName;
     public List<PlayerUIElement> playerUIElements;
@@ -33,7 +34,14 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     [Button("Move to GameScene")]
     public void OnStartButtonClick(){
         //PhotonNetwork.AutomaticallySyncScene = true;
-        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_NEXT_SCENE);
+        var order = new CmdOrder(nameof(CreateRoomPopup), CMD_NEXT_SCENE);
+        PhotonManager.s.CmdCallFunction(order);
+    }
+
+    [Button("Move to AI Test")]
+    public void MoveToAiTest(){
+        //PhotonNetwork.AutomaticallySyncScene = true;
+        var order = new CmdOrder(nameof(CreateRoomPopup), CMD_AI_SCENE);
         PhotonManager.s.CmdCallFunction(order);
     }
 
@@ -78,6 +86,10 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         if(order.functionName == CMD_NEXT_SCENE){
             GameManager.levelId = currentSceneId;
             PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
+        }
+        if(order.functionName == CMD_AI_SCENE){
+            GameManager.levelId = currentSceneId;
+            PhotonNetwork.LoadLevel("AI_Test");
         }
     }
 

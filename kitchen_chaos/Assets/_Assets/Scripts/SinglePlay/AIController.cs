@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations;
 
+#region Enum
 public enum BotStage
 {
     Move,
@@ -16,9 +16,11 @@ public enum BotStage
     GetOrder,
     FindNextAction
 }
+#endregion
 
 public class AIController : MonoBehaviour, IKitchenObjectParent
 {
+    #region Variables
     [SerializeField] private Transform _objectHoldingPoint;
     [SerializeField] private float _interactDistance = 1f;
     private NavMeshAgent _navMeshAgent;
@@ -28,15 +30,20 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     private KitchenObject _currentKitchenObject;
     private Queue<AIAction> _aIActionQueue = new Queue<AIAction>();
     private bool _startAltInteract;
+    private float _altInteractDelay = 1f;
+    private float _altInteractDelayTimer = 0;
+    private PhotonView _photonView;
 
-    public PhotonView photonView => null;
+    public PhotonView photonView => _photonView;
     public BotStage botStage => _stage;
-    private Dictionary<KitchenObjectSO, BaseCounter> _counterKitchenObjectDictionary = new Dictionary<KitchenObjectSO, BaseCounter>();
+    #endregion
 
+    #region Unity functions
     void Start()
     {
         _stage = BotStage.GetOrder;
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _photonView = GetComponent<PhotonView>();
     }
     void Update()
     {
@@ -61,6 +68,7 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
                 break;
         }        
     }
+    #endregion
 
     #region Actions
     private void Move()
@@ -68,37 +76,54 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
         // Set move target and check move
         // If move to the target, play next action
         // If not, set the target to AI
+        if(IsReachTargetPosition() )
+        {
+            Debug.Log("Reach target pos");
+            if (_selectedCounter != null)
+                _stage = BotStage.Interact;
+            else
+                _stage = BotStage.FindNextAction;
+        }
+        else
+        {
+            SetTargetPosition(_selectedCounter.transform.position);
+            _stage = BotStage.Move;
+        }
     }
     private void Interact()
     {
+        Debug.Log("Interact");
         // Interact with counter
-        _selectedCounter.Interact(this);
-        if(_selectedCounter is CuttingCounter)
-        {
-            _startAltInteract = true;
-            _stage = BotStage.AltInteract;
-        }
+        if(_selectedCounter != null)
+            _selectedCounter.Interact(this);
+        _stage = BotStage.FindNextAction;
     }    
     private void AltInteract()
     {
         // Alt interact with counter (chop)
-        if(_selectedCounter is CuttingCounter)
+        if(_selectedCounter is IAltInteractable)
         {
-            CuttingCounter cuttingCounter = _selectedCounter as CuttingCounter;
-            if(cuttingCounter.isComplete == false)
+            _altInteractDelayTimer += Time.deltaTime;
+            if (_altInteractDelayTimer >= _altInteractDelay)
             {
-                _selectedCounter.Chop(this);
-            }
-            else
-            {
-                cuttingCounter.Interact(this);
+                IAltInteractable altInteractableCounter = _selectedCounter as IAltInteractable;
+                if (altInteractableCounter.CanAltInteract() == true)
+                {
+                    altInteractableCounter.AltInteract(this);
+                    _altInteractDelayTimer = 0;
+                }
+                else
+                {
+                    _startAltInteract = false;
+                    FindNextAction();
+                }
             }
         }
     }
     private void GetOrder()
     {
         // Get the next order
-        GetNewOrder();
+        // GetNewOrder();
         FindNextAction();
     }
     private void FindNextAction()
@@ -109,86 +134,95 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
         }
         else
         {
+            Debug.Log("Check enough ingredients");
+            bool isEnough = EnoughAllIngredients(out KitchenObjectSO lackOfKitchenObject);
             if(HasKitchenObject())
             {
-                // Check if kitchen object is need chop or fry
-                if(CheckChopOrFry())
+                switch(_currentKitchenObject)
                 {
-                    // If yes, get to the counter
-                    SetTargetPosition(_selectedCounter.transform.position);
-                    _stage = BotStage.Move;
-                }
-                else
-                {
-                    // If not, check all ingredient
-                    // if have all ingredient, begin combine 
-                    // else prepare next ingredient
-                    if(FindAllOtherKitchenObject(out KitchenObjectSO lackOfKitchenObject) == false)
-                    {
-                        if(HasKitchenObject())
+                    case CompleteDishKitchenObject completeDishKitchenObject:
+                        if(completeDishKitchenObject.IsHasPlate())
                         {
-                            AICounterManager.s.TryGetEmptyClearCounter(out _selectedCounter);
-                            SetTargetPosition(_selectedCounter.transform.position);
-                            _stage = BotStage.Move;
-                            return;
+                            DeliverDish();
                         }
                         else
                         {
-                            GetKitchenObject(lackOfKitchenObject);
-                            SetTargetPosition(_selectedCounter.transform.position);
+                            GetPlate();
+                        }
+                        break;
+                    default:
+                        if(CheckChopOrFry())
+                        {
+                            // Check if kitchen object is need chop or fry
+                            // If yes, get to the counter
                             _stage = BotStage.Move;
                         }
-                    }
-                    else
-                    {
-                        // Begin combine
-                        Combine();
-                    }
+                        else
+                        {
+                            // If not, check all ingredient
+                            // if have all ingredient, begin combine 
+                            // else prepare next ingredient
+                            if(isEnough == false)
+                            {
+                                Debug.Log("Not enough ingredient");
+                                // Put current kitchen object down and start making the lack kitchen object
+                                PutDownKitchenObject();
+                            }
+                            else
+                            {
+                                Debug.Log("Combine");
+                                // Begin combine
+                                Combine();
+                            }
+                        }
+                        break;
                 }
             }
             else
             {
-                if (_selectedCounter == null)
+                // Don't has kitchen object
+                if(IsReachTargetPosition())
                 {
-                    // Check if all kitchen object is done
-                    if(FindAllOtherKitchenObject(out KitchenObjectSO lackOfKitchenObject) == false)
+                    switch(_selectedCounter)
                     {
-                        if(AICounterManager.s.TryGetCounterHasKitchenObject(lackOfKitchenObject, out BaseCounter resultCounter))
-                        {
-                            SetSelectedCounter(resultCounter);
-                            SetTargetPosition(resultCounter.transform.position);
-                            _stage = BotStage.Move;
-                        }
-                    }
-                    else
-                    {
-                        // Begin combine
-                        Combine();
+                        case IAltInteractable altInteractable:
+                            // if this counter is Alt interactable
+                            if(altInteractable.CanAltInteract())
+                            {
+                                _altInteractDelayTimer = 0;
+                                _stage = BotStage.AltInteract;
+                            }
+                            else
+                            {
+                                _stage = BotStage.Interact;
+                            }
+                            break;
+                        case StoveCounter stoveCounter:
+                            // if this is StoveCounter => wait for this complete
+                            if(stoveCounter.IsCookComplete())
+                            {
+                                _stage = BotStage.Interact;
+                            }
+                            else
+                            {
+                                _stage = BotStage.FindNextAction;
+                            }
+                            break;
+                        default:
+                            if(isEnough == false)
+                            {
+                                MakeKitchenObject(lackOfKitchenObject);
+                            }    
+                            else
+                            {
+                                Combine();
+                            }
+                            break;
                     }
                 }
                 else
                 {
-                    // Check if reach at selected counter
-                    // If counter is empty, get kitchen object
-                    // If counter is not empty, try to alt interact it 
-                    // If it is fry and it is frying, wait for it done and get kitchen object
-                    if(IsReachTargetPosition())
-                    {
-                        if(_selectedCounter is CuttingCounter && _selectedCounter.HasKitchenObject() == true)
-                        {
-                            // Check if kitchen object can be chopped
-                            _stage = BotStage.AltInteract;
-                        }
-                        else if (_selectedCounter is StoveCounter && _selectedCounter.HasKitchenObject() == true)
-                        {
-                            // Check if kitchen object is cooked
-                            _stage = BotStage.Interact;
-                        }
-                    }
-                    else
-                    {
-                        _stage = BotStage.Move;
-                    }
+                    _stage = BotStage.Move;
                 }
             }
         }
@@ -196,69 +230,154 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     #endregion
 
     #region Small Action
+    private void DeliverDish()
+    {
+        DeliveryCounter deliveryCounter = AICounterManager.s.GetDeliveryCounter();
+        SetSelectedCounter(deliveryCounter);
+        _stage = BotStage.Move;
+    }
+    private void MakeKitchenObject(KitchenObjectSO kitchenObjectSO)
+    {
+        Debug.Log("make kitchen object: " + kitchenObjectSO);
+        KitchenObjectSO original = AIKitchenObjectManager.s.GetKitchenObjectSoOriginal(kitchenObjectSO);
+        Debug.Log("try get original: " + original);
+        if(AICounterManager.s.TryGetCounterHasKitchenObject(original, out BaseCounter resultCounter))
+        {
+            SetSelectedCounter(resultCounter);
+            _stage = BotStage.Move;
+        }
+    }
+    private void PutDownKitchenObject()
+    {
+        if(AICounterManager.s.TryGetEmptyClearCounter(out BaseCounter resultCounter))
+        {
+            SetSelectedCounter(resultCounter);
+            _stage = BotStage.Move;
+        }
+    }
+    List<KitchenObjectSO> combineCheckList = new List<KitchenObjectSO>(); 
     private void Combine()
     {
-        BaseCounter targetCounter = _counterKitchenObjectDictionary[_counterKitchenObjectDictionary.Keys.ElementAt(0)];
-        SetTargetPosition(targetCounter.transform.position);
-        _stage = BotStage.Move;
+        combineCheckList.Clear();
+        // Prepare check list
+        foreach(KitchenObjectSO ingredient in _currentRecipeSO.kitchenObjectSOList)
+        {
+            combineCheckList.Add(ingredient);
+        }
+
+        // Remove ingredients is holding
+        if(HasKitchenObject())
+        {
+            switch(_currentKitchenObject)
+            {
+                case CompleteDishKitchenObject completeDishKitchenObject:
+                    Debug.Log("Complete dish");
+                    foreach(var kitchenObjectSO in completeDishKitchenObject.GetKitchenObjectSOList())
+                    {
+                        Debug.Log(kitchenObjectSO);
+                        combineCheckList.Remove(kitchenObjectSO);
+                    }
+                    break;
+                default:
+                    Debug.Log("Default");
+                    if(_currentKitchenObject != null)
+                        combineCheckList.Remove(_currentKitchenObject.GetKitchenObjectSO());
+                    break;
+            }
+        }
+
+        if (combineCheckList.Count == 0)
+        {
+            GetPlate();
+            return;
+        }
+        else
+        {
+            KitchenObjectSO nextKitchenObjectSO = combineCheckList[0];
+            if(AICounterManager.s.TryGetCounterHasKitchenObject(nextKitchenObjectSO, out BaseCounter targetCounter))
+            {
+                SetSelectedCounter(targetCounter);
+                SetTargetPosition(targetCounter.transform.position);
+                _stage = BotStage.Move;
+            }
+            else
+            {
+                _stage = BotStage.FindNextAction;
+            }
+        }
+
     }
     #endregion
 
     #region Support
+    private void GetPlate()
+    {
+        PlatesCounter platesCounter = AICounterManager.s.GetPlatesCounter();
+        SetSelectedCounter(platesCounter);
+        _stage = BotStage.Move;
+    }
     private void GetKitchenObject(KitchenObjectSO kitchenObjectSO)
     {
         KitchenObjectSO original = GetKitchenObjectOriginal(kitchenObjectSO);
         AICounterManager.s.TryGetCounterHasKitchenObject(original, out BaseCounter resultCounter); 
         SetSelectedCounter(resultCounter);
     }
-    private bool FindAllOtherKitchenObject(out KitchenObjectSO lackOfKitchenObject)
+    private bool EnoughAllIngredients(out KitchenObjectSO lackOfKitchenObject)
     {
         lackOfKitchenObject = null;
-        _counterKitchenObjectDictionary.Clear();
         List<KitchenObjectSO> checkList = new List<KitchenObjectSO>();
-        checkList = _currentRecipeSO.kitchenObjectSOList;
+        // Prepare check list
+        foreach(KitchenObjectSO ingredient in _currentRecipeSO.kitchenObjectSOList)
+        {
+            checkList.Add(ingredient);
+        }
         
+        // Remove current holding ingredient
         if(HasKitchenObject())
         {
-            if(HasKitchenObject() && _currentKitchenObject is CompleteDishKitchenObject)
+            switch(_currentKitchenObject)
             {
-                CompleteDishKitchenObject completeDishKitchenObject = _currentKitchenObject as CompleteDishKitchenObject;
-                foreach(var kitchenObjectSO in completeDishKitchenObject.GetKitchenObjectSOList())
-                    checkList.Remove(kitchenObjectSO);
-            }
-            else
-            {
-                checkList.Remove(_currentKitchenObject.GetKitchenObjectSO());
+                case CompleteDishKitchenObject completeDishKitchenObject:
+                    foreach(var kitchenObjectSO in completeDishKitchenObject.GetKitchenObjectSOList())
+                        checkList.Remove(kitchenObjectSO);
+                    break;
+                default:
+                    if(_currentKitchenObject != null)
+                        checkList.Remove(_currentKitchenObject.GetKitchenObjectSO());
+                    break;
             }
         }
 
+        if (checkList.Count == 0) return true;
+
         foreach(KitchenObjectSO kitchenObjectSO in checkList)
         {
-            AICounterManager.s.TryGetCounterHasKitchenObject(kitchenObjectSO, out BaseCounter resultCounter);
-            if (HasKitchenObject())
+            if(AICounterManager.s.TryGetCounterHasKitchenObject(kitchenObjectSO, out BaseCounter resultCounter))
             {
-                if (_counterKitchenObjectDictionary.ContainsKey(kitchenObjectSO) == false)
-                    _counterKitchenObjectDictionary.Add(kitchenObjectSO, resultCounter);
-                else
-                    _counterKitchenObjectDictionary[kitchenObjectSO] = resultCounter;
+                if(resultCounter is ContainerCounter)
+                {
+                    lackOfKitchenObject = kitchenObjectSO;
+                    return false;
+                }
             }
             else
+            {
                 lackOfKitchenObject = kitchenObjectSO;
                 return false;
+            }
         }
         return true;
     }
     private bool CheckChopOrFry()
     {
-        if(GetKitchenObject().GetKitchenObjectSO().kitchenObjectType == KitchenObjectType.NeedChop)
+        if(AIKitchenObjectManager.s.IsNeedChop(_currentKitchenObject.GetKitchenObjectSO()))
         {
             // Find cut counter and choose it
             if(AICounterManager.s.TryGetEmptyCuttingCounter(out CuttingCounter resultCounter))
                 SetSelectedCounter(resultCounter);
-
             return true;
         }
-        else if(GetKitchenObject().GetKitchenObjectSO().kitchenObjectType == KitchenObjectType.NeedFried)
+        else if(AIKitchenObjectManager.s.IsNeedFry(_currentKitchenObject.GetKitchenObjectSO()))
         {
             // Find fry counter and choose it
             if(AICounterManager.s.TryGetEmptyStoveCounter(out StoveCounter resultCounter))
@@ -293,6 +412,7 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     }
     private bool IsReachTargetPosition()
     {
+        if (_selectedCounter == null) return true;
         if (Vector3.Distance(this.transform.position, _selectedCounter.transform.position) <= _interactDistance)
             return true;
         else return false;
@@ -302,8 +422,6 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
         _currentRecipeSO = recipeSO;
     }
     #endregion
-
-
 
     #region Interface functions
     public Transform GetKitchenObjectFollowTransform()

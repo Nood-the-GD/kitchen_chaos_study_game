@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter, IHasProgressBar
+public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 {
     #region Static
     public static event EventHandler OnCut;
@@ -20,11 +20,12 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
 
     #region Variables 
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
-    private int cuttingProcess;
+    private int _cuttingProcess;
     private IKitchenObjectParent KOParent;
-    public bool isComplete;
+    public bool _isComplete;
     #endregion
 
+    #region Interact
     public override void Interact(IKitchenObjectParent KOParent)
     {
         if(KOParent == null){
@@ -73,8 +74,8 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
                 KOParent.GetKitchenObject().SetKitchenObjectParent(this);
                 if(HasRecipeForInput(GetKitchenObject().GetKitchenObjectSO()))
                 {
-                    cuttingProcess = 0;
-                    isComplete = false;
+                    _cuttingProcess = 0;
+                    _isComplete = false;
                 }
             }
             //else
@@ -82,6 +83,48 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
             //Do no thing
         }
     }
+    public override void Chop(IKitchenObjectParent KOParent)
+    {
+        if(HasKitchenObject() && HasRecipeForInput(GetKitchenObject().GetKitchenObjectSO()))
+        {
+            //There is a kitchenObject on this counter and it can be cut.
+            //Get output kitchenObject base on input with recipe.
+            _cuttingProcess++;
+            int cuttingProgressNumber = GetOutputProcessForInput(GetKitchenObject().GetKitchenObjectSO());
+            OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
+            {
+                processNormalize = (float)_cuttingProcess / cuttingProgressNumber
+            });
+
+            OnCutAction?.Invoke(this, EventArgs.Empty);
+            OnCut?.Invoke(this, EventArgs.Empty);
+            if (_cuttingProcess >= cuttingProgressNumber && KOParent.photonView.IsMine)
+            {
+                KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+
+                //Destroy input kitchenObject.
+                GetKitchenObject().DestroySelf();
+
+                //Spawn output kitchenObject
+                KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
+
+                _isComplete = true;
+            }
+        }
+        //else
+        //There is a kitchenObject on this counter but can not be cut
+        //Do nothing
+    }
+
+    public void AltInteract(IKitchenObjectParent kitchenObjectParent)
+    {
+        Chop(kitchenObjectParent);
+    }
+    public bool CanAltInteract()
+    {
+        return !_isComplete;
+    }
+    #endregion
 
     private void TryAddPlayerIngredient()
     {
@@ -109,40 +152,6 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
                 GetKitchenObject().DestroySelf();
             }
         }
-    }
-
-
-    public override void Chop(IKitchenObjectParent KOParent)
-    {
-        if(HasKitchenObject() && HasRecipeForInput(GetKitchenObject().GetKitchenObjectSO()))
-        {
-            //There is a kitchenObject on this counter and it can be cut.
-            //Get output kitchenObject base on input with recipe.
-            cuttingProcess++;
-            int cuttingProgressNumber = GetOutputProcessForInput(GetKitchenObject().GetKitchenObjectSO());
-            OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
-            {
-                processNormalize = (float)cuttingProcess / cuttingProgressNumber
-            });
-
-            OnCutAction?.Invoke(this, EventArgs.Empty);
-            OnCut?.Invoke(this, EventArgs.Empty);
-            if(cuttingProcess >= cuttingProgressNumber && KOParent.photonView.IsMine)
-            {
-                KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-
-                //Destroy input kitchenObject.
-                GetKitchenObject().DestroySelf();
-
-                //Spawn output kitchenObject
-                KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
-
-                isComplete = true;
-            }
-        }
-        //else
-        //There is a kitchenObject on this counter but can not be cut
-        //Do nothing
     }
 
     public KitchenObjectSO GetCuttingInputForOutput(KitchenObjectSO output)
@@ -185,4 +194,5 @@ public class CuttingCounter : BaseCounter, IHasProgressBar
     {
         return cuttingRecipeSOArray;
     }
+
 }

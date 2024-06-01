@@ -6,14 +6,16 @@ using UnityEngine;
 
 public class StoveCounter : BaseCounter, IHasProgressBar
 {
+    #region Events
     public event EventHandler<OnStateChangedEventArg> OnStateChanged;
     public event EventHandler<IHasProgressBar.OnProcessChangedEvenArgs> OnProcessChanged;
-
     public class OnStateChangedEventArg : EventArgs
     {
         public State state;
     }
+    #endregion
 
+    #region Enum
     public enum State
     {
         Idle,
@@ -21,7 +23,9 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         Fried,
         Burned,
     }
+    #endregion
 
+    #region Variables
     [SerializeField] private FryingRecipeSO[] _firingRecipeSOArray;
     [SerializeField] private BurningRecipeSO[] _burningRecipeSOArray;
 
@@ -31,12 +35,13 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     private float _fryingTimer;
     private float _burningTimer;
     private Player _player;
+    #endregion
 
+    #region Unity functions
     private void Start()
     {
         _currentState = State.Idle;
     }
-
     private void Update()
     {
         switch(_currentState)
@@ -103,7 +108,9 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 break;
         }
     }
+    #endregion
 
+    #region Interact
     public override void Interact(IKitchenObjectParent player)
     {
         if (HasKitchenObject())
@@ -165,7 +172,12 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             //Do no thing
         }
     }
+    #endregion
 
+    public bool IsCookComplete()
+    {
+        return _currentState == State.Fried;
+    }
 
     public KitchenObjectSO GetFryingInputFromOutput(KitchenObjectSO output)
     {

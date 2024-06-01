@@ -82,7 +82,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3133c4e1c8ffaf84ea8f3c9c824343c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonView: {fileID: 6169402711737491020}
   moveSpeed: 7
   kitchenObjectHoldPoint: {fileID: 4456572842394803632}
 --- !u!114 &8613944316671232746

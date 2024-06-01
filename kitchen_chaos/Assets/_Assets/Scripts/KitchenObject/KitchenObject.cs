@@ -7,7 +7,7 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    private IKitchenObjectParent kitchenObjectParent;
+    private IKitchenObjectParent _kitchenObjectParent;
     PhotonView photonView;
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
@@ -54,7 +54,21 @@ public class KitchenObject : MonoBehaviour
             ingredientString[i] = ingredients[i].objectName;
         }
 
-        PhotonManager.s.CmdSpawnCompleteDish(completeDishSO.prefab.GetComponent<ObjectTypeView>().objectType, ingredientString, parentId);
+        if(!SectionData.s.isSinglePlay)
+        {
+            PhotonManager.s.CmdSpawnCompleteDish(completeDishSO.prefab.GetComponent<ObjectTypeView>().objectType, ingredientString, parentId);
+        }
+        else
+        {
+            var obj = Instantiate(completeDishSO.prefab);
+            CompleteDishKitchenObject completeDish = obj.GetComponent<CompleteDishKitchenObject>();
+            completeDish.SetKitchenObjectParent(kitchenObjectParent);
+            for(int i = 0; i < ingredients.Length; i++)
+            {
+                KitchenObjectSO ingredient = ingredients[i];
+                completeDish.TryAddIngredient(ingredient);
+            }
+        }
     }
     
     void Awake()
@@ -63,7 +77,8 @@ public class KitchenObject : MonoBehaviour
     }
 
     void Start(){
-        StartCoroutine(OnSync());
+        if(!SectionData.s.isSinglePlay)
+            StartCoroutine(OnSync());
     }
 
     [PunRPC]
@@ -76,7 +91,7 @@ public class KitchenObject : MonoBehaviour
         if(kitchenObjectParent == null)
             Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
 
-        MonoBehaviour monoBehaviour = this.kitchenObjectParent as MonoBehaviour;
+        MonoBehaviour monoBehaviour = this._kitchenObjectParent as MonoBehaviour;
         if(monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
             SetKitchenObjectParent(kitchenObjectParent);
     }
@@ -91,7 +106,7 @@ public class KitchenObject : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
 
-            var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
+            var kitchenObjectParentGameObject = _kitchenObjectParent as MonoBehaviour;
             var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
             // Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
             
@@ -126,15 +141,15 @@ public class KitchenObject : MonoBehaviour
         {
             this.transform.position = Vector3.zero;
             this.transform.parent = null;
-            this.kitchenObjectParent = kitchenObjectParent;
+            this._kitchenObjectParent = kitchenObjectParent;
             return;
         }
 
-        if(this.kitchenObjectParent != null)
+        if(this._kitchenObjectParent != null)
         {
-            this.kitchenObjectParent.ClearKitchenObject();
+            this._kitchenObjectParent.ClearKitchenObject();
         }
-        this.kitchenObjectParent = kitchenObjectParent;
+        this._kitchenObjectParent = kitchenObjectParent;
 
         kitchenObjectParent.SetKitchenObject(this);
         this.transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
@@ -143,13 +158,19 @@ public class KitchenObject : MonoBehaviour
 
     public IKitchenObjectParent GetKitchenObjectParent()
     {
-        return kitchenObjectParent;
+        return _kitchenObjectParent;
     }
 
     public void DestroySelf()
     {
-        CmdDestroy();
-       // PhotonNetwork.Destroy(gameObject);
+        if(!SectionData.s.isSinglePlay)
+            CmdDestroy();
+        else
+        {
+            if(_kitchenObjectParent != null)
+                _kitchenObjectParent.ClearKitchenObject();
+            Destroy(this.gameObject);
+        }
     }
 
     public void CmdDestroy(){
@@ -158,8 +179,8 @@ public class KitchenObject : MonoBehaviour
 
     [PunRPC]
     public void RpcDestroy(){
-        if(kitchenObjectParent != null)
-            kitchenObjectParent.ClearKitchenObject();
+        if(_kitchenObjectParent != null)
+            _kitchenObjectParent.ClearKitchenObject();
         Destroy(this.gameObject);
     }
 }
