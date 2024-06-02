@@ -224,13 +224,13 @@ public class AIController : MonoBehaviour, IPlayer
                             break;
                         case StoveCounter stoveCounter:
                             // if this is StoveCounter => wait for this complete
-                            if(stoveCounter.IsCookComplete())
+                            if(stoveCounter.IsCookComplete() && stoveCounter.HasKitchenObject())
                             {
                                 _stage = BotStage.Interact;
                             }
-                            else
+                            else if(stoveCounter.HasKitchenObject() == false)
                             {
-                                _stage = BotStage.FindNextAction;
+                                SetSelectedCounter(null);
                             }
                             break;
                         default:
