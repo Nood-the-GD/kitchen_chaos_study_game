@@ -10,10 +10,13 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 
 public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
+    #region Constants
     const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
     const string CMD_NEXT_SCENE = "CmdNextScene";
     const string CMD_AI_SCENE = "CmdAiScene";
+    #endregion
 
+    #region Variables
     public TextMeshProUGUI roomName;
     public List<PlayerUIElement> playerUIElements;
     public GameObject startButton;
@@ -30,7 +33,10 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public GameObject stageParent;
     int currentSceneId = 0;
     public Image changeSkinColorButtonImage;
+    private int _roomPlayer = 2;
+    #endregion
 
+    #region Editors
     [Button("Move to GameScene")]
     public void OnStartButtonClick(){
         //PhotonNetwork.AutomaticallySyncScene = true;
@@ -44,6 +50,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         var order = new CmdOrder(nameof(CreateRoomPopup), CMD_AI_SCENE);
         PhotonManager.s.CmdCallFunction(order);
     }
+    #endregion
 
     #region Unity functions
     public void OnExitButtonClick(){
@@ -51,10 +58,17 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     }
     void Start(){
         currentSceneId = 0;
-        RefreshUI();
         SetupStages();
         stageParent.SetActive(PhotonNetwork.IsMasterClient);
-        
+        if(SectionData.s.isSinglePlay)
+        {
+            _roomPlayer = 1;
+        }
+        else
+        {
+            _roomPlayer = 2;
+        }
+        RefreshUI();
     }
     protected override void OnEnable(){
         base.OnEnable();
@@ -196,7 +210,7 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             playerUIElements[i].SetData(PhotonNetwork.PlayerList[i]);
         }
 
-        var enoughPlayer = roomPlayer == 2;
+        var enoughPlayer = roomPlayer == _roomPlayer;
         var activateStartButton = enoughPlayer && PhotonNetwork.IsMasterClient;
         
         startButton.gameObject.SetActive(activateStartButton);

@@ -90,7 +90,8 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 if (_burningTimer >= _burningRecipeSO.burningTimerMax)
                 {
 
-                    if(PhotonNetwork.IsMasterClient){
+                    if(SectionData.s.isSinglePlay || PhotonNetwork.IsMasterClient)
+                    {
                         GetKitchenObject().DestroySelf();
 
                         KitchenObject.SpawnKitchenObject(_burningRecipeSO.output, this);

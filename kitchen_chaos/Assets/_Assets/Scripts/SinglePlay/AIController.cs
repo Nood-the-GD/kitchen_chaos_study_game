@@ -18,7 +18,7 @@ public enum BotStage
 }
 #endregion
 
-public class AIController : MonoBehaviour, IKitchenObjectParent
+public class AIController : MonoBehaviour, IPlayer
 {
     #region Variables
     [SerializeField] private Transform _objectHoldingPoint;
@@ -28,9 +28,7 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     private BaseCounter _selectedCounter;
     private RecipeSO _currentRecipeSO;
     private KitchenObject _currentKitchenObject;
-    private Queue<AIAction> _aIActionQueue = new Queue<AIAction>();
-    private bool _startAltInteract;
-    private float _altInteractDelay = 1f;
+    private float _altInteractDelay = 0.5f;
     private float _altInteractDelayTimer = 0;
     private PhotonView _photonView;
 
@@ -41,7 +39,7 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     #region Unity functions
     void Start()
     {
-        _stage = BotStage.GetOrder;
+        _stage = BotStage.FindNextAction;
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _photonView = GetComponent<PhotonView>();
     }
@@ -84,18 +82,32 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
             else
                 _stage = BotStage.FindNextAction;
         }
-        else
+        else if(_selectedCounter != null)
         {
             SetTargetPosition(_selectedCounter.transform.position);
             _stage = BotStage.Move;
         }
+        else
+        {
+            _stage = BotStage.FindNextAction;
+        }
     }
     private void Interact()
     {
-        Debug.Log("Interact");
         // Interact with counter
-        if(_selectedCounter != null)
-            _selectedCounter.Interact(this);
+        switch(_selectedCounter)
+        {
+            case StoveCounter stoveCounter:
+                if(stoveCounter.HasKitchenObject() == true && stoveCounter.IsCookComplete() || stoveCounter.HasKitchenObject() == false)
+                {
+                    _selectedCounter.Interact(this);
+                }
+                break;
+            default:
+                if(_selectedCounter != null)
+                    _selectedCounter.Interact(this);
+                break;
+        }
         _stage = BotStage.FindNextAction;
     }    
     private void AltInteract()
@@ -114,21 +126,30 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
                 }
                 else
                 {
-                    _startAltInteract = false;
                     FindNextAction();
                 }
             }
+        }
+        else
+        {
+            _stage = BotStage.FindNextAction;
         }
     }
     private void GetOrder()
     {
         // Get the next order
-        // GetNewOrder();
+        GetNewOrder();
         FindNextAction();
     }
     private void FindNextAction()
     {
-        if(_currentRecipeSO == null)
+        if (DeliveryManager.Instance.GetWaitingRecipeSOList().Count == 0)
+        {
+            _stage = BotStage.FindNextAction;
+            return;
+        }
+
+        if(_currentRecipeSO != DeliveryManager.Instance.GetWaitingRecipeSOList()[0])
         {
             _stage = BotStage.GetOrder;
         }
@@ -154,7 +175,7 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
                         if(CheckChopOrFry())
                         {
                             // Check if kitchen object is need chop or fry
-                            // If yes, get to the counter
+                            // If yes, move to the counter
                             _stage = BotStage.Move;
                         }
                         else
@@ -192,9 +213,13 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
                                 _altInteractDelayTimer = 0;
                                 _stage = BotStage.AltInteract;
                             }
-                            else
+                            else if(altInteractable.HasKitchenObject())
                             {
                                 _stage = BotStage.Interact;
+                            }
+                            else
+                            {
+                                SetSelectedCounter(null);
                             }
                             break;
                         case StoveCounter stoveCounter:
@@ -232,8 +257,17 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     #region Small Action
     private void DeliverDish()
     {
-        DeliveryCounter deliveryCounter = AICounterManager.s.GetDeliveryCounter();
-        SetSelectedCounter(deliveryCounter);
+        CompleteDishKitchenObject completeDishKitchenObject = _currentKitchenObject as CompleteDishKitchenObject;
+        BaseCounter targetCounter = null;
+        if(completeDishKitchenObject.IsCorrectRecipe(_currentRecipeSO))
+        {
+            targetCounter = AICounterManager.s.GetDeliveryCounter();
+        }
+        else
+        {
+            AICounterManager.s.TryGetEmptyClearCounter(out targetCounter);
+        }
+        SetSelectedCounter(targetCounter);
         _stage = BotStage.Move;
     }
     private void MakeKitchenObject(KitchenObjectSO kitchenObjectSO)
@@ -443,6 +477,14 @@ public class AIController : MonoBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return _currentKitchenObject != null;
+    }
+    public bool IsWalking()
+    {
+        return _stage == BotStage.Move;
+    }
+    public bool IsHolding()
+    {
+        return HasKitchenObject();
     }
     #endregion
 }

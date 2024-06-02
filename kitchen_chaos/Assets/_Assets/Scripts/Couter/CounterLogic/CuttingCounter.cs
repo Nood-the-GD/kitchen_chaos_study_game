@@ -41,6 +41,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
                 //Player carrying nothing    
                 //Move kitchen object to player
                 GetKitchenObject().SetKitchenObjectParent(KOParent);
+                _isComplete = true;
             }
             else
             {
@@ -54,6 +55,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
                     {
                         // After adding ingredient, destroy it on counter
                         GetKitchenObject().DestroySelf();
+                        _isComplete = true;
                     }
                 }
                 else
@@ -98,17 +100,20 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
             OnCutAction?.Invoke(this, EventArgs.Empty);
             OnCut?.Invoke(this, EventArgs.Empty);
-            if (_cuttingProcess >= cuttingProgressNumber && KOParent.photonView.IsMine)
+            if (_cuttingProcess >= cuttingProgressNumber)
             {
-                KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+                if(SectionData.s.isSinglePlay || KOParent.photonView.IsMine)
+                {
+                    KitchenObjectSO outputKitchenObject = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
 
-                //Destroy input kitchenObject.
-                GetKitchenObject().DestroySelf();
+                    //Destroy input kitchenObject.
+                    GetKitchenObject().DestroySelf();
 
-                //Spawn output kitchenObject
-                KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
+                    //Spawn output kitchenObject
+                    KitchenObject.SpawnKitchenObject(outputKitchenObject, this);
 
-                _isComplete = true;
+                    _isComplete = true;
+                }
             }
         }
         //else
@@ -136,6 +141,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             if(counterCompleteDish.TryAddIngredient(playerKitchenObjectSO))
             {
                 KOParent.GetKitchenObject().DestroySelf();
+                _isComplete = true;
             }
         }
         else
@@ -150,6 +156,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
                 KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, counterKitchenObjectSO}, KOParent);
 
                 GetKitchenObject().DestroySelf();
+                _isComplete = true;
             }
         }
     }

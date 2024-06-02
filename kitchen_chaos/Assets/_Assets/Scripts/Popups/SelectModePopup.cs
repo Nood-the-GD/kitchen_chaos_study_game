@@ -1,18 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
 using System;
 using Sirenix.OdinInspector;
+using UnityEngine.UI;
 public class SelectModePopup : BasePopup<SelectModePopup>
 {
+    [SerializeField] private Button _singlePlayBtn, _randomMatchBtn, _findRoomBtn, _createRoomBtn;
+     
     private void Start() {
         PhotonManager.s.onJoinRandomRoomFailed += OnJoinRandomRoomFailed;
+        _singlePlayBtn.onClick.AddListener(SinglePlay);
+        _randomMatchBtn.onClick.AddListener(RandomMatch);
+        _findRoomBtn.onClick.AddListener(FindRoom);
+        _createRoomBtn.onClick.AddListener(CreateRoom);
     }
+
     private void OnJoinRandomRoomFailed(string obj)
     {
         NoRoomFoundPopup.ShowPopup();
+    }
+
+    private void SinglePlay()
+    {
+        SectionData.s.isSinglePlay = true;
+        PhotonNetwork.CreateRoom(RandomStringGenerator.GenerateRandomString(7));
     }
 
     public void RandomMatch(){

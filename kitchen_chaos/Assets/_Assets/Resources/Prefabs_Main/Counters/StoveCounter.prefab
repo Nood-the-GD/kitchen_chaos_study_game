@@ -489,9 +489,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   counterTopPoint: {fileID: 3738375835106427504}
-  firingRecipeSOArray:
+  _firingRecipeSOArray:
   - {fileID: 11400000, guid: 792a7448fa47b4ee7914d64c38771475, type: 2}
-  burningRecipeSOArray:
+  _burningRecipeSOArray:
   - {fileID: 11400000, guid: e524d52b929f8432daf99914d82e06ea, type: 2}
 --- !u!1001 &8278048141721165322
 PrefabInstance:

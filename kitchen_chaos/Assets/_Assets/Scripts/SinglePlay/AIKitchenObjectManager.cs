@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Sirenix.OdinInspector.Editor.ValueResolvers;
 using UnityEngine;
 
 public class AIKitchenObjectManager : Singleton<AIKitchenObjectManager>
@@ -15,8 +12,8 @@ public class AIKitchenObjectManager : Singleton<AIKitchenObjectManager>
         }
         else if(kitchenObjectSO.kitchenObjectType == KitchenObjectType.NeedFried)
         {
-            StoveCounter cuttingCounter = AICounterManager.s.GetStoveCounter();
-            KitchenObjectSO original = cuttingCounter.GetFryingInputFromOutput(kitchenObjectSO);
+            StoveCounter stoveCounter = AICounterManager.s.GetStoveCounter();
+            KitchenObjectSO original = stoveCounter.GetFryingInputFromOutput(kitchenObjectSO);
             return original;
         }
         return kitchenObjectSO;
@@ -24,6 +21,8 @@ public class AIKitchenObjectManager : Singleton<AIKitchenObjectManager>
     public bool IsNeedChop(KitchenObjectSO kitchenObjectSO)
     {
         CuttingCounter cuttingCounter = AICounterManager.s.GetCuttingCounter();
+
+        if (cuttingCounter == null) return false;
 
         foreach(var recipe in cuttingCounter.GetCuttingRecipeSOArray())
         {
@@ -38,9 +37,11 @@ public class AIKitchenObjectManager : Singleton<AIKitchenObjectManager>
     {
         StoveCounter stoveCounter = AICounterManager.s.GetStoveCounter();
 
+        if (stoveCounter == null) return false;
+
         foreach(var recipe in stoveCounter.GetFryingRecipeSOArray())
         {
-            if(recipe.input = kitchenObjectSO)
+            if(recipe.input == kitchenObjectSO)
             {
                 return true;
             }

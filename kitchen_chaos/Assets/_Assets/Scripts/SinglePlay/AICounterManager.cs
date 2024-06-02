@@ -90,18 +90,34 @@ public class AICounterManager : Singleton<AICounterManager>
     }
     public CuttingCounter GetCuttingCounter()
     {
-        return _allCounters.First(x => x is CuttingCounter) as CuttingCounter;
+        if (_allCounters.Any(x => x is CuttingCounter))
+        {
+            return _allCounters.First(x => x is CuttingCounter) as CuttingCounter;
+        }
+        return null;
     }
     public StoveCounter GetStoveCounter()
     {
-        return _allCounters.First(x => x is StoveCounter) as StoveCounter;
+        if(_allCounters.Any(x => x is StoveCounter))
+        {
+            return _allCounters.First(x => x is StoveCounter) as StoveCounter;
+        }
+        return null;
     }
     public PlatesCounter GetPlatesCounter()
     {
-        return _allCounters.First(x => x is PlatesCounter) as PlatesCounter;
+        if(_allCounters.Any(x => x is PlatesCounter))
+        {
+            return _allCounters.First(x => x is PlatesCounter) as PlatesCounter;
+        }
+        return null;
     }
     public DeliveryCounter GetDeliveryCounter()
     {
-        return _allCounters.First(x => x is DeliveryCounter) as DeliveryCounter;
+        if(_allCounters.Any(x => x is DeliveryCounter))
+        {
+            return _allCounters.First(x => x is DeliveryCounter) as DeliveryCounter;
+        }
+        return null;
     }
 }

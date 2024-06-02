@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Variables
+    const string AI_MANAGER_PATH = "Prefabs/AISystem";
     public bool isTesting;
     [SerializeField] private float gamePlayingTimerMax = 10f;
     private float gamePlayingTimer = 100;
@@ -34,7 +35,7 @@ public class GameManager : MonoBehaviour
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private bool isGamePause = false;
-    public Transform[] spawnPoints;
+    public List<Transform> spawnPoints = new List<Transform>();
     public static int levelId;
     public static StageData getStageData{
         get{
@@ -55,9 +56,17 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (isTesting) return;
+        if(SectionData.s.isSinglePlay)
+        {
+            // Spawn AIManager
+            AISystem aISystem = Instantiate(Resources.Load<AISystem>(AI_MANAGER_PATH)).GetComponent<AISystem>();
+            Transform spawnPosition = spawnPoints[0];
+            aISystem.Init(spawnPosition.position);
+            spawnPoints.Remove(spawnPosition);
+        }
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
-        OnJoinRoom();
         TutorialUI.OnTutorialComplete += TutorialUI_OnTutorialComplete;
+        OnJoinRoom();
     }
     private void Update()
     {
@@ -108,8 +117,10 @@ public class GameManager : MonoBehaviour
     void OnJoinRoom(){
         Debug.Log("OnJoinRoom");
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
-        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPoints[0].position, Quaternion.identity);
+        Transform spawnPosition = spawnPoints[0];
+        var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPosition.position, Quaternion.identity);
         ob.name = "MainPlayer_"+id;
+        spawnPoints.Remove(spawnPosition);
     }
     private void GameInput_OnPauseAction(object sender, System.EventArgs e)
     {

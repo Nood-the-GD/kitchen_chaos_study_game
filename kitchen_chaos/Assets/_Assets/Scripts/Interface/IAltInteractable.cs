@@ -6,4 +6,5 @@ public interface IAltInteractable
 {
     public void AltInteract(IKitchenObjectParent kitchenObjectParent);
     public bool CanAltInteract();
+    public bool HasKitchenObject();
 }

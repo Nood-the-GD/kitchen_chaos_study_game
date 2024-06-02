@@ -57,5 +57,17 @@ public class CompleteDishKitchenObject : KitchenObject
     {
         return kitchenObjectSOList;
     }
+    public bool IsCorrectRecipe(RecipeSO recipeSO)
+    {
+        if (recipeSO.kitchenObjectSOList.Count != kitchenObjectSOList.Count) return false;
+        foreach(KitchenObjectSO kitchenObjectSO in kitchenObjectSOList)
+        {
+            if(!recipeSO.kitchenObjectSOList.Contains(kitchenObjectSO))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     #endregion
 }
