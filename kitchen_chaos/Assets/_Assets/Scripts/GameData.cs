@@ -138,6 +138,18 @@ public class GameData : SerializedScriptableObject
         }
         Save();
     }
+    [ShowIf(nameof(showEdit))]
+    [Button]
+    private void UpdateCustomer()
+    {
+        _customerList.Clear();
+        var customers = Resources.FindObjectsOfTypeAll<Customer>();
+        foreach(var i in customers)
+        {
+            _customerList.Add(i);
+        }
+        Save();
+    }
 
     [ShowIf(nameof(showEdit))]
     [Button]
@@ -162,7 +174,6 @@ public class GameData : SerializedScriptableObject
         }
         AutoGenerateFile.GenerateEnum("IconType", names);
         AssetDatabase.Refresh();
-
     }
 
     string FormatPath(string input)
@@ -283,7 +294,7 @@ public class GameData : SerializedScriptableObject
             objectTypeViews.Add(list[i].objectType, list[i]);
         }
 
-
+        UpdateCustomer();
         UpdatePath();
         Save();
     }
@@ -303,6 +314,7 @@ public class GameData : SerializedScriptableObject
     [Searchable]
     [ListDrawerSettings(ShowIndexLabels = true, NumberOfItemsPerPage = 10)]
     public Dictionary<string, ObjectTypeView> objectTypeViews = new Dictionary<string, ObjectTypeView>();
+    public List<Customer> _customerList = new List<Customer>();
     
     public ColorSkin GetColorSkin(string id){
         return colorElements.Find(x=>x.colorCode == id);
@@ -394,4 +406,14 @@ public class GameData : SerializedScriptableObject
         return inGameProduct;
     }
 
+    public Customer GetCustomer(int id)
+    {
+        var customer = _customerList[id];
+        if (customer == null)
+        {
+            Debug.LogError("cant find customer at: " + id);
+            return null;
+        }
+        return customer;
+    }
 }
