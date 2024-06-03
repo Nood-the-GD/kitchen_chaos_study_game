@@ -7,8 +7,9 @@ public class CustomerManager : Singleton<CustomerManager>
 {
     private Queue<Customer> _customerQueue = new Queue<Customer>();
 
-    void OnEnable()
+    protected override void Start()
     {
+        base.Start();
         DeliveryManager.Instance.OnRecipeSuccess += DeliverFood;
     }
 

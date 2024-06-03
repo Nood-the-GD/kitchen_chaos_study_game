@@ -22,7 +22,7 @@ public class CustomerSpawner : MonoBehaviour
         _customerList = Resources.LoadAll<Customer>(CUSTOMER_FOLDER_PATH).ToList();
         _photonView = GetComponent<PhotonView>();
     }
-    void OnEnable()
+    void Start()
     {
         if(PhotonNetwork.IsMasterClient)
             DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
@@ -50,6 +50,7 @@ public class CustomerSpawner : MonoBehaviour
     [PunRPC]
     private void RpcSpawnCustomer(int id)
     {
+        Debug.Log("SpawnCustomer");
         Customer customer = GameData.s.GetCustomer(id);
         Customer spawnCustomer = Instantiate(customer, transform.position, this.transform.rotation);
         spawnCustomer.transform.position = this.transform.position;

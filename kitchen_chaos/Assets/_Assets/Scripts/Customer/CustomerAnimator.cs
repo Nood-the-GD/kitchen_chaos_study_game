@@ -15,15 +15,17 @@ public class CustomerAnimator : MonoBehaviour
 
     public void Walk()
     {
-        _anim.Play("Walk");
+        if(_anim != null)
+            _anim.Play("Walk");
     }
     public void Stop()
     {
-        if(_isAnimating == false)
+        if(_isAnimating == false && _anim != null)
             _anim.Play("Idle_A");
     }
     public void DeliverFood(Action onComplete)
     {
+        if (_anim == null) return;
         _anim.Play("Roll");
         _isAnimating = true;
         float duration = _anim.GetCurrentAnimatorStateInfo(0).length;
