@@ -28,19 +28,19 @@ MonoBehaviour:
     - {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
     - {fileID: 11400000, guid: f32ad0e34362e0844b73b01701b79205, type: 2}
     - {fileID: 11400000, guid: 990447f1a33874b7199704021dee7467, type: 2}
-    - {fileID: 7502353502858751676, guid: e8363954b170347179db2e61abb47cf4, type: 3}
     - {fileID: 1817624834693766468, guid: 5e372c0d5a32f4c3e8c787c930f02d5a, type: 3}
     - {fileID: 7745850432262308927, guid: fe107e29635272f4e9c0c448b17c5edc, type: 3}
-    - {fileID: 1609378212798663079, guid: 6058b29e42dcf42d88afef05d95f3efe, type: 3}
+    - {fileID: 4438093364599518989, guid: d62396a87c5abce4598a6e8bd5d76d9e, type: 3}
     - {fileID: -2441813765035412052, guid: d29bf294e950f437db233e2e4cafbdf5, type: 3}
-    - {fileID: -7175529056743475181, guid: 206d70af57bc2401693feb15986b8e1b, type: 3}
-    - {fileID: 1599805354852870132, guid: d00250d3ee698469e94b8251517005db, type: 3}
     - {fileID: -6275936465289592617, guid: 39fdad88482a32644aafaab84b4e95df, type: 3}
     - {fileID: 3492988916858510848, guid: 580cea5c67f810c4f9bf32b78a2987ee, type: 3}
-    - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
-    - {fileID: 4438093364599518989, guid: d62396a87c5abce4598a6e8bd5d76d9e, type: 3}
-    - {fileID: 8525692102432909788, guid: 8f51dcb530c1348c4a9c47b9e66b6bb2, type: 3}
+    - {fileID: -7175529056743475181, guid: 206d70af57bc2401693feb15986b8e1b, type: 3}
     - {fileID: 7502353502858751676, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
+    - {fileID: 1599805354852870132, guid: d00250d3ee698469e94b8251517005db, type: 3}
+    - {fileID: 7502353502858751676, guid: e8363954b170347179db2e61abb47cf4, type: 3}
+    - {fileID: -6677463780327860135, guid: c0603822a5c386b4084ef343fa0b66f4, type: 3}
+    - {fileID: 1609378212798663079, guid: 6058b29e42dcf42d88afef05d95f3efe, type: 3}
+    - {fileID: 8525692102432909788, guid: 8f51dcb530c1348c4a9c47b9e66b6bb2, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -65,46 +65,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cheese
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Cheese
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
       Data: CheeseSlices
     - Name: $v
       Entry: 1
       Data: Prefabs_Main/KitchenObjects/CheeseSlices
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyUncooked
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Tomato
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Tomato
     - Name: 
       Entry: 8
       Data: 
@@ -125,22 +89,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Plate
+      Data: Cabbage
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Plate
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: MeatPattyBurned
-    - Name: $v
-      Entry: 1
-      Data: Prefabs_Main/KitchenObjects/MeatPattyBurned
+      Data: Prefabs_Main/KitchenObjects/Cabbage
     - Name: 
       Entry: 8
       Data: 
@@ -161,10 +113,22 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MainPlayer
+      Data: Cheese
     - Name: $v
       Entry: 1
-      Data: Prefabs/MainPlayer
+      Data: Prefabs_Main/KitchenObjects/Cheese
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Tomato
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/Tomato
     - Name: 
       Entry: 8
       Data: 
@@ -185,10 +149,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cabbage
+      Data: CompleteBurger
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/Cabbage
+      Data: Prefabs_Main/KitchenObjects/CompleteBurger
     - Name: 
       Entry: 8
       Data: 
@@ -209,10 +173,46 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CompleteBurger
+      Data: Plate
     - Name: $v
       Entry: 1
-      Data: Prefabs_Main/KitchenObjects/CompleteBurger
+      Data: Prefabs_Main/KitchenObjects/Plate
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MeatPattyUncooked
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/MeatPattyUncooked
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MeatPattyBurned
+    - Name: $v
+      Entry: 1
+      Data: Prefabs_Main/KitchenObjects/MeatPattyBurned
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MainPlayer
+    - Name: $v
+      Entry: 1
+      Data: Prefabs/MainPlayer
     - Name: 
       Entry: 8
       Data: 
@@ -391,8 +391,12 @@ MonoBehaviour:
       Data: 4|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[ObjectTypeView,
         Game]], mscorlib
     - Name: comparer
-      Entry: 9
-      Data: 3
+      Entry: 7
+      Data: 5|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 12
       Data: 13
@@ -401,7 +405,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Plate
+      Data: CheeseSlices
     - Name: $v
       Entry: 10
       Data: 12
@@ -413,7 +417,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CheeseSlices
+      Data: Bread
     - Name: $v
       Entry: 10
       Data: 13
@@ -425,7 +429,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Bread
+      Data: Cabbage
     - Name: $v
       Entry: 10
       Data: 14
@@ -437,7 +441,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyBurned
+      Data: CabbageSlices
     - Name: $v
       Entry: 10
       Data: 15
@@ -449,7 +453,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CabbageSlices
+      Data: Cheese
     - Name: $v
       Entry: 10
       Data: 16
@@ -461,7 +465,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: TomatoSlices
+      Data: Tomato
     - Name: $v
       Entry: 10
       Data: 17
@@ -473,7 +477,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyCooked
+      Data: TomatoSlices
     - Name: $v
       Entry: 10
       Data: 18
@@ -485,7 +489,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cheese
+      Data: CompleteBurger
     - Name: $v
       Entry: 10
       Data: 19
@@ -497,7 +501,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Tomato
+      Data: MeatPattyCooked
     - Name: $v
       Entry: 10
       Data: 20
@@ -509,7 +513,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MeatPattyUncooked
+      Data: Plate
     - Name: $v
       Entry: 10
       Data: 21
@@ -521,7 +525,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Cabbage
+      Data: MeatPattyUncooked
     - Name: $v
       Entry: 10
       Data: 22
@@ -533,7 +537,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: MainPlayer
+      Data: MeatPattyBurned
     - Name: $v
       Entry: 10
       Data: 23
@@ -545,7 +549,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: CompleteBurger
+      Data: MainPlayer
     - Name: $v
       Entry: 10
       Data: 24
@@ -560,7 +564,7 @@ MonoBehaviour:
       Data: 
     - Name: icons
       Entry: 7
-      Data: 5|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Sprite,
+      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Sprite,
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 9
@@ -636,4 +640,13 @@ MonoBehaviour:
     colorCode: yellow
     material: {fileID: 2100000, guid: 5238fd86c7a7c8945ab05a30cbd4754b, type: 2}
     icon: {fileID: 21300000, guid: a7bb90f4c980d3c489d9c07177fc791a, type: 3}
+  _customerList:
+  - {fileID: 1152172672870110571, guid: f39e031f6390dc14195ae09ff81ee7fe, type: 3}
+  - {fileID: 1152172672870110571, guid: 7b6b9828fbce81744ae490c949553db3, type: 3}
+  - {fileID: 1152172672870110571, guid: 8e0c53c112ae7414691b2e3e9cd6ec6c, type: 3}
+  - {fileID: 1152172672870110571, guid: 08a4e892a4185a446bd3ba9779d241a3, type: 3}
+  - {fileID: 1152172672870110571, guid: 27ae38c8e925fce479019c45cbe47daf, type: 3}
+  - {fileID: 1152172672870110571, guid: 6462f3984f6afbf4ebf19c5b80d73118, type: 3}
+  - {fileID: 1152172672870110571, guid: d01559472edf45f4dad1b200cfb4e78d, type: 3}
+  - {fileID: 1152172672870110571, guid: 4f38060df251a30409c629ad6e0f58b8, type: 3}
   inGameProducts: []
