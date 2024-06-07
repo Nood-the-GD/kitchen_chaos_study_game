@@ -62,11 +62,6 @@ public class DeliveryManager : MonoBehaviour
         if(!PhotonNetwork.IsMasterClient)
             return;
 
-        //feature only for mobile, because in editor sometime need to test of line
-        if(PhotonNetwork.PlayerList.Length < 2 && !Application.isEditor){
-            return;
-        }
-
         if (GameManager.Instance.IsGamePlaying() == false || GameManager.Instance.isTesting) return;
         
         spawnRecipeTimer -= Time.deltaTime;
