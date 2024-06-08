@@ -7,16 +7,30 @@ using Photon.Pun;
 using System;
 using System.Linq;
 
-public class CmdOrder{
+public class CmdOrder
+{
     public string receiver;
     public string functionName;
     public object[] data;
 
-    public CmdOrder(string reciver, string functionName, params object[] data){
+    public CmdOrder(string reciver, string functionName, params object[] data)
+    {
         this.receiver = reciver;
         this.functionName = functionName;
         this.data = data;
     }
+}
+
+public class RegionPing
+{
+    public string region;
+    public int ping;
+    public RegionPing(string region, int ping)
+    {
+        this.region = region;
+        this.ping = ping;
+    }
+
 }
 
 //using Game;
@@ -24,12 +38,14 @@ public class CmdOrder{
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager s;
-    [SerializeField]bool _autoConnectToPhotonTest;
-    [ShowIf(nameof(_autoConnectToPhotonTest))]public string defaultRoomName = "TestRoom2";
+    [SerializeField] bool _autoConnectToPhotonTest;
+    [ShowIf(nameof(_autoConnectToPhotonTest))] public string defaultRoomName = "TestRoom2";
 
-    public bool autoConnectToPhotonTest{
-        get{
-            if(!Application.isEditor)
+    public bool autoConnectToPhotonTest
+    {
+        get
+        {
+            if (!Application.isEditor)
                 return false;
 
             return _autoConnectToPhotonTest;
@@ -38,7 +54,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public bool autoConncetToMaster = true;
 
-#region Event
+    #region Event
     public Action onCreatedRoom;
     public Action onJoinRoom;
     public Action onJoinLobby;
@@ -48,123 +64,201 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public Action onConnectToServer;
     public Action<DisconnectCause> onDisconnect;
     public Action onSetMasterClient;
-    public  Action<string> onJoinRoomFailed;
+    public Action<string> onJoinRoomFailed;
     public Action<string> onJoinRandomRoomFailed;
     public Action<string> onCreateRoomFailed;
     public Action<Photon.Realtime.Player> onPlayerLeftRoom;
     public Action<Photon.Realtime.Player> onPlayerEnteredRoom;
     public bool isJoinedRoom => PhotonNetwork.InRoom;
-    public bool isServerConnected => PhotonNetwork.IsConnected; 
+    public bool isServerConnected => PhotonNetwork.IsConnected;
     public Photon.Realtime.Player myPlayerPhoton => PhotonNetwork.LocalPlayer;
     public Action<CmdOrder> onCallAnyCmdFunction;
-    
-
+    RegionHandler prevRegion;
+    public List<RegionPing> allRegionPing = new List<RegionPing>();
+    Action<List<RegionPing>> doneRefeshRegionPing;
     [ReadOnly]
     public List<Player> currentGamePlayers;
 
-    public Player GetPlayerView(int viewId){
-        foreach(var player in currentGamePlayers){
-            if(player.photonView.ViewID == viewId)
+    public Player GetPlayerView(int viewId)
+    {
+        foreach (var player in currentGamePlayers)
+        {
+            if (player.photonView.ViewID == viewId)
                 return player;
         }
-        
-        Debug.Log("Player not found: "+ viewId);
+
+        Debug.Log("Player not found: " + viewId);
         return null;
 
     }
 
-#endregion
+    #endregion
 
-    private void Awake(){
-        if(s == null){
+    private void Awake()
+    {
+        if (s == null)
+        {
             s = this;
             DontDestroyOnLoad(gameObject);
         }
-        else{
+        else
+        {
             DestroyImmediate(gameObject);
             return;
         }
     }
 
-    public PhotonView GetPhotonView(int id){
+    public PhotonView GetPhotonView(int id)
+    {
         var views = PhotonNetwork.PhotonViewCollection;
-        foreach(var view in views){
-            if(view.ViewID == id){
+        foreach (var view in views)
+        {
+            if (view.ViewID == id)
+            {
                 return view;
             }
         }
-        Debug.LogError("PhotonView not found: "+ id);
+        Debug.LogError("PhotonView not found: " + id);
         return null;
     }
 
-    public void DestroyPhotonView(int id){
+    public void DestroyPhotonView(int id)
+    {
         var view = GetPhotonView(id);
-        if(view == null)
+        if (view == null)
             return;
         PhotonNetwork.Destroy(view);
     }
 
-    public void DestroyPhotonView(PhotonView view){
+    public void DestroyPhotonView(PhotonView view)
+    {
         PhotonNetwork.Destroy(view);
     }
 
 
-    void Start(){
+    void Start()
+    {
         Init();
     }
 
-    void Init(){
+    void Init()
+    {
         //set name to player
-        if(!UserData.isInitName){
+        if (!UserData.isInitName)
+        {
             PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
         }
-        else{
+        else
+        {
             PhotonNetwork.NickName = UserData.userName;
         }
 
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
-        if(autoConnectToPhotonTest){
+        if (autoConnectToPhotonTest)
+        {
             //Debug.Log("starting offline mode");
-             // Set up Photon server settings
+            // Set up Photon server settings
             //PhotonNetwork.PhotonServerSettings.AppSettings.UseNameServer = false; // Disable the default Photon Cloud server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = "127.0.0.1"; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 5058; // Set the port number of the local Photon Server
 
 
-            
+
             ConnectToPhoton();
-            onConnectToServer += ()=>{JoinLobby();};
-            onJoinLobby += ()=>{
+            onConnectToServer += () => { JoinLobby(); };
+            onJoinLobby += () =>
+            {
                 JoinOrCreate(defaultRoomName);
-                
+
             };
             //onJoinRoom += ()=>{ObjectEnum.MainPlayer.SpawnMultiplay(Vector3.zero, Quaternion.identity);};
             //CreateRoom();
         }
-        else{
+        else
+        {
             //PhotonNetwork.PhotonServerSettings.AppSettings.Server = ""; // Set the IP address of the local Photon Server
             //PhotonNetwork.PhotonServerSettings.AppSettings.Port = 0; // Set the port number of the local Photon Server
-            if(autoConncetToMaster){
-                onLeaveRoom += () => {JoinLobby();};
+            if (autoConncetToMaster)
+            {
+                onLeaveRoom += () => { JoinLobby(); };
                 ConnectToPhoton();
             }
 
         }
     }
+    [Button]
+    public void RefeshPing()
+    {
+        if (prevRegion == null)
+        {
+            Debug.Log("Region not found");
+            return;
+        }
+        Debug.Log("Refeshing ping");
+        OnRegionListReceived(prevRegion);
 
-    public void EndSession(){
+    }
+    public override void OnRegionListReceived(RegionHandler regionHandler)
+    {
+        Debug.Log("Region list received");
+        if (regionHandler == null)
+            return;
+        base.OnRegionListReceived(regionHandler);
+        prevRegion = regionHandler;
+        var prevPing = regionHandler.SummaryToCache;
+        //Debug.Log(regionHandler.GetResults());
+        regionHandler.PingMinimumOfRegions((callback) =>
+        {
+
+            allRegionPing.Clear();
+            foreach (var i in callback.EnabledRegions)
+            {
+                allRegionPing.Add(new RegionPing(i.Code, i.Ping));
+                Debug.Log(i.Code + " " + i.Ping);
+            }
+            SortPing();
+            //SortPing();
+            doneRefeshRegionPing?.Invoke(allRegionPing);
+            prevRegion = callback;
+
+            if (UserSetting.regionSelected == "null")
+            {
+                UserSetting.regionSelected = allRegionPing[0].region;
+            }
+            Debug.Log("Region selected: " + UserSetting.regionSelected);
+            Debug.Log(PhotonNetwork.NetworkClientState);
+
+            if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToNameServer)
+            {
+                ConnectToPhoton(UserSetting.regionSelected);
+            }
+
+            //OnRegionListReceived(callback);
+        }, prevPing);
+        //prevRegion = regionHandler;
+        //serverDropdown.AddOptions(options);
+    }
+
+    void SortPing()
+    {
+        allRegionPing = allRegionPing.OrderBy(x => x.ping).ToList();
+    }
+
+    public void EndSession()
+    {
         s = null;
         PhotonNetwork.LeaveRoom();
-        
+
         Destroy(gameObject);
     }
-    
-#region Photon Control
+
+    #region Photon Control
     public static void JoinRoom(string name)
     {
         PhotonNetwork.JoinRoom(name);
     }
-    public static void JoinOrCreate(string name = "TestRoom"){
+    public static void JoinOrCreate(string name = "TestRoom")
+    {
         PhotonNetwork.JoinOrCreateRoom(name, new RoomOptions(), TypedLobby.Default);
     }
     [Button]
@@ -174,8 +268,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     //log current state of photon
     [Button]
-    public static void LogState(){
+    public static void LogState()
+    {
         Debug.Log("state: " + PhotonNetwork.NetworkClientState);
+
     }
     public static void LeaveRoom()
     {
@@ -190,7 +286,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [Button]
     public static void JoinLobby()
     {
-         var p =PhotonNetwork.CountOfPlayersInRooms;
+        var p = PhotonNetwork.CountOfPlayersInRooms;
         PhotonNetwork.JoinLobby();
     }
 
@@ -199,18 +295,37 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveLobby();
     }
     [Button]
-    public static void ConnectToPhoton(){
-        try{
+    public static void ConnectToPhoton()
+    {
+        try
+        {
             PhotonNetwork.ConnectUsingSettings();
-        }catch(System.Exception e){
+        }
+        catch (System.Exception e)
+        {
             Debug.Log(e);
         }
     }
-
-    public static void ConnectToServer(string serverId){
-        try{
+    [Button]
+    public void ConnectToPhoton(String region)
+    {
+        try
+        {
+            PhotonNetwork.ConnectToRegion(region);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+    public static void ConnectToServer(string serverId)
+    {
+        try
+        {
             PhotonNetwork.ConnectToRegion(serverId);
-        }catch(System.Exception e){
+        }
+        catch (System.Exception e)
+        {
             Debug.Log(e);
         }
     }
@@ -229,59 +344,67 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public static void SetMasterClient(Photon.Realtime.Player player)
     {
         PhotonNetwork.SetMasterClient(player);
-        
+
     }
 
-    public static GameObject Instantiate(ObjectEnum type, Vector3 position = default, Quaternion rotation= default)
+    public static GameObject Instantiate(ObjectEnum type, Vector3 position = default, Quaternion rotation = default)
     {
         var path = GameData.s.prefabPaths[type.ToString()];
         var g = PhotonNetwork.Instantiate(path, position, rotation);
         //Resources.Load()
-        if(g==null)
-            Debug.Log("Instantiate multiplay object failed"+ type);
+        if (g == null)
+            Debug.Log("Instantiate multiplay object failed" + type);
         return g;
     }
-#endregion
+    #endregion
 
-    public void CmdChangeState(int index){
+    public void CmdChangeState(int index)
+    {
         photonView.RPC(nameof(RPCChangeState), RpcTarget.Others, index);
     }
 
     [PunRPC]
-    public void RPCChangeState(int index){
+    public void RPCChangeState(int index)
+    {
         //GameManager.s.SetState(index);
     }
 
     [Button]
-    public void CmdCallFunction(CmdOrder cmdOrder){
-        photonView.RPC(nameof(RPCCallFunction), RpcTarget.All, cmdOrder.receiver,cmdOrder.functionName, cmdOrder.data);
+    public void CmdCallFunction(CmdOrder cmdOrder)
+    {
+        photonView.RPC(nameof(RPCCallFunction), RpcTarget.All, cmdOrder.receiver, cmdOrder.functionName, cmdOrder.data);
     }
 
     [PunRPC]
-    public void RPCCallFunction(string receiver,string functionName, object[] data){
+    public void RPCCallFunction(string receiver, string functionName, object[] data)
+    {
         //GameManager.s.CallFunction(functionName, data);
         //Debug.Log("Call function: "+ functionName + " on "+ receiver);
         var order = new CmdOrder(receiver, functionName, data);
         onCallAnyCmdFunction?.Invoke(order);
     }
-    
+
     [Button]
-    public void CmdEndGame(){
+    public void CmdEndGame()
+    {
         photonView.RPC(nameof(RPCEndGame), RpcTarget.All);
-    } 
+    }
 
     [PunRPC]
-    public void RPCEndGame(){
+    public void RPCEndGame()
+    {
         Debug.Log("called rpc end game");
         TimeupPopup.ShowPopup().SetData(GameManager.getStageData, DeliveryManager.recipeDeliveredPoint);
     }
 
 
-    public void OnSpawnInventory(){
+    public void OnSpawnInventory()
+    {
         //photonView.RPC(nameof(RPCOnSpawnInventory), RpcTarget.Others);
     }
 
-    public void RPCSpawnInventory(){
+    public void RPCSpawnInventory()
+    {
         //GameManager.s.SpawnInventory();
     }
 
@@ -302,7 +425,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId)
     {
         IKitchenObjectParent kitchenObjectParent = null;
-        if(parentPhotonId != -1)
+        if (parentPhotonId != -1)
             kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenObjectParent>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
@@ -310,10 +433,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
     }
     [PunRPC]
-    public void RpcSpawnCompleteDish(string objectType, string[] ingredientString , int parentPhotonId, int viewId)
+    public void RpcSpawnCompleteDish(string objectType, string[] ingredientString, int parentPhotonId, int viewId)
     {
         IKitchenObjectParent kitchenObjectParent = null;
-        if(parentPhotonId != -1)
+        if (parentPhotonId != -1)
             kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenObjectParent>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
@@ -321,7 +444,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
         CompleteDishKitchenObject completeDish = kitchenObjectTransform.GetComponent<CompleteDishKitchenObject>();
 
-        for(int i = 0; i < ingredientString.Length; i++)
+        for (int i = 0; i < ingredientString.Length; i++)
         {
             KitchenObjectSO ingredient = GameData.s.GetKitchenObjectSO(ingredientString[i]);
             completeDish.TryAddIngredient(ingredient);
@@ -330,7 +453,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 
 
-#region Callback
+    #region Callback
     public override void OnConnected()
     {
         base.OnConnected();
@@ -368,15 +491,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-        Debug.Log("Player Left Room"+ otherPlayer.UserId);
-    
+        Debug.Log("Player Left Room" + otherPlayer.UserId);
+
         onPlayerLeftRoom?.Invoke(otherPlayer);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        Debug.Log("Player Entered Room"+ newPlayer.UserId);
+        Debug.Log("Player Entered Room" + newPlayer.UserId);
         onPlayerEnteredRoom?.Invoke(newPlayer);
     }
 
@@ -391,16 +514,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         base.OnCreateRoomFailed(returnCode, message);
-        Debug.Log("Create Room Failed"+ message);
+        Debug.Log("Create Room Failed" + message);
         onCreateRoomFailed?.Invoke(message);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        Debug.Log("Disconnected"+ cause);
+        Debug.Log("Disconnected" + cause);
+
         onDisconnect?.Invoke(cause);
-        
+        //reconnect
+        if (UserSetting.regionSelected != "null")
+        {
+            Debug.Log("Reconnect to region: " + UserSetting.regionSelected);
+            ConnectToPhoton(UserSetting.regionSelected);
+        }
     }
 
 
@@ -410,26 +539,26 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Joined Room");
         onJoinRoom?.Invoke();
     }
-    
+
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         base.OnJoinRoomFailed(returnCode, message);
-        Debug.Log("Join Room Failed"+ message);
+        Debug.Log("Join Room Failed" + message);
         onJoinRoomFailed?.Invoke(message);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         base.OnJoinRandomFailed(returnCode, message);
-        Debug.Log("Join Random Room Failed"+ message);
+        Debug.Log("Join Random Room Failed" + message);
         onJoinRandomRoomFailed?.Invoke(message);
     }
-    
 
 
 
 
-#endregion
+
+    #endregion
 
 }
