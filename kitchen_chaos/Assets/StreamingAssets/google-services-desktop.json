@@ -7,22 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:166344716404:ios:4764be84570039a2766121",
+        "mobilesdk_app_id": "1:166344716404:android:5dbbfb66e93560b9766121",
         "android_client_info": {
           "package_name": "com.kitchentogether"
         }
       },
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD5V4BSM2Ow7RfOdbrNb9OgTCpOeoVrpF0"
+          "current_key": "AIzaSyC6EZ9BgOmvqEMeVqNSTGqURHt8sBVjwKw"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 0
-        },
         "appinvite_service": {
-          "status": 1
+          "other_platform_oauth_client": []
         }
       }
     }
