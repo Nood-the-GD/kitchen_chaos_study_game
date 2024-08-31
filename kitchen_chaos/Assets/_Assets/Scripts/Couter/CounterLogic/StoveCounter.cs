@@ -26,15 +26,10 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     #endregion
 
     #region Variables
-    [SerializeField] private FryingRecipeSO[] _firingRecipeSOArray;
-    [SerializeField] private BurningRecipeSO[] _burningRecipeSOArray;
-
+    private Recipe _curRecipe;
     private State _currentState;
-    private FryingRecipeSO _fryingRecipeSO;
-    private BurningRecipeSO _burningRecipeSO;
     private float _fryingTimer;
     private float _burningTimer;
-    private Player _player;
     #endregion
 
     #region Unity functions
@@ -44,7 +39,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     }
     private void Update()
     {
-        switch(_currentState)
+        switch (_currentState)
         {
             case State.Idle:
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
@@ -57,48 +52,49 @@ public class StoveCounter : BaseCounter, IHasProgressBar
 
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
                 {
-                    processNormalize = _fryingTimer / _fryingRecipeSO.fryingTimerMax
+                    processNormalize = _fryingTimer / _curRecipe.step
                 });
 
-                if (_fryingTimer >= _fryingRecipeSO.fryingTimerMax)
+                if (_fryingTimer >= _curRecipe.step)
                 {
-                    if(PhotonNetwork.IsMasterClient){
+                    if (PhotonNetwork.IsMasterClient)
+                    {
                         GetKitchenObject().DestroySelf();
 
 
-                        KitchenObject.SpawnKitchenObject(_fryingRecipeSO.output, this);
+                        KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
-                    
+
                     ChangeState(State.Fried);
                     _burningTimer = 0;
-                    _burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    _curRecipe = GetKitchenObjectSO().GetFriedOnlyRecipe();
                 }
                 break;
             case State.Fried:
-                if(_burningRecipeSO == null)
+                if (_curRecipe == null)
                 {
-                    _burningRecipeSO = GetBurningRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+
                     return;
                 }
                 _burningTimer += Time.deltaTime;
 
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
                 {
-                    processNormalize = _burningTimer / _burningRecipeSO.burningTimerMax
+                    processNormalize = _burningTimer / _curRecipe.step
                 });
 
-                if (_burningTimer >= _burningRecipeSO.burningTimerMax)
+                if (_burningTimer >= _curRecipe.step)
                 {
 
-                    if(SectionData.s.isSinglePlay || PhotonNetwork.IsMasterClient)
+                    if (SectionData.s.isSinglePlay || PhotonNetwork.IsMasterClient)
                     {
                         GetKitchenObject().DestroySelf();
 
-                        KitchenObject.SpawnKitchenObject(_burningRecipeSO.output, this);
+                        KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
                     ChangeState(State.Burned);
 
-                        
+
                 }
                 break;
             case State.Burned:
@@ -143,12 +139,12 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 else
                 {
                     //Player is holding an ingredient
-                    if(CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
+                    if (CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
                     {
                         player.GetKitchenObject().DestroySelf();
 
                         KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-                        KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, counterKitchenObjectSO}, player);
+                        KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] { playerKitchenObjectSO, counterKitchenObjectSO }, player);
 
                         GetKitchenObject().DestroySelf();
                         ChangeState(State.Idle);
@@ -159,12 +155,12 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         else
         {
             //Counter don't have kitchen object
-            if (player.HasKitchenObject() && HasFryingRecipeForInput(player.GetKitchenObject().GetKitchenObjectSO()))
+            if (player.HasKitchenObject() && GetKitchenObjectSO().IsCanFried())
             {
                 //Player carrying something that can be fried
                 //Move kitchen object to counter
                 player.GetKitchenObject().SetKitchenObjectParent(this);
-                _fryingRecipeSO = GetFryingRecipeWithInput(GetKitchenObject().GetKitchenObjectSO());
+                _curRecipe = GetKitchenObjectSO().GetFriedOnlyRecipe();
                 ChangeState(State.Frying);
                 _fryingTimer = 0;
             }
@@ -180,14 +176,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         return _currentState == State.Fried;
     }
 
-    public KitchenObjectSO GetFryingInputFromOutput(KitchenObjectSO output)
-    {
-        foreach (FryingRecipeSO recipe in _firingRecipeSOArray)
-        {
-            if (recipe.output == output) return recipe.input;
-        }
-        return null;
-    }
 
     private void ChangeState(State state)
     {
@@ -198,44 +186,4 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         });
     }
 
-    private FryingRecipeSO GetFryingRecipeWithInput(KitchenObjectSO input)
-    {
-        foreach (FryingRecipeSO recipe in _firingRecipeSOArray)
-        {
-            if (recipe.input == input) return recipe;
-        }
-        return null;
-    }
-
-    private BurningRecipeSO GetBurningRecipeWithInput(KitchenObjectSO input)
-    {
-        foreach (BurningRecipeSO recipe in _burningRecipeSOArray)
-        {
-            if (recipe.input == input) return recipe;
-        }
-        return null;
-    }
-
-    private bool HasFryingRecipeForInput(KitchenObjectSO input)
-    {
-        return GetFryingRecipeWithInput(input) != null;
-    }
-
-    private KitchenObjectSO GetOutputForInput(KitchenObjectSO input)
-    {
-        FryingRecipeSO outputCuttingRecipe = GetFryingRecipeWithInput(input);
-        return outputCuttingRecipe.output;
-    }
-
-    private int GetOutputFryingTimerForInput(KitchenObjectSO input)
-    {
-        FryingRecipeSO outputCuttingRecipe = null;
-        outputCuttingRecipe = GetFryingRecipeWithInput(input);
-        return outputCuttingRecipe.fryingTimerMax;
-    }
-
-    public FryingRecipeSO[] GetFryingRecipeSOArray()
-    {
-        return _firingRecipeSOArray;
-    }
 }

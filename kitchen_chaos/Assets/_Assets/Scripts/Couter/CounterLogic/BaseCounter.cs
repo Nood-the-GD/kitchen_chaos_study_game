@@ -4,11 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+
+public enum CounterType
+{
+    Cutting,
+    Cooking,
+}
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
     public static event EventHandler OnSomethingPlacedHere;
+    public CounterType counterType;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
@@ -17,30 +24,35 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform counterTopPoint;
     private KitchenObject kitchenObject;
 
-    public virtual void Interact(IKitchenObjectParent KOParent){}
-    public virtual void Chop(IKitchenObjectParent KOParent){ }
+    public virtual void Interact(IKitchenObjectParent KOParent) { }
+    public virtual void Chop(IKitchenObjectParent KOParent) { }
 
-    protected virtual void Awake(){
+    protected virtual void Awake()
+    {
         _photonView = GetComponent<PhotonView>();
     }
 
     #region Multiplay
-    
-    public void CmdInteract(int id){
+
+    public void CmdInteract(int id)
+    {
         _photonView.RPC("RPCIntertact", RpcTarget.All, id);
     }
 
-    public void CmdChop(int id){
+    public void CmdChop(int id)
+    {
         _photonView.RPC("RPCChop", RpcTarget.All, id);
     }
 
     [PunRPC]
-    public void RPCIntertact(int id){
+    public void RPCIntertact(int id)
+    {
         var player = PhotonManager.s.GetPlayerView(id);
         Interact(player);
-    } 
+    }
     [PunRPC]
-    public void RPCChop(int id){
+    public void RPCChop(int id)
+    {
         var player = PhotonManager.s.GetPlayerView(id);
         Chop(player);
     }
@@ -49,11 +61,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public Transform GetKitchenObjectFollowTransform()
     {
         return counterTopPoint;
-    } 
+    }
 
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
             Debug.Log(kitchenObject.gameObject.name);
             OnSomethingPlacedHere?.Invoke(this, EventArgs.Empty);
@@ -66,6 +78,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         return this.kitchenObject;
     }
+
+    public KitchenObjectSO GetKitchenObjectSO(){
+        return this.kitchenObject.GetKitchenObjectSO();
+    }
+
 
     public void ClearKitchenObject()
     {

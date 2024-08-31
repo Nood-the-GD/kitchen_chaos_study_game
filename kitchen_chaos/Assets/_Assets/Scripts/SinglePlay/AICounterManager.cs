@@ -15,20 +15,22 @@ public class AICounterManager : Singleton<AICounterManager>
 
     public bool TryGetCounterHasKitchenObject(KitchenObjectSO kitchenObjectSO, out BaseCounter resultCounter)
     {
-        foreach (var counter in _allCounters)
-        {
-            if (counter.HasKitchenObject() && counter.GetKitchenObject().GetKitchenObjectSO() == kitchenObjectSO)
-            {
-                resultCounter = counter;
-                return true;
-            }
-        }
-        if(kitchenObjectSO.kitchenObjectType == KitchenObjectType.Original)
-        {
-            resultCounter = GetContainerCounter(kitchenObjectSO);
-            return true;
-        }
+        // foreach (var counter in _allCounters)
+        // {
+        //     if (counter.HasKitchenObject() && counter.GetKitchenObject().GetKitchenObjectSO() == kitchenObjectSO)
+        //     {
+        //         resultCounter = counter;
+        //         return true;
+        //     }
+        // }
+        // if(kitchenObjectSO.kitchenObjectType == KitchenObjectType.Original)
+        // {
+        //     resultCounter = GetContainerCounter(kitchenObjectSO);
+        //     return true;
+        // }
+        // resultCounter = null;
         resultCounter = null;
+        Debug.LogError("This method is not implemented yet");
         return false;
     }
 
@@ -48,9 +50,9 @@ public class AICounterManager : Singleton<AICounterManager>
 
     public bool TryGetEmptyCuttingCounter(out CuttingCounter cuttingCounter)
     {
-        foreach(var counter in _allCounters)
+        foreach (var counter in _allCounters)
         {
-            if(counter is CuttingCounter && counter.HasKitchenObject() == false)
+            if (counter is CuttingCounter && counter.HasKitchenObject() == false)
             {
                 cuttingCounter = counter as CuttingCounter;
                 return true;
@@ -61,9 +63,9 @@ public class AICounterManager : Singleton<AICounterManager>
     }
     public bool TryGetEmptyStoveCounter(out StoveCounter stoveCounter)
     {
-        foreach(var counter in _allCounters)
+        foreach (var counter in _allCounters)
         {
-            if(counter is StoveCounter && counter.HasKitchenObject() == false)
+            if (counter is StoveCounter && counter.HasKitchenObject() == false)
             {
                 stoveCounter = counter as StoveCounter;
                 return true;
@@ -77,10 +79,10 @@ public class AICounterManager : Singleton<AICounterManager>
     {
         foreach (var counter in _allCounters)
         {
-            if(counter is ContainerCounter)
+            if (counter is ContainerCounter)
             {
                 ContainerCounter containerCounter = counter as ContainerCounter;
-                if(containerCounter.GetContainerKitchenObject() == kitchenObjectSO)
+                if (containerCounter.GetContainerKitchenObject() == kitchenObjectSO)
                 {
                     return counter as ContainerCounter;
                 }
@@ -98,7 +100,7 @@ public class AICounterManager : Singleton<AICounterManager>
     }
     public StoveCounter GetStoveCounter()
     {
-        if(_allCounters.Any(x => x is StoveCounter))
+        if (_allCounters.Any(x => x is StoveCounter))
         {
             return _allCounters.First(x => x is StoveCounter) as StoveCounter;
         }
@@ -106,7 +108,7 @@ public class AICounterManager : Singleton<AICounterManager>
     }
     public PlatesCounter GetPlatesCounter()
     {
-        if(_allCounters.Any(x => x is PlatesCounter))
+        if (_allCounters.Any(x => x is PlatesCounter))
         {
             return _allCounters.First(x => x is PlatesCounter) as PlatesCounter;
         }
@@ -114,7 +116,7 @@ public class AICounterManager : Singleton<AICounterManager>
     }
     public DeliveryCounter GetDeliveryCounter()
     {
-        if(_allCounters.Any(x => x is DeliveryCounter))
+        if (_allCounters.Any(x => x is DeliveryCounter))
         {
             return _allCounters.First(x => x is DeliveryCounter) as DeliveryCounter;
         }
