@@ -10,32 +10,37 @@ using UnityEditor;
 #endif
 
 [System.Serializable]
-public class InGameProduct{
-        public string id;
-        public int amount;
+public class InGameProduct
+{
+    public string id;
+    public int amount;
 
-        public int starRMAmount;
-        public enum ItemShopType{
-            buyOneTime,
-            upgradeable
+    public int starRMAmount;
+    public enum ItemShopType
+    {
+        buyOneTime,
+        upgradeable
+    }
+
+    public ItemShopType itemShopType;
+    [ShowIf("itemShopType", ItemShopType.upgradeable)]
+    public int maxUpdate;
+    string key => "Shop_" + id;
+    public int curUpdate
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(key, 0);
         }
+        set => PlayerPrefs.SetInt(key, value);
+    }
 
-        public ItemShopType itemShopType;
-        [ShowIf("itemShopType", ItemShopType.upgradeable)]
-        public int maxUpdate;
-        string key => "Shop_"+id;
-        public int curUpdate{
-            get{
-                return PlayerPrefs.GetInt(key, 0);
-            }
-            set => PlayerPrefs.SetInt(key, value);
-        }
-
-        public bool isRealMoney;
-        public bool autoSetPrice = true;
+    public bool isRealMoney;
+    public bool autoSetPrice = true;
 }
 [System.Serializable]
-public class ColorSkin{
+public class ColorSkin
+{
     public Color color;
     public string colorCode;
     public Material material;
@@ -63,10 +68,12 @@ public class GameData : SerializedScriptableObject
 
     public List<StageData> stages;
     public List<ColorSkin> colorElements;
-  
+    public List<CompleteDishSO> completeDishSOs;
+
     #region editor
     bool showEdit;
-    [ShowIf(nameof(showEdit))][Button]
+    [ShowIf(nameof(showEdit))]
+    [Button]
     public void Save()
     {
 #if UNITY_EDITOR
@@ -96,13 +103,14 @@ public class GameData : SerializedScriptableObject
     {
         var photonViews = Resources.FindObjectsOfTypeAll<PhotonView>();
         prefabPaths.Clear();
-        foreach(var i in photonViews)
+        foreach (var i in photonViews)
         {
             if (i.gameObject.GetComponent<ObjectTypeView>() == null)
                 continue;
             var id = i.gameObject.GetComponent<ObjectTypeView>().objectType;
-            if(string.IsNullOrEmpty(id)){
-                Debug.LogError(i.gameObject.name+ " is empty id");
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogError(i.gameObject.name + " is empty id");
                 continue;
             }
 
@@ -125,9 +133,9 @@ public class GameData : SerializedScriptableObject
         }
 
         var kitchenObjectSOs = Resources.FindObjectsOfTypeAll<KitchenObjectSO>();
-        foreach(var kitchenObjectSO in kitchenObjectSOs)
+        foreach (var kitchenObjectSO in kitchenObjectSOs)
         {
-            if(kitchenObjectSODic.ContainsKey(kitchenObjectSO.objectName))
+            if (kitchenObjectSODic.ContainsKey(kitchenObjectSO.objectName))
             {
                 kitchenObjectSODic[kitchenObjectSO.objectName] = kitchenObjectSO;
             }
@@ -144,7 +152,7 @@ public class GameData : SerializedScriptableObject
     {
         _customerList.Clear();
         var customers = Resources.FindObjectsOfTypeAll<Customer>();
-        foreach(var i in customers)
+        foreach (var i in customers)
         {
             _customerList.Add(i);
         }
@@ -153,9 +161,10 @@ public class GameData : SerializedScriptableObject
 
     [ShowIf(nameof(showEdit))]
     [Button]
-    void GenerateConstantFile(){
+    void GenerateConstantFile()
+    {
         var names = new List<string>();
-        foreach(var i in objectTypeViews)
+        foreach (var i in objectTypeViews)
         {
             names.Add(i.Key.ToString());
         }
@@ -169,7 +178,8 @@ public class GameData : SerializedScriptableObject
 
 
         names.Clear();
-        foreach(var i in icons){
+        foreach (var i in icons)
+        {
             names.Add(i.Key.ToString());
         }
         AutoGenerateFile.GenerateEnum("IconType", names);
@@ -187,7 +197,7 @@ public class GameData : SerializedScriptableObject
         }
 
         string res = "";
-        for (int i = startIndex+1; i < split.Length; i++)
+        for (int i = startIndex + 1; i < split.Length; i++)
         {
             if (!string.IsNullOrEmpty(res))
                 res += "/";
@@ -195,10 +205,10 @@ public class GameData : SerializedScriptableObject
             res += split[i];
         }
 
-        return res.Replace(".prefab","");
+        return res.Replace(".prefab", "");
     }
-    
-    
+
+
     public void AddNewObjectTypeViews(ObjectTypeView objectTypeView)
     {
         //check if objectTypeView is active in the current scene
@@ -225,34 +235,46 @@ public class GameData : SerializedScriptableObject
         }
 
         objectTypeViews.Add(objectTypeView.objectType, objectTypeView);
-        
+
         //save
         Save();
     }
 
-    [ShowIf(nameof(showEdit))] [Button]
-    void MergeFrom(GameData other){
+    [ShowIf(nameof(showEdit))]
+    [Button]
+    void MergeFrom(GameData other)
+    {
         //merge objectTypeViews
-        foreach(var i in other.objectTypeViews){
-            if(objectTypeViews.ContainsKey(i.Key)){
+        foreach (var i in other.objectTypeViews)
+        {
+            if (objectTypeViews.ContainsKey(i.Key))
+            {
                 objectTypeViews[i.Key] = i.Value;
-            }else{
+            }
+            else
+            {
                 objectTypeViews.Add(i.Key, i.Value);
             }
         }
-        
+
         //merge inGameProducts
-        foreach(var i in other.inGameProducts){
-            if(inGameProducts.Find(x=> x.id == i.id) == null){
+        foreach (var i in other.inGameProducts)
+        {
+            if (inGameProducts.Find(x => x.id == i.id) == null)
+            {
                 inGameProducts.Add(i);
             }
         }
 
         //merge icons
-        foreach(var i in other.icons){
-            if(icons.ContainsKey(i.Key)){
+        foreach (var i in other.icons)
+        {
+            if (icons.ContainsKey(i.Key))
+            {
                 icons[i.Key] = i.Value;
-            }else{
+            }
+            else
+            {
                 icons.Add(i.Key, i.Value);
             }
         }
@@ -261,10 +283,12 @@ public class GameData : SerializedScriptableObject
 
         Save();
     }
-    
 
-    [ShowIf(nameof(showEdit))] [Button(Icon = SdfIconType.ArrowCounterclockwise, IconAlignment = IconAlignment.LeftOfText)]
-    public void RefeshData(){
+
+    [ShowIf(nameof(showEdit))]
+    [Button(Icon = SdfIconType.ArrowCounterclockwise, IconAlignment = IconAlignment.LeftOfText)]
+    public void RefeshData()
+    {
         //refesh objectTypeViews
         var list = Resources.FindObjectsOfTypeAll<ObjectTypeView>();
 
@@ -273,22 +297,26 @@ public class GameData : SerializedScriptableObject
         for (int i = 0; i < list.Length; i++)
         {
             //if object is in the scene then skip 
-            if(list[i].gameObject.scene.name != null){
+            if (list[i].gameObject.scene.name != null)
+            {
                 //Debug.LogError("ObjectTypeView is active in the "+ list[i].gameObject.scene.name + " scene");
                 continue;
             }
 
-            if(!list[i].gameObject.name.IsValidNameForEnum()){
-                Debug.LogError("ObjectTypeView name is not valid: "+ list[i].name);
+            if (!list[i].gameObject.name.IsValidNameForEnum())
+            {
+                Debug.LogError("ObjectTypeView name is not valid: " + list[i].name);
             }
 
-            if(list[i].objectType != list[i].gameObject.name){
+            if (list[i].objectType != list[i].gameObject.name)
+            {
                 list[i].objectType = list[i].gameObject.name;
                 //list[i].SetDirty();
             }
 
-            if(objectTypeViews.ContainsKey(list[i].objectType)){
-                Debug.LogError("Duplicate objectTypeViews: "+ list[i].gameObject.name);
+            if (objectTypeViews.ContainsKey(list[i].objectType))
+            {
+                Debug.LogError("Duplicate objectTypeViews: " + list[i].gameObject.name);
                 continue;
             }
             objectTypeViews.Add(list[i].objectType, list[i]);
@@ -301,10 +329,12 @@ public class GameData : SerializedScriptableObject
 #endif
     #endregion
 
-    public StageData GetStage(int levelId){
-        var find = stages.Find(x=>x.levelId == levelId);
-        if(find == null){
-            Debug.LogError("Cant find stage with levelId: "+ levelId);
+    public StageData GetStage(int levelId)
+    {
+        var find = stages.Find(x => x.levelId == levelId);
+        if (find == null)
+        {
+            Debug.LogError("Cant find stage with levelId: " + levelId);
         }
         return find;
     }
@@ -315,15 +345,17 @@ public class GameData : SerializedScriptableObject
     [ListDrawerSettings(ShowIndexLabels = true, NumberOfItemsPerPage = 10)]
     public Dictionary<string, ObjectTypeView> objectTypeViews = new Dictionary<string, ObjectTypeView>();
     public List<Customer> _customerList = new List<Customer>();
-    
-    public ColorSkin GetColorSkin(string id){
-        return colorElements.Find(x=>x.colorCode == id);
+
+    public ColorSkin GetColorSkin(string id)
+    {
+        return colorElements.Find(x => x.colorCode == id);
     }
 
 
     public List<InGameProduct> inGameProducts;
-    public int GetCurUpdateItem(string product){
-        return inGameProducts.Find(x=> x.id == product).curUpdate;
+    public int GetCurUpdateItem(string product)
+    {
+        return inGameProducts.Find(x => x.id == product).curUpdate;
     }
 
     public Dictionary<string, Sprite> icons = new Dictionary<string, Sprite>();
@@ -344,7 +376,8 @@ public class GameData : SerializedScriptableObject
         }
     }
 
-    public GameObject GetObject(string id){
+    public GameObject GetObject(string id)
+    {
         if (objectTypeViews.ContainsKey(id))
         {
             return objectTypeViews[id].gameObject;
@@ -395,11 +428,13 @@ public class GameData : SerializedScriptableObject
         }
     }
 
-    
-    public InGameProduct GetInGameProduct(string id){
-        var inGameProduct = inGameProducts.Find(x=>x.id == id);
-        if(inGameProduct == null){
-            Debug.LogError("cant find: "+ id);
+
+    public InGameProduct GetInGameProduct(string id)
+    {
+        var inGameProduct = inGameProducts.Find(x => x.id == id);
+        if (inGameProduct == null)
+        {
+            Debug.LogError("cant find: " + id);
             return null;
         }
 

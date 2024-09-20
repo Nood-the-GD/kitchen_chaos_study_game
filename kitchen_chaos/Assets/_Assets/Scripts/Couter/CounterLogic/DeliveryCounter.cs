@@ -8,25 +8,20 @@ public class DeliveryCounter : BaseCounter
     public static DeliveryCounter Instance;
     [SerializeField] MMF_Player deliverFeedback;
 
-    protected override void Awake() 
+    protected override void Awake()
     {
         base.Awake();
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
     }
 
     public override void Interact(IKitchenObjectParent KOParent)
     {
-        if(KOParent.HasKitchenObject())
+        if (KOParent.HasKitchenObject())
         {
-            if(KOParent.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDishKitchenObject))
+            if (KOParent.GetKitchenObject())
             {
-                if(!completeDishKitchenObject.IsHasPlate())
-                {
-                    Debug.Log("Doesn't have plate");
-                    return;
-                }
 
-                if(DeliveryManager.Instance.DeliverRecipe(completeDishKitchenObject))
+                if (DeliveryManager.Instance.DeliverRecipe(KOParent.GetKitchenObject()))
                 {
                     KOParent.GetKitchenObject().DestroySelf();
                     deliverFeedback.PlayFeedbacks();
@@ -36,12 +31,14 @@ public class DeliveryCounter : BaseCounter
                     Debug.Log("Delivery failed");
                 }
             }
-            else{
+            else
+            {
                 Debug.Log("Player is carrying something not Plate");
-            
+
             }
         }
-        else{
+        else
+        {
             Debug.Log("Player is not carrying anything");
         }
     }

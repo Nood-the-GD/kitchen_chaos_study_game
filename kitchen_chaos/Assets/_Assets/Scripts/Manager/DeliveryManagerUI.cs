@@ -8,7 +8,7 @@ public class DeliveryManagerUI : MonoBehaviour
     #region Variables
     [SerializeField] private Transform container;
     [SerializeField] private Transform recipeTemplate;
-    private List<RecipeTemplateUI> recipeTemplateList= new List<RecipeTemplateUI>();
+    private List<RecipeTemplateUI> recipeTemplateList = new List<RecipeTemplateUI>();
     #endregion
 
     #region Unity functions
@@ -24,9 +24,9 @@ public class DeliveryManagerUI : MonoBehaviour
     }
     void Update()
     {
-        for(int i = 0; i < recipeTemplateList.Count; i++)
+        for (int i = 0; i < recipeTemplateList.Count; i++)
         {
-            recipeTemplateList[i].UpdateTimer(DeliveryManager.Instance.GetWaitingTimerClassList()[i]);
+            recipeTemplateList[i].UpdateTimer(DeliveryManager.Instance.GetWaitingRecipeSOList()[i]);
         }
     }
     #endregion
@@ -45,7 +45,7 @@ public class DeliveryManagerUI : MonoBehaviour
     #region Update visual
     private void UpdateVisual()
     {
-        List<RecipeSO> waitingRecipeSOList = DeliveryManager.Instance.GetWaitingRecipeSOList();
+        List<Order> waitingRecipeSOList = DeliveryManager.Instance.GetWaitingRecipeSOList();
         int numWaiting = waitingRecipeSOList.Count;
         for (int i = 0; i < numWaiting; i++)
         {
@@ -74,11 +74,11 @@ public class DeliveryManagerUI : MonoBehaviour
         Destroy(recipeTemplateList[index].gameObject);
         recipeTemplateList.RemoveAt(index);
     }
-    private void CreateRecipeTemplate(RecipeSO recipe)
+    private void CreateRecipeTemplate(Order order)
     {
         Transform template = Instantiate(recipeTemplate, container);
         template.gameObject.SetActive(true);
-        template.GetComponent<RecipeTemplateUI>().SetRecipeSO(recipe);
+        template.GetComponent<RecipeTemplateUI>().SetRecipeSO(order);
         recipeTemplateList.Add(template.GetComponent<RecipeTemplateUI>());
     }
     #endregion
