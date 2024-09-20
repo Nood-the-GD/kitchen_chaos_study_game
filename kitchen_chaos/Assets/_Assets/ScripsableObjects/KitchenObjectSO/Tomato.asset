@@ -16,4 +16,9 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 5b7e2863951e37e48b885ac507df22db, type: 3}
   point: 1
   objectName: Tomato
-  kitchenObjectType: 2
+  recipes:
+  - ingredients: []
+    actionType: 0
+    output: {fileID: 0}
+    overCookOutput: {fileID: 0}
+    step: 0

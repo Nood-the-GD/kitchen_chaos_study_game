@@ -17,8 +17,9 @@ public class Recipe
     public KitchenObjectType actionType;
     public KitchenObjectSO output;
     public KitchenObjectSO overCookOutput;
-    public float step = 0;
+    public float step;
 }
+
 
 [CreateAssetMenu(fileName = "KitchenObject")]
 public class KitchenObjectSO : ScriptableObject

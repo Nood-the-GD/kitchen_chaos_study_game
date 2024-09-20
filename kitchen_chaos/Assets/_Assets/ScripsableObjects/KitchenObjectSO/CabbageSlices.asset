@@ -16,3 +16,14 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 72a5501163c07434ea841191f71f5ae0, type: 3}
   point: 2
   objectName: CabbageSlices
+  recipes:
+  - ingredients: []
+    actionType: 1
+    output: {fileID: 11400000, guid: 357a2661862a04af7b173ea6f42f1d23, type: 2}
+    overCookOutput: {fileID: 0}
+    step: 5
+  - ingredients: []
+    actionType: 2
+    output: {fileID: 11400000, guid: 39672c3727d5b48ce8e27d13f02cca9e, type: 2}
+    overCookOutput: {fileID: 11400000, guid: 357a2661862a04af7b173ea6f42f1d23, type: 2}
+    step: 5
