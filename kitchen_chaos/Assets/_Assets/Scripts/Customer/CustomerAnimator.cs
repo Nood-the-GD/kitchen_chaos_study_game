@@ -15,12 +15,12 @@ public class CustomerAnimator : MonoBehaviour
 
     public void Walk()
     {
-        if(_anim != null)
+        if (_anim != null)
             _anim.Play("Walk");
     }
     public void Stop()
     {
-        if(_isAnimating == false && _anim != null)
+        if (_isAnimating == false && _anim != null)
             _anim.Play("Idle_A");
     }
     public void DeliverFood(Action onComplete)
@@ -30,7 +30,7 @@ public class CustomerAnimator : MonoBehaviour
         _isAnimating = true;
         float duration = _anim.GetCurrentAnimatorStateInfo(0).length;
         Debug.Log(duration);
-        StartCoroutine(EndDeliverFoodAnimation_CR(duration, onComplete));    
+        StartCoroutine(EndDeliverFoodAnimation_CR(duration, onComplete));
     }
     IEnumerator EndDeliverFoodAnimation_CR(float duration, Action onComplete)
     {

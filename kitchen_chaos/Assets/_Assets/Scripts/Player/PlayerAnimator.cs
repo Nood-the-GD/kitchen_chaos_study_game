@@ -5,16 +5,16 @@ using UnityEngine.UI;
 public class PlayerAnimator : MonoBehaviour
 {
     #region Constants
-    private const string IS_WALKING = "IsWalking";
-    private const string IS_HOLDING = "IsHolding";
+    private const string ANIM_IS_WALKING = "IsWalking";
+    private const string ANIM_IS_HOLDING = "IsHolding";
     #endregion
 
     #region Variables
-    private IPlayer player;
     [SerializeField] private GameObject arrowGO;
+    [SerializeField] private Text usernameUI;
+    private IPlayer player;
     private Animator animator;
     private GameInput gameInput => GameInput.Instance;
-    public Text usernameUI;
     #endregion
 
     #region Unity functions
@@ -25,7 +25,7 @@ public class PlayerAnimator : MonoBehaviour
     }
     void Start()
     {
-        if(!player.photonView.IsMine)
+        if (!player.photonView.IsMine)
         {
             arrowGO.gameObject.SetActive(false);
         }
@@ -35,9 +35,9 @@ public class PlayerAnimator : MonoBehaviour
     }
     private void Update()
     {
-        animator.SetBool(IS_WALKING, player.IsWalking());  
-        animator.SetBool(IS_HOLDING, player.IsHolding());
-        if(player.photonView.IsMine)
+        animator.SetBool(ANIM_IS_WALKING, player.IsWalking());
+        animator.SetBool(ANIM_IS_HOLDING, player.IsHolding());
+        if (player.photonView.IsMine)
         {
             arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
         }

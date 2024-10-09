@@ -10,7 +10,12 @@ public class Customer : MonoBehaviour
     private bool _isBlock;
     private bool _isDelivered;
     private CustomerAnimator _animator;
+    private Vector3 _chairPos;
+    private Quaternion _chairRot;
+    private bool _isHasChair;
+    private float _speed = 2f;
 
+    #region Unity Functions
     void Awake()
     {
         _animator = GetComponentInChildren<CustomerAnimator>();
@@ -18,24 +23,51 @@ public class Customer : MonoBehaviour
     }
     void Start()
     {
-        CustomerManager.s.AddNewCustomer(this);    
+        // CustomerManager.s.AddNewCustomer(this);
     }
     void Update()
     {
-        if(_isBlock == false || _isDelivered == true)
+        if (_chairPos != Vector3.zero)
         {
             Walk();
         }
-        else
-        {
-            Stop();
-        }
     }
+    #endregion
 
+    #region Customer Functions
     private void Walk()
     {
         _animator.Walk();
-        this.transform.position += this.transform.forward * 2f * Time.deltaTime;
+        Vector3 targetPosition = _chairPos;
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        transform.position += direction * Time.deltaTime * _speed;
+
+        Rotate(direction);
+
+        // Check if the customer has reached the table
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            _chairPos = Vector3.zero; // Clear the table reference once reached
+            _isHasChair = false;
+            transform.rotation = _chairRot;
+            Stop();
+        }
+    }
+    private void Rotate(Vector3 direction)
+    {
+
+        // Rotate to walking direction
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+    public void SetChair(Vector3 chairPosition, Quaternion chairRotation)
+    {
+        _isHasChair = true;
+        _chairPos = chairPosition;
+        _chairRot = chairRotation;
     }
     private void Stop()
     {
@@ -48,13 +80,29 @@ public class Customer : MonoBehaviour
             _isDelivered = true;
         });
     }
+    #endregion
 
+    #region Trigger
     void OnTriggerEnter(Collider other)
     {
-        _isBlock = true;    
+        _isBlock = true;
     }
     void OnTriggerExit(Collider other)
     {
-        _isBlock = false;        
+        _isBlock = false;
     }
+    #endregion
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,7 +5,7 @@ using Photon.Pun;
 public class Player : MonoBehaviour, IPlayer
 {
     #region Instance
-    public static Player Instance {get; private set;}
+    public static Player Instance { get; private set; }
     #endregion
 
     #region Events
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour, IPlayer
     #endregion
 
     #region Variables
-    private  PhotonView _photonView;
+    private PhotonView _photonView;
     public int viewId => _photonView.ViewID;
     public PhotonView photonView => _photonView;
     public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -37,17 +37,17 @@ public class Player : MonoBehaviour, IPlayer
     private float moveDistance;
     private Vector3 moveDir = Vector3.zero;
     #endregion
-    
+
     #region Unity functions
     private void Awake()
     {
         _photonView = GetComponent<PhotonView>();
-        if(_photonView.IsMine)
-            if(Instance == null) Instance = this;
+        if (_photonView.IsMine)
+            if (Instance == null) Instance = this;
     }
     private void Start()
     {
-        if(_photonView.IsMine)
+        if (_photonView.IsMine)
         {
             gameInput.OnInteractAction += GameInput_OnInteractAction;
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
@@ -55,11 +55,18 @@ public class Player : MonoBehaviour, IPlayer
             var colorSkin = UserSetting.colorSkin;
             SetSkinColor(colorSkin);
         }
-        
+
         PhotonManager.s.currentGamePlayers.Add(this);
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F) && selectedCounter != null)
+        {
+            if (selectedCounter is IPlaceable placeable)
+            {
+                placeable.StartPlacing();
+            }
+        }
         HandleMovement();
         HandleInteraction();
     }
@@ -68,9 +75,9 @@ public class Player : MonoBehaviour, IPlayer
     #region Events functions
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
     {
-        if(!GameManager.Instance.IsGamePlaying()) return;
+        if (!GameManager.Instance.IsGamePlaying()) return;
 
-        if (selectedCounter != null) 
+        if (selectedCounter != null)
         {
             selectedCounter.CmdChop(viewId);
             Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
@@ -80,9 +87,9 @@ public class Player : MonoBehaviour, IPlayer
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        if(!GameManager.Instance.IsGamePlaying()) return;
+        if (!GameManager.Instance.IsGamePlaying()) return;
 
-        if(selectedCounter != null) 
+        if (selectedCounter != null)
         {
             selectedCounter.CmdInteract(viewId);
             Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
@@ -117,8 +124,8 @@ public class Player : MonoBehaviour, IPlayer
     {
         GetMovementInput();
         HandleRotation(moveDir);
-        #if UNITY_EDITOR
-        if(MovementTypeController.Instance.isMobileController)
+#if UNITY_EDITOR
+        if (MovementTypeController.Instance.isMobileController)
         {
             HandleMobileMovement();
         }
@@ -126,14 +133,14 @@ public class Player : MonoBehaviour, IPlayer
         {
             HandlePCMovement();
         }
-        #elif UNITY_IPHONE || UNITY_ANDROID
+#elif UNITY_IPHONE || UNITY_ANDROID
             HandleMobileMovement();
-        #endif
+#endif
 
     }
     private void GetMovementInput()
     {
-        if(!_photonView.IsMine)
+        if (!_photonView.IsMine)
             return;
 
         moveDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
@@ -217,33 +224,36 @@ public class Player : MonoBehaviour, IPlayer
 
     private bool CanMove(Vector3 direction, float distance)
     {
-       return !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, direction, distance);
+        return !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, direction, distance);
     }
 
     void SetWalking(bool isWalking)
     {
-        if(_photonView.IsMine)
+        if (_photonView.IsMine)
             _photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
 
-    void SetSkinColor(ColorSkin colorSkin){
-        if(_photonView.IsMine)
+    void SetSkinColor(ColorSkin colorSkin)
+    {
+        if (_photonView.IsMine)
             _photonView.RPC("RPCSetColorSkin", RpcTarget.All, colorSkin.colorCode);
     }
     #endregion
 
     #region Multiplay
     [PunRPC]
-    void RPCSetWalking(bool isWalking){
+    void RPCSetWalking(bool isWalking)
+    {
         this.isWalking = isWalking;
     }
     [PunRPC]
-    void RPCSetColorSkin(string id){
+    void RPCSetColorSkin(string id)
+    {
         var skin = GameData.s.GetColorSkin(id);
         GetComponentInChildren<SkinnedMeshRenderer>().material = skin.material;
     }
 
-    
+
     #endregion
 
     #region Supports
@@ -259,7 +269,7 @@ public class Player : MonoBehaviour, IPlayer
     public Transform GetKitchenObjectFollowTransform()
     {
         return kitchenObjectHoldPoint;
-    } 
+    }
     public bool IsWalking()
     {
         return isWalking;
@@ -270,9 +280,9 @@ public class Player : MonoBehaviour, IPlayer
     }
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
-            if(this.kitchenObject == null || kitchenObject.gameObject != this.kitchenObject.gameObject)
+            if (this.kitchenObject == null || kitchenObject.gameObject != this.kitchenObject.gameObject)
                 OnPickupSomething?.Invoke(this, EventArgs.Empty);
             // Debug.Log("Sound: " + this.kitchenObject != null);
         }
