@@ -37,6 +37,7 @@ public class TableManager : Singleton<TableManager>
         {
             table.ActiveChair();
             TableModel tableModel = new TableModel();
+            tableModel.Table = table;
             tableModel.NumberOfChairs = table.ChairNumber;
             tableModel.ChairsPosition = table.Chairs.Select(chair => chair.position).ToList();
             tableModel.ChairsRotation = table.Chairs.Select(chair => chair.rotation).ToList();

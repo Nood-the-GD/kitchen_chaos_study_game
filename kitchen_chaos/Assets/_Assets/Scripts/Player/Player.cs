@@ -68,7 +68,7 @@ public class Player : MonoBehaviour, IPlayer
             }
         }
         HandleMovement();
-        HandleInteraction();
+        HandleSelection();
     }
     #endregion
 
@@ -87,19 +87,20 @@ public class Player : MonoBehaviour, IPlayer
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        if (!GameManager.Instance.IsGamePlaying()) return;
+        // if (!GameManager.Instance.IsGamePlaying()) return;
 
         if (selectedCounter != null)
         {
-            selectedCounter.CmdInteract(viewId);
+            // selectedCounter.CmdInteract(viewId);
+            selectedCounter.Interact(this);
             Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
             this.transform.forward = direction;
         }
     }
     #endregion
 
-    #region Interactions
-    private void HandleInteraction()
+    #region Selection
+    private void HandleSelection()
     {
         Vector3 playerInputDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
         if (playerInputDir != Vector3.zero)

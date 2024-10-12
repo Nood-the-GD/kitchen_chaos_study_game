@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using DG.Tweening;
+using System.Security.Cryptography;
 
-public class Table : BaseCounter, IPlaceable
+public class Table : BaseCounter, IPlaceable, IKitchenObjectParent
 {
     [SerializeField] private List<Transform> _chairTransforms;
     [SerializeField] private Material _activeChairMaterial, _inactiveChairMaterial;
     private Collider[] _colliders;
+    private List<Customer> _customers = new List<Customer>();
 
     public Transform Transform => this.transform;
     public int ChairNumber => _chairTransforms.Count;
     public List<Transform> Chairs => _chairTransforms;
+
 
     protected override void Awake()
     {
@@ -20,6 +23,18 @@ public class Table : BaseCounter, IPlaceable
         _colliders = this.GetComponentsInChildren<Collider>();
     }
 
+    #region Override
+    public override void Interact(IKitchenObjectParent KOParent)
+    {
+        Debug.Log("Interact: " + CanServe(KOParent.GetKitchenObject().GetKitchenObjectSO()));
+        if (CanServe(KOParent.GetKitchenObject().GetKitchenObjectSO()))
+        {
+            Serve(KOParent);
+        }
+    }
+    #endregion
+
+    #region Placing
     public void StartPlacing()
     {
         PlaceObjectManager.s.StartPlacingObject(this);
@@ -36,7 +51,6 @@ public class Table : BaseCounter, IPlaceable
                     .OnComplete(() => chairTransform.rotation = Quaternion.Euler(originalRotation)));
         }
     }
-
     public void PlaceObject()
     {
         _colliders.ToList().ForEach(collider => collider.enabled = true);
@@ -58,7 +72,9 @@ public class Table : BaseCounter, IPlaceable
                          .Join(chairTransform.DORotate(originalRotation, 0.5f, RotateMode.FastBeyond360));
         }
     }
+    #endregion
 
+    #region Chair
     public void ActiveChair()
     {
         foreach (var chair in _chairTransforms)
@@ -75,6 +91,33 @@ public class Table : BaseCounter, IPlaceable
                 });
         }
     }
+    #endregion
+
+    #region Customer
+    public void AddCustomer(Customer customer)
+    {
+        _customers.Add(customer);
+    }
+    public void RemoveCustomer(Customer customer)
+    {
+        _customers.Remove(customer);
+    }
+    #endregion
+
+    #region Serving
+    private bool CanServe(KitchenObjectSO kitchenObjectSO)
+    {
+        return _customers.Any(customer => customer.KitchenObjectSo == kitchenObjectSO);
+    }
+    public void Serve(IKitchenObjectParent KOParent)
+    {
+        Customer customer = _customers.FirstOrDefault(customer => customer.KitchenObjectSo == KOParent.GetKitchenObject().GetKitchenObjectSO());
+        if (customer != null)
+        {
+            customer.Serve(KOParent);
+        }
+    }
+    #endregion
 }
 
 

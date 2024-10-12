@@ -12,7 +12,7 @@ public class WaitingLine : Singleton<WaitingLine>
         _customerGroups.Enqueue(customerGroup);
         NextCustomerGroupNumber = _customerGroups.Count > 0 ? _customerGroups.ToArray()[0].Number : 0;
     }
-    public CustomerGroup GetCustomerGroup()
+    public CustomerGroup GetNextCustomerGroup()
     {
         CustomerGroup customerGroup = _customerGroups.Dequeue();
         NextCustomerGroupNumber = _customerGroups.Count > 0 ? _customerGroups.ToArray()[0].Number : 0;

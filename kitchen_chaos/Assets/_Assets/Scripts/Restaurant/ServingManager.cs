@@ -26,13 +26,14 @@ public class ServingManager : Singleton<ServingManager>
 
     private void NextCustomerGroup()
     {
-        CustomerGroup customerGroup = _waitingLine.GetCustomerGroup();
+        CustomerGroup customerGroup = _waitingLine.GetNextCustomerGroup();
         TableModel tableModel = TableManager.s.GetAvailableTableModels(customerGroup.Number).FirstOrDefault();
 
         for (int i = 0; i < customerGroup.Number; i++)
         {
             Customer customer = customerGroup.Customers[i];
             customer.SetChair(tableModel.ChairsPosition[i], tableModel.ChairsRotation[i]);
+            customer.SetTable(tableModel.Table);
         }
 
         tableModel.IsAvailable = false;

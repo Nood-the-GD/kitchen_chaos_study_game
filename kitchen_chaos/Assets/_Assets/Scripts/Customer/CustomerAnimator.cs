@@ -2,17 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomerAnimator : MonoBehaviour
 {
-    private Animator _anim;
+    [SerializeField] private Animator _anim;
+    [SerializeField] private Canvas _canvas;
+    [SerializeField] private Image _icon;
+    [SerializeField] private Sprite _perOrderIcon;
     private bool _isAnimating;
 
-    void Awake()
+    #region Unity Function
+    void Start()
     {
-        _anim = GetComponent<Animator>();
+        _canvas.gameObject.SetActive(false);
     }
+    #endregion
 
+    #region Animation
     public void Walk()
     {
         if (_anim != null)
@@ -23,6 +30,23 @@ public class CustomerAnimator : MonoBehaviour
         if (_isAnimating == false && _anim != null)
             _anim.Play("Idle_A");
     }
+    public void PreOrder()
+    {
+        _canvas.gameObject.SetActive(true);
+        _icon.sprite = _perOrderIcon;
+    }
+    public void Order(KitchenObjectSO kitchenObjectSo)
+    {
+        _icon.sprite = kitchenObjectSo.sprite;
+        _canvas.gameObject.SetActive(true);
+    }
+    public void Eat()
+    {
+        _canvas.gameObject.SetActive(false);
+        _anim.Play("Eat");
+    }
+    #endregion
+
     public void DeliverFood(Action onComplete)
     {
         if (_anim == null) return;

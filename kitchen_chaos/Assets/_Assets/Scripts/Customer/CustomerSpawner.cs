@@ -6,7 +6,7 @@ using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class CustomerSpawner : MonoBehaviour
+public class CustomerSpawner : Singleton<CustomerSpawner>
 {
     #region Const
     const string CUSTOMER_FOLDER_PATH = "Prefabs/Customers";
@@ -18,13 +18,15 @@ public class CustomerSpawner : MonoBehaviour
     #endregion
 
     #region Unity functions
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _customerList = Resources.LoadAll<Customer>(CUSTOMER_FOLDER_PATH).ToList();
         // _photonView = GetComponent<PhotonView>();
     }
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         // if (PhotonNetwork.IsMasterClient)
         //     DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
     }
@@ -75,3 +77,15 @@ public class CustomerSpawner : MonoBehaviour
     }
     #endregion
 }
+
+
+
+
+
+
+
+
+
+
+
+
