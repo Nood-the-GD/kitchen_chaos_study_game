@@ -42,12 +42,12 @@ public class KitchenObjectSO : ScriptableObject
         return recipes.Find(x => x.actionType == KitchenObjectType.NeedFried && x.ingredients.Count == 1);
     }
 
-    public bool IsCanCut()
+    public bool CanCut()
     {
         return GetCutOnlyRecipe() != null;
     }
 
-    public bool IsCanFried()
+    public bool CanFried()
     {
         return GetFriedOnlyRecipe() != null;
     }

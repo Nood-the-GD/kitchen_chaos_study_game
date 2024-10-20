@@ -22,6 +22,7 @@ public class CustomerAnimator : MonoBehaviour
     #region Animation
     public void Walk()
     {
+        Debug.Log("Walk");
         if (_anim != null)
             _anim.Play("Walk");
     }

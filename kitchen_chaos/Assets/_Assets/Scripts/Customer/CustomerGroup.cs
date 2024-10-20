@@ -3,25 +3,16 @@ using UnityEngine;
 
 public class CustomerGroup
 {
-    public int Number => Customers.Count;
-    public List<Customer> Customers;
+    public int Number => Customers.Length;
+    public Customer[] Customers;
 
-    public CustomerGroup()
+    public CustomerGroup(int numberOfPeople)
     {
-        Customers = new List<Customer>();
+        Customers = new Customer[numberOfPeople];
     }
-    public CustomerGroup(List<Customer> customers)
+    public CustomerGroup(Customer[] customers)
     {
         Customers = customers;
     }
 
-    public void AddToList(Customer customer)
-    {
-        Customers.Add(customer);
-    }
-    public void RemoveFromList(Customer customer)
-    {
-        if (Customers.Contains(customer))
-            Customers.Remove(customer);
-    }
 }

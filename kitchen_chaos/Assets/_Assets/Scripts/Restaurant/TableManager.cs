@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TableManager : Singleton<TableManager>
 {
-    [SerializeField] private List<Table> _tables;
-    private List<TableModel> _tableModels = new List<TableModel>();
-    public List<TableModel> TableModels => _tableModels;
+    [SerializeField] private List<Table> _tables = new List<Table>();
+    private TableModel[] _tableModels;
+    public TableModel[] TableModels => _tableModels;
 
     private void OnEnable()
     {
@@ -30,19 +30,38 @@ public class TableManager : Singleton<TableManager>
         return _tableModels.Where(table => table.IsAvailable && table.NumberOfChairs >= numberOfPeople).ToList();
     }
 
-    private void ConvertToTableModels()
+    public TableModel GetTableModel(int tableIndex)
     {
-        _tableModels.Clear();
-        foreach (var table in _tables)
+        return _tableModels[tableIndex];
+    }
+
+    public TableModel GetTableModel(Table table)
+    {
+        int index = _tables.IndexOf(table);
+        return _tableModels[index];
+    }
+
+    public void TableCleared(Table table)
+    {
+        TableModel tableModel = GetTableModel(table);
+        tableModel.ClearTable();
+    }
+
+    private void ConvertToTableModels() // This will active when start day
+    {
+        _tableModels = new TableModel[_tables.Count];
+        for (int i = 0; i < _tables.Count; i++)
         {
+            Table table = _tables[i];
             table.ActiveChair();
             TableModel tableModel = new TableModel();
-            tableModel.Table = table;
+            tableModel.TableIndex = i;
             tableModel.NumberOfChairs = table.ChairNumber;
-            tableModel.ChairsPosition = table.Chairs.Select(chair => chair.position).ToList();
-            tableModel.ChairsRotation = table.Chairs.Select(chair => chair.rotation).ToList();
+            tableModel.TablePosition = table.transform.position;
+            tableModel.ChairsPositions = table.Chairs.Select(chair => chair.position).ToList();
+            tableModel.ChairsRotations = table.Chairs.Select(chair => chair.rotation).ToList();
             tableModel.IsAvailable = true;
-            _tableModels.Add(tableModel);
+            _tableModels[i] = tableModel;
         }
     }
 }

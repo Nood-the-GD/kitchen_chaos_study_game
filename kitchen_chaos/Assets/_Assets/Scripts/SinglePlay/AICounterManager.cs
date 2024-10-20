@@ -23,14 +23,14 @@ public class AICounterManager : Singleton<AICounterManager>
         //         return true;
         //     }
         // }
-        // if(kitchenObjectSO.kitchenObjectType == KitchenObjectType.Original)
+        // if (kitchenObjectSO.kitchenObjectType == KitchenObjectType.Original)
         // {
         //     resultCounter = GetContainerCounter(kitchenObjectSO);
         //     return true;
         // }
         // resultCounter = null;
+        // Debug.LogError("This method is not implemented yet");
         resultCounter = null;
-        Debug.LogError("This method is not implemented yet");
         return false;
     }
 

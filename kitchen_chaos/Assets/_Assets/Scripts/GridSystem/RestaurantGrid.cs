@@ -48,7 +48,6 @@ public class RestaurantGrid : Singleton<RestaurantGrid>
 
     public Vector3 FindWorldPositionInGrid(Vector3 position)
     {
-        Debug.Log(position);
         var x = Mathf.RoundToInt(position.x / SIZE_OF_GRID);
         var y = Mathf.RoundToInt(position.z / SIZE_OF_GRID);
         return new Vector3(x * SIZE_OF_GRID, 0, y * SIZE_OF_GRID);

@@ -15,6 +15,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     #region Variables
     private List<Customer> _customerList = new List<Customer>();
     private PhotonView _photonView;
+    public int MaxCustomerSpawn = 2;
     #endregion
 
     #region Unity functions
@@ -49,7 +50,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private void SpawnCustomer(object sender, EventArgs e)
     {
         int index = UnityEngine.Random.Range(0, _customerList.Count - 1);
-        int numberOfPeople = UnityEngine.Random.Range(1, 4);
+        int numberOfPeople = UnityEngine.Random.Range(1, MaxCustomerSpawn + 1);
         RpcSpawnCustomerGroup(index, numberOfPeople);
         // CmdSpawnCustomer();
     }
@@ -65,13 +66,14 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private void RpcSpawnCustomerGroup(int id, int numberOfPeople)
     {
         Debug.Log("SpawnCustomer");
-        CustomerGroup customerGroup = new CustomerGroup();
+        CustomerGroup customerGroup = new CustomerGroup(numberOfPeople);
         for (int i = 0; i < numberOfPeople; i++)
         {
             Customer customer = GameData.s.GetCustomer(id);
             Customer spawnCustomer = Instantiate(customer, transform.position, this.transform.rotation);
-            customerGroup.AddToList(spawnCustomer);
+            customerGroup.Customers[i] = spawnCustomer;
             spawnCustomer.transform.position = this.transform.position;
+            CustomerManager.s.AddCustomer(spawnCustomer);
         }
         WaitingLine.s.AddCustomerGroup(customerGroup);
     }

@@ -7,26 +7,28 @@ using System.Security.Cryptography;
 
 public class Table : BaseCounter, IPlaceable, IKitchenObjectParent
 {
+    #region Variables
     [SerializeField] private List<Transform> _chairTransforms;
     [SerializeField] private Material _activeChairMaterial, _inactiveChairMaterial;
     private Collider[] _colliders;
-    private List<Customer> _customers = new List<Customer>();
+    // private List<Customer> _customers = new List<Customer>();
 
     public Transform Transform => this.transform;
     public int ChairNumber => _chairTransforms.Count;
     public List<Transform> Chairs => _chairTransforms;
+    #endregion
 
-
+    #region Unity functions
     protected override void Awake()
     {
         base.Awake();
         _colliders = this.GetComponentsInChildren<Collider>();
     }
+    #endregion
 
     #region Override
     public override void Interact(IKitchenObjectParent KOParent)
     {
-        Debug.Log("Interact: " + CanServe(KOParent.GetKitchenObject().GetKitchenObjectSO()));
         if (CanServe(KOParent.GetKitchenObject().GetKitchenObjectSO()))
         {
             Serve(KOParent);
@@ -93,29 +95,18 @@ public class Table : BaseCounter, IPlaceable, IKitchenObjectParent
     }
     #endregion
 
-    #region Customer
-    public void AddCustomer(Customer customer)
-    {
-        _customers.Add(customer);
-    }
-    public void RemoveCustomer(Customer customer)
-    {
-        _customers.Remove(customer);
-    }
-    #endregion
-
     #region Serving
     private bool CanServe(KitchenObjectSO kitchenObjectSO)
     {
-        return _customers.Any(customer => customer.KitchenObjectSo == kitchenObjectSO);
+        TableModel tableModel = TableManager.s.GetTableModel(this);
+        return tableModel.CanServe(kitchenObjectSO);
     }
     public void Serve(IKitchenObjectParent KOParent)
     {
-        Customer customer = _customers.FirstOrDefault(customer => customer.KitchenObjectSo == KOParent.GetKitchenObject().GetKitchenObjectSO());
-        if (customer != null)
-        {
-            customer.Serve(KOParent);
-        }
+        TableModel tableModel = TableManager.s.GetTableModel(this);
+        KitchenObject kitchenObject = KOParent.GetKitchenObject();
+        kitchenObject.SetKitchenObjectParent(this);
+        tableModel.Serve(kitchenObject);
     }
     #endregion
 }

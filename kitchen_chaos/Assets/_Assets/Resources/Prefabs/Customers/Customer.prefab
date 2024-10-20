@@ -287,7 +287,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 32
   m_CollisionDetection: 0
 --- !u!136 &8785286187568957838
 CapsuleCollider:
@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeToOrder: 3
+  _timeToEat: 3
   photonView: {fileID: 7743200345042886898}
 --- !u!114 &4121218023871267371
 MonoBehaviour:

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
@@ -15,70 +17,62 @@ public class Customer : MonoBehaviour
         Leaving
     }
 
+    #region Variables
     [SerializeField] private float _timeToOrder = 3f;
     [SerializeField] private float _timeToEat = 3f;
+    [SerializeField] private float _speed = 4f;
 
     public PhotonView photonView;
     public KitchenObjectSO KitchenObjectSo => _kitchenObjectSo;
 
     private bool _isBlock;
     private CustomerAnimator _animator;
-    private Table _table;
+    private int _tableIndex;
     private Vector3 _chairPos;
     private Quaternion _chairRot;
-    private float _speed = 4f;
     private KitchenObjectSO _kitchenObjectSo;
     private KitchenObject _kitchenObject;
-
+    private int _chairIndex;
+    private Vector3 _targetPositions;
+    private Vector3 _targetRotation;
+    private CancellationTokenSource _moveToken;
+    #endregion
 
     #region Unity Functions
     void Awake()
     {
         _animator = GetComponentInChildren<CustomerAnimator>();
         photonView = GetComponent<PhotonView>();
-    }
-    void Start()
-    {
-        // CustomerManager.s.AddNewCustomer(this);
-    }
-    void Update()
-    {
-
-    }
-    #endregion
-
-    #region Serve
-    public void Serve(IKitchenObjectParent KOParent)
-    {
-        Vector3 servePosition = GetServePosition();
-        KitchenObject kitchenObject = KOParent.GetKitchenObject();
-        kitchenObject.SetKitchenObjectParent(_table);
-        kitchenObject.transform.position = servePosition;
-        _kitchenObject = kitchenObject;
-        _table.RemoveCustomer(this);
-
-        SetState(CustomerState.Eating);
+        _moveToken = new CancellationTokenSource();
     }
     #endregion
 
     #region Customer Functions
-    public void SetChair(Vector3 chairPosition, Quaternion chairRotation)
+    public void SetChair(Vector3 chairPosition, Quaternion chairRotation, int chairIndex)
     {
         _chairPos = chairPosition;
         _chairRot = chairRotation;
+        _chairIndex = chairIndex;
+        Debug.Log("SetChair " + "Customer: " + CustomerManager.s.GetCustomerId(this) + " Chair: " + _chairIndex);
 
         SetState(CustomerState.Entering);
     }
-    public void SetTable(Table table)
+    public void SetTable(int tableIndex)
     {
-        _table = table;
+        _tableIndex = tableIndex;
     }
+    public void Serve(KitchenObject kitchenObject)
+    {
+        _kitchenObject = kitchenObject;
+        SetState(CustomerState.Eating);
+    }
+
     private void SetState(CustomerState state)
     {
         switch (state)
         {
             case CustomerState.Entering:
-                Walk();
+                WalkToTable();
                 break;
             case CustomerState.Ordering:
                 Order();
@@ -91,19 +85,22 @@ public class Customer : MonoBehaviour
                 break;
         }
     }
-    private async void Walk()
+    private async void WalkToTable()
     {
-        Vector3 targetPosition = _chairPos;
-        await MoveToTargetAsync(targetPosition);
+        _targetPositions = _chairPos;
+        _targetRotation = _chairRot.eulerAngles;
+        _moveToken.Cancel();
+        _moveToken = new CancellationTokenSource();
+        await MoveToTargetAsync(_moveToken.Token);
 
         // Customer has reached the table
         transform.rotation = _chairRot;
-        Stop();
 
         SetState(CustomerState.Ordering);
     }
     private void Stop()
     {
+        Debug.Log("Stop");
         _animator.Stop();
     }
     private void Rotate(Vector3 direction)
@@ -119,9 +116,12 @@ public class Customer : MonoBehaviour
     {
         _animator.PreOrder();
         await UniTask.WaitForSeconds(_timeToOrder);
-        _kitchenObjectSo = KitchenObjectSoManager.s.GetRandomKitchenObjectSO();
+        _kitchenObjectSo = DeliveryManager.Instance.KitchenObjectSOList[0];
         _animator.Order(_kitchenObjectSo);
-        _table.AddCustomer(this);
+
+        TableModel tableModel = TableManager.s.GetTableModel(_tableIndex);
+        tableModel.AddCustomer(CustomerManager.s.GetCustomerId(this), _chairIndex);
+        tableModel.AddOrder(_kitchenObjectSo.objectName, CustomerManager.s.GetCustomerId(this));
     }
     private async void Eat()
     {
@@ -132,44 +132,45 @@ public class Customer : MonoBehaviour
     private async void Leave()
     {
         Destroy(_kitchenObject.gameObject);
-        Vector3 targetPosition = CustomerSpawner.s.transform.position;
-        await MoveToTargetAsync(targetPosition);
+        _targetPositions = CustomerSpawner.s.transform.position;
+        await MoveToTargetAsync(_moveToken.Token);
         Destroy(this.gameObject);
     }
     #endregion
 
     #region Support
-    private Vector3 GetServePosition()
-    {
-        Vector3 direction = (transform.position - _table.Transform.position).normalized;
-        Vector3 servePosition = _table.Transform.position + direction * .5f;
-        servePosition.y = 1f;
-        return servePosition;
-    }
     #endregion
 
     #region Move
-    private async UniTask MoveToTargetAsync(Vector3 targetPosition)
+    private async UniTask MoveToTargetAsync(CancellationToken token)
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
+        bool isArrived = Vector3.Distance(transform.position, _targetPositions) < 0.1f;
+        _animator.Walk();
+        while (!isArrived)
         {
-            await UniTask.WaitForEndOfFrame(this);
-            _animator.Walk();
-            Vector3 direction = (targetPosition - transform.position).normalized;
-            transform.position += direction * Time.deltaTime * _speed;
-            Rotate(direction);
-        }
-    }
-    #endregion
+            try
+            {
+                if (this.transform == null) break;
+                isArrived = Vector3.Distance(transform.position, _targetPositions) < 0.1f;
 
-    #region Trigger
-    void OnTriggerEnter(Collider other)
-    {
-        _isBlock = true;
+                await UniTask.WaitForEndOfFrame(this, token);
+                Vector3 direction = (_targetPositions - transform.position).normalized;
+                transform.position += direction * Time.deltaTime * _speed;
+                Rotate(direction);
+            }
+            catch (OperationCanceledException e)
+            {
+                return;
+            }
+        }
+        Stop();
+        transform.SetPositionAndRotation(_targetPositions, Quaternion.Euler(_targetRotation));
     }
-    void OnTriggerExit(Collider other)
+    public void AddTargetPosition(Vector3 targetPosition, Vector3 rotation)
     {
-        _isBlock = false;
+        _targetPositions = targetPosition;
+        _targetRotation = rotation;
+        MoveToTargetAsync(_moveToken.Token);
     }
     #endregion
 }

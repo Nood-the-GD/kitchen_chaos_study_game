@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlaceObjectManager : Singleton<PlaceObjectManager>
 {
+    private const float SIZE_OF_GRID = 2f;
+
     [SerializeField] private IPlaceable _placingObject;
 
     private bool _canPlace = false;
@@ -23,10 +25,17 @@ public class PlaceObjectManager : Singleton<PlaceObjectManager>
         if (_placingObject != null && GameInput.Instance.GetMovementVectorNormalize() != Vector2.zero)
         {
             Vector3 testPos = Player.Instance.transform.position + GameInput.Instance.GetMovementVectorNormalize().ToVector3XZ() * 2;
-            Vector3 worldPosition = RestaurantGrid.s.FindWorldPositionInGrid(testPos);
-            _placingObject.Transform.position = worldPosition;
+            Vector3 gridPosition = GetGridPosition(testPos);
+            _placingObject.Transform.position = gridPosition;
             _canPlace = true;
         }
+    }
+
+    public Vector3 GetGridPosition(Vector3 position)
+    {
+        var x = Mathf.RoundToInt(position.x / SIZE_OF_GRID);
+        var y = Mathf.RoundToInt(position.z / SIZE_OF_GRID);
+        return new Vector3(x * SIZE_OF_GRID, 0, y * SIZE_OF_GRID);
     }
 
     public void StartPlacingObject(IPlaceable objectToPlace)

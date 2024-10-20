@@ -17,7 +17,7 @@ public class ServingManager : Singleton<ServingManager>
     {
         while (true)
         {
-            await UniTask.Delay(2000); // Delay 2 seconds
+            await UniTask.Delay(1000); // Delay 1 second
             if (_waitingLine.NextCustomerGroupNumber == 0) continue;
             if (TableManager.s.GetAvailableTableModels(_waitingLine.NextCustomerGroupNumber).Count > 0)
                 NextCustomerGroup();
@@ -28,14 +28,13 @@ public class ServingManager : Singleton<ServingManager>
     {
         CustomerGroup customerGroup = _waitingLine.GetNextCustomerGroup();
         TableModel tableModel = TableManager.s.GetAvailableTableModels(customerGroup.Number).FirstOrDefault();
+        tableModel.IsAvailable = false;
 
         for (int i = 0; i < customerGroup.Number; i++)
         {
             Customer customer = customerGroup.Customers[i];
-            customer.SetChair(tableModel.ChairsPosition[i], tableModel.ChairsRotation[i]);
-            customer.SetTable(tableModel.Table);
+            customer.SetChair(tableModel.ChairsPositions[i], tableModel.ChairsRotations[i], i);
+            customer.SetTable(tableModel.TableIndex);
         }
-
-        tableModel.IsAvailable = false;
     }
 }
