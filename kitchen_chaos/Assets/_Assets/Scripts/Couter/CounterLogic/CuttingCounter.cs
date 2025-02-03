@@ -46,7 +46,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             else
             {
                 //Player is carrying something
-                if (KOParent.GetKitchenObject() is CompleteDishKitchenObject)
+                if (KOParent.GetKitchenObject().)
                 {
                     //Player is holding a set of kitchen object
                     CompleteDishKitchenObject playerCompleteDish = KOParent.GetKitchenObject() as CompleteDishKitchenObject;

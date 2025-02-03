@@ -9,7 +9,7 @@ public class KitchenObject : MonoBehaviour
 
     private IKitchenObjectParent _kitchenObjectParent;
     PhotonView photonView;
-
+    bool isCompleteDish => kitchenObjectSO is CompleteDishSO;
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         //convert interface to gameObject

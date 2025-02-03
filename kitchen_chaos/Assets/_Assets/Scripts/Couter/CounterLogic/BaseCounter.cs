@@ -5,23 +5,20 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public enum CounterType
-{
-    Cutting,
-    Cooking,
-}
-public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+
+public class BaseCounter : MonoBehaviour
 {
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
     public static event EventHandler OnSomethingPlacedHere;
-    public CounterType counterType;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
     }
 
     [SerializeField] private Transform counterTopPoint;
+
+
     private KitchenObject kitchenObject;
 
     public virtual void Interact(IKitchenObjectParent KOParent) { }
@@ -79,7 +76,8 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
         return this.kitchenObject;
     }
 
-    public KitchenObjectSO GetKitchenObjectSO(){
+    public KitchenObjectSO GetKitchenObjectSO()
+    {
         return this.kitchenObject.GetKitchenObjectSO();
     }
 
