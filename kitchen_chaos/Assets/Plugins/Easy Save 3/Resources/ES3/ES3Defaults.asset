@@ -69,6 +69,11 @@ MonoBehaviour:
     - Tayx.Graphy
     - UIEffect
     - UIEffect_Demo
+    - UniTask
+    - UniTask.Addressables
+    - UniTask.DOTween
+    - UniTask.Linq
+    - UniTask.TextMeshPro
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

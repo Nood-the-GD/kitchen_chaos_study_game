@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
-    public static GameInput Instance {get; private set;}
+    public static GameInput Instance { get; private set; }
 
     public event EventHandler OnInteractAction;
     public event EventHandler OnUseAction;
@@ -17,7 +17,7 @@ public class GameInput : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    
+
         playerInputAction = new PlayerInputAction();
         playerInputAction.Player.Enable();
 
@@ -29,8 +29,8 @@ public class GameInput : MonoBehaviour
 
     void Start()
     {
-        mobileController.OnInteractBtnPress(() => OnInteractAction?.Invoke(this, EventArgs.Empty));
-        mobileController.OnUseBtnPress(() => OnUseAction?.Invoke(this, EventArgs.Empty));
+        mobileController?.OnInteractBtnPress(() => OnInteractAction?.Invoke(this, EventArgs.Empty));
+        mobileController?.OnUseBtnPress(() => OnUseAction?.Invoke(this, EventArgs.Empty));
     }
 
     private void Update()
@@ -56,7 +56,7 @@ public class GameInput : MonoBehaviour
     {
         Vector2 inputVector = Vector2.zero;
 #if UNITY_EDITOR
-        if(MovementTypeController.Instance.isMobileController)
+        if (MovementTypeController.Instance.isMobileController)
         {
             inputVector = mobileController.GetPlayerMovementInput();
         }

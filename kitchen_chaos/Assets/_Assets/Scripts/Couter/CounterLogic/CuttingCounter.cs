@@ -74,7 +74,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
                 //Player carrying something
                 //Move kitchen object to counter
                 KOParent.GetKitchenObject().SetKitchenObjectParent(this);
-                if (GetKitchenObjectSO().IsCanCut())
+                if (GetKitchenObjectSO().CanCut())
                 {
                     _cuttingProcess = 0;
                     _isComplete = false;
@@ -87,7 +87,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     }
     public override void Chop(IKitchenObjectParent KOParent)
     {
-        if (HasKitchenObject() && GetKitchenObjectSO().IsCanCut())
+        if (HasKitchenObject() && GetKitchenObjectSO().CanCut())
         {
             //There is a kitchenObject on this counter and it can be cut.
             //Get output kitchenObject base on input with recipe.
@@ -123,6 +123,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
     public void AltInteract(IKitchenObjectParent kitchenObjectParent)
     {
+        Debug.Log("AltInteract");
         Chop(kitchenObjectParent);
     }
     public bool CanAltInteract()

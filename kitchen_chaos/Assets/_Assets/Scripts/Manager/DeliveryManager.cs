@@ -22,7 +22,8 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
 
-    public static DeliveryManager Instance{get; private set;}
+    public static DeliveryManager Instance { get; private set; }
+    public KitchenObjectSO[] KitchenObjectSOList => recipeListSO.recipeSOList[0].kitchenObjectSOList.ToArray();
 
     [SerializeField] private RecipeListSO recipeListSO;
 
@@ -39,14 +40,15 @@ public class DeliveryManager : MonoBehaviour
     #region Unity functions
     private void Awake()
     {
-        
-        if(Instance == null) Instance = this;
+
+        if (Instance == null) Instance = this;
         recipeDeliveredPoint = 0;
         waitingTimeForEachRecipe = recipeListSO.waitingTimeForEachRecipe;
     }
     void Start()
     {
-        if(PhotonNetwork.IsMasterClient){
+        if (PhotonNetwork.IsMasterClient)
+        {
             StartCoroutine(CR_UpdateTimerClass());
             StartCoroutine(UpdateOrder());
         }
@@ -54,31 +56,31 @@ public class DeliveryManager : MonoBehaviour
 
     private void Update()
     {
-        for(int i = 0; i < waitingTimerClassList.Count; i++)
+        for (int i = 0; i < waitingTimerClassList.Count; i++)
         {
             waitingTimerClassList[i].timer -= Time.deltaTime;
         }
 
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
             return;
 
         if (GameManager.Instance.IsGamePlaying() == false || GameManager.Instance.isTesting) return;
-        
+
         spawnRecipeTimer -= Time.deltaTime;
-        if(spawnRecipeTimer <= 0f)
+        if (spawnRecipeTimer <= 0f)
         {
             spawnRecipeTimer = spawnRecipeTimerMax;
 
-            if(waitingRecipeSOList.Count < waitingRecipeMax)
+            if (waitingRecipeSOList.Count < waitingRecipeMax)
             {
                 var index = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
                 AddOrder(index);
             }
         }
 
-        for(int i = 0; i < waitingTimerClassList.Count; i++)
+        for (int i = 0; i < waitingTimerClassList.Count; i++)
         {
-            if(waitingTimerClassList[i].timer <= 0f)
+            if (waitingTimerClassList[i].timer <= 0f)
             {
                 RemoveOrder(i);
             }
@@ -87,12 +89,14 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Multiplay
-    void CmdUpdateList(string[] orders){
+    void CmdUpdateList(string[] orders)
+    {
         photonView.RPC(nameof(RpcUpdateList), RpcTarget.Others, orders);
     }
     [PunRPC]
-    void RpcUpdateList(params string[] orders){
-        if(orders.Contains("None"))
+    void RpcUpdateList(params string[] orders)
+    {
+        if (orders.Contains("None"))
         {
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == orders[0]);
             UpdateOrder(0, index, 1);
@@ -101,7 +105,7 @@ public class DeliveryManager : MonoBehaviour
         for (int i = 0; i < orders.Length; i++)
         {
             string order = orders[i];
-            if(order == "None")
+            if (order == "None")
                 continue;
             var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
             UpdateOrder(i, index, orders.Length);
@@ -116,30 +120,36 @@ public class DeliveryManager : MonoBehaviour
     [PunRPC]
     void RPCUpdateTimerClass(int index, float timer)
     {
-        if(index < waitingTimerClassList.Count - 1)
+        if (index < waitingTimerClassList.Count - 1)
             waitingTimerClassList[index].timer = timer;
     }
     #endregion
 
     #region Delay functions
-    IEnumerator UpdateOrder(){
-        while(GameManager.Instance.IsGameOver() == false){
+    IEnumerator UpdateOrder()
+    {
+        while (GameManager.Instance.IsGameOver() == false)
+        {
             yield return new WaitForSeconds(1f);
-            
+
             var listOfName = new List<string>();
-            foreach(var recipe in waitingRecipeSOList){
+            foreach (var recipe in waitingRecipeSOList)
+            {
                 listOfName.Add(recipe.name);
             }
 
-            if(listOfName.Count == 0){
+            if (listOfName.Count == 0)
+            {
                 continue;
             }
-            if(listOfName.Count == 1){
+            if (listOfName.Count == 1)
+            {
                 listOfName.Add("None");
             }
 
             string[] arr = new string[listOfName.Count];
-            for(int i = 0; i < listOfName.Count; i++){
+            for (int i = 0; i < listOfName.Count; i++)
+            {
                 arr[i] = listOfName[i];
             }
             CmdUpdateList(arr);
@@ -148,11 +158,11 @@ public class DeliveryManager : MonoBehaviour
     }
     private IEnumerator CR_UpdateTimerClass()
     {
-        while(GameManager.Instance.IsGameOver() == false)
+        while (GameManager.Instance.IsGameOver() == false)
         {
             yield return new WaitForSeconds(1f);
 
-            for(int i = 0; i < waitingTimerClassList.Count; i++)
+            for (int i = 0; i < waitingTimerClassList.Count; i++)
             {
                 CmdUpdateTimerClass(i, waitingTimerClassList[i].timer);
             }
@@ -225,10 +235,10 @@ public class DeliveryManager : MonoBehaviour
         // Add the recipe to the waiting list
         waitingRecipeSOList.Add(recipeListSO.recipeSOList[index]);
         // Add a new timer to the list
-        waitingTimerClassList.Add(new TimerClass 
-        { 
-            maxTimer = waitingTimeForEachRecipe, 
-            timer = waitingTimeForEachRecipe 
+        waitingTimerClassList.Add(new TimerClass
+        {
+            maxTimer = waitingTimeForEachRecipe,
+            timer = waitingTimeForEachRecipe
         });
 
         // Invoke the OnRecipeAdded event
@@ -236,13 +246,13 @@ public class DeliveryManager : MonoBehaviour
     }
     private void UpdateOrder(int indexOfOrder, int indexOfRecipe, int orderCount)
     {
-        while(waitingRecipeSOList.Count != orderCount)
+        while (waitingRecipeSOList.Count != orderCount)
         {
-            if(waitingRecipeSOList.Count > orderCount)
+            if (waitingRecipeSOList.Count > orderCount)
             {
                 RemoveOrder(waitingRecipeSOList.Count - 1);
             }
-            if(waitingRecipeSOList.Count < orderCount)
+            if (waitingRecipeSOList.Count < orderCount)
             {
                 AddOrder(indexOfRecipe);
             }

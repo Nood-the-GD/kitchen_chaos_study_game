@@ -155,7 +155,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
         else
         {
             //Counter don't have kitchen object
-            if (player.HasKitchenObject() && GetKitchenObjectSO().IsCanFried())
+            if (player.HasKitchenObject() && GetKitchenObjectSO().CanFried())
             {
                 //Player carrying something that can be fried
                 //Move kitchen object to counter

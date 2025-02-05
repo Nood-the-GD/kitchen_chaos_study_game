@@ -642,11 +642,7 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: a7bb90f4c980d3c489d9c07177fc791a, type: 3}
   _customerList:
   - {fileID: 1152172672870110571, guid: f39e031f6390dc14195ae09ff81ee7fe, type: 3}
-  - {fileID: 1152172672870110571, guid: 7b6b9828fbce81744ae490c949553db3, type: 3}
-  - {fileID: 1152172672870110571, guid: 8e0c53c112ae7414691b2e3e9cd6ec6c, type: 3}
-  - {fileID: 1152172672870110571, guid: 08a4e892a4185a446bd3ba9779d241a3, type: 3}
-  - {fileID: 1152172672870110571, guid: 27ae38c8e925fce479019c45cbe47daf, type: 3}
-  - {fileID: 1152172672870110571, guid: 6462f3984f6afbf4ebf19c5b80d73118, type: 3}
-  - {fileID: 1152172672870110571, guid: d01559472edf45f4dad1b200cfb4e78d, type: 3}
-  - {fileID: 1152172672870110571, guid: 4f38060df251a30409c629ad6e0f58b8, type: 3}
+  - {fileID: 8706729562652796321, guid: b5666fc69fd25476caed382f05c9feac, type: 3}
+  - {fileID: 7566727231783719154, guid: 12fd3946b3fe4451daa411cc7aa63eef, type: 3}
+  - {fileID: 3403694395154120337, guid: 55f60f1fa982d46aa9881c319c90d50f, type: 3}
   inGameProducts: []
