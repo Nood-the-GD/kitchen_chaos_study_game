@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Photon.Pun;
 
-public class Player : MonoBehaviour, IPlayer
+public class Player : MonoBehaviour, IPlayer, IContainable
 {
     #region Instance
     public static Player Instance { get; private set; }
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour, IPlayer
             gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
             OnPlayerSpawn?.Invoke(this);
             var colorSkin = UserSetting.colorSkin;
-            SetSkinColor(colorSkin);
+            CmdSetSkinColor(colorSkin);
         }
 
         PhotonManager.s.currentGamePlayers.Add(this);
@@ -79,9 +79,11 @@ public class Player : MonoBehaviour, IPlayer
 
         if (selectedCounter != null)
         {
-            selectedCounter.CmdChop(viewId);
-            Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
-            this.transform.forward = direction;
+            if(selectedCounter is CuttingCounter){
+                ((CuttingCounter)selectedCounter).CmdChop(viewId);
+                Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
+                this.transform.forward = direction;
+            }
         }
     }
 
@@ -178,7 +180,7 @@ public class Player : MonoBehaviour, IPlayer
 
         // Set if player is walking or not
         isWalking = direction != Vector3.zero;
-        SetWalking(isWalking);
+        CmdSetWalking(isWalking);
 
         // Rotate player to calculated direction
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
@@ -212,7 +214,7 @@ public class Player : MonoBehaviour, IPlayer
 
         // Set if player is walking or not
         isWalking = direction != Vector3.zero;
-        SetWalking(isWalking);
+        CmdSetWalking(isWalking);
     }
 
     private void HandleRotation(Vector3 direction)
@@ -228,13 +230,13 @@ public class Player : MonoBehaviour, IPlayer
         return !Physics.CapsuleCast(transform.position, transform.position + transform.up * playerRadius, playerSize, direction, distance);
     }
 
-    void SetWalking(bool isWalking)
+    void CmdSetWalking(bool isWalking)
     {
         if (_photonView.IsMine)
             _photonView.RPC("RPCSetWalking", RpcTarget.All, isWalking);
     }
 
-    void SetSkinColor(ColorSkin colorSkin)
+    void CmdSetSkinColor(ColorSkin colorSkin)
     {
         if (_photonView.IsMine)
             _photonView.RPC("RPCSetColorSkin", RpcTarget.All, colorSkin.colorCode);

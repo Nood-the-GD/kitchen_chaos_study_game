@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public interface IKitchenObjectParent
+public interface IContainable
 {
     public Transform GetKitchenObjectFollowTransform();
 

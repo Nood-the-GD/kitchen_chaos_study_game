@@ -9,7 +9,7 @@ public class ContainerCounter : BaseCounter
 
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    public override void Interact(IKitchenObjectParent KOParent)
+    public override void Interact(IContainable KOParent)
     {
         if(!KOParent.HasKitchenObject())
         {

@@ -424,24 +424,24 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId)
     {
-        IKitchenObjectParent kitchenObjectParent = null;
+        IContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
-            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenObjectParent>();
+            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IContainable>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
-        kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+        kitchenObjectTransform.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
     }
     [PunRPC]
     public void RpcSpawnCompleteDish(string objectType, string[] ingredientString, int parentPhotonId, int viewId)
     {
-        IKitchenObjectParent kitchenObjectParent = null;
+        IContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
-            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenObjectParent>();
+            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IContainable>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
-        kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+        kitchenObjectTransform.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
         CompleteDishKitchenObject completeDish = kitchenObjectTransform.GetComponent<CompleteDishKitchenObject>();
 
         for (int i = 0; i < ingredientString.Length; i++)

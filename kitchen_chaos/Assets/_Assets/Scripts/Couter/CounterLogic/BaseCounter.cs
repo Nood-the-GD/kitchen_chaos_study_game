@@ -5,17 +5,12 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public enum CounterType
-{
-    Cutting,
-    Cooking,
-}
-public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+
+public class BaseCounter : MonoBehaviour, IContainable
 {
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
     public static event EventHandler OnSomethingPlacedHere;
-    public CounterType counterType;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
@@ -24,8 +19,79 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform counterTopPoint;
     private KitchenObject kitchenObject;
 
-    public virtual void Interact(IKitchenObjectParent KOParent) { }
-    public virtual void Chop(IKitchenObjectParent KOParent) { }
+    public virtual void Interact(IContainable otherContainer) { 
+        if(otherContainer == null){
+            Debug.LogError("player is null");
+            return;
+        }
+
+        if(HasKitchenObject())
+        {
+            //Player is not holding
+            if(!otherContainer.HasKitchenObject())
+            {
+                Debug.Log("player is not holding");
+                GetKitchenObject().SetContainerParent(otherContainer);
+            }
+            else
+            {
+                Debug.Log("player is holding");
+                //Player is carrying something
+                if(otherContainer.GetKitchenObject() is CompleteDishKitchenObject)
+                {
+                    //Player is holding a set of kitchen object
+                    CompleteDishKitchenObject playerCompleteDish = otherContainer.GetKitchenObject() as CompleteDishKitchenObject;
+                    // Try add ingredient with the current kitchen object on counter
+                    if(playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        // After adding ingredient, destroy it on counter
+                        GetKitchenObject().DestroySelf();
+                    }
+                }
+                else
+                {
+                    //Player is holding an ingredient
+                    TryAddPlayerIngredient(otherContainer.GetKitchenObject());
+                }
+            }
+        }
+        else
+        {
+            //Counter don't have kitchen object
+            if(otherContainer.HasKitchenObject())
+            {
+                //Player carrying something
+                //Move kitchen object to counter
+                otherContainer.GetKitchenObject().SetContainerParent(this);
+            }
+        }
+
+    }
+
+    private void TryAddPlayerIngredient(KitchenObject playerKitchenObject)
+    {
+        var playerObjectSO = playerKitchenObject.GetKitchenObjectSO();
+        if(GetKitchenObject() is CompleteDishKitchenObject)
+        {
+            // Kitchen object on counter is a set of kitchen object
+            CompleteDishKitchenObject counterCompleteDish = GetKitchenObject() as CompleteDishKitchenObject;
+            if(counterCompleteDish.TryAddIngredient(playerObjectSO))
+            {
+               playerKitchenObject.DestroySelf();
+            }
+        }
+        else
+        {
+            if(CompleteDishManager.Instance.TryCombineDish(playerObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
+            {
+                playerKitchenObject.DestroySelf();
+                KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
+                KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerObjectSO, counterKitchenObjectSO}, this);
+
+                GetKitchenObject().DestroySelf();
+            }
+        }
+    }
 
     protected virtual void Awake()
     {
@@ -39,10 +105,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
         _photonView.RPC("RPCIntertact", RpcTarget.All, id);
     }
 
-    public void CmdChop(int id)
-    {
-        _photonView.RPC("RPCChop", RpcTarget.All, id);
-    }
+
 
     [PunRPC]
     public void RPCIntertact(int id)
@@ -50,12 +113,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
         var player = PhotonManager.s.GetPlayerView(id);
         Interact(player);
     }
-    [PunRPC]
-    public void RPCChop(int id)
-    {
-        var player = PhotonManager.s.GetPlayerView(id);
-        Chop(player);
-    }
+
     #endregion
 
     public Transform GetKitchenObjectFollowTransform()

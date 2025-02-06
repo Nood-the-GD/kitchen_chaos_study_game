@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
@@ -20,73 +21,45 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
     #region Variables 
     private int _cuttingProcess;
-    private IKitchenObjectParent KOParent;
     public bool _isComplete;
     #endregion
 
     #region Interact
-    public override void Interact(IKitchenObjectParent KOParent)
+    public override void Interact(IContainable otherContainer)
     {
-        if (KOParent == null)
-        {
-            Debug.LogError("player is null");
-            return;
-        }
 
-        if (HasKitchenObject())
+        base.Interact(otherContainer);
+
+        if (!HasKitchenObject() && otherContainer.HasKitchenObject())
         {
-            //Counter has kitchen object
-            if (!KOParent.HasKitchenObject())
+            //Player carrying something
+            //Move kitchen object to counter
+            otherContainer.GetKitchenObject().SetContainerParent(this);
+            if (GetKitchenObjectSO().CanCut())
             {
-                //Player carrying nothing    
-                //Move kitchen object to player
-                GetKitchenObject().SetKitchenObjectParent(KOParent);
-                _isComplete = true;
+                _cuttingProcess = 0;
+                _isComplete = false;
             }
-            else
-            {
-                //Player is carrying something
-                if (KOParent.GetKitchenObject() is CompleteDishKitchenObject)
-                {
-                    //Player is holding a set of kitchen object
-                    CompleteDishKitchenObject playerCompleteDish = KOParent.GetKitchenObject() as CompleteDishKitchenObject;
-                    // Try add ingredient with the current kitchen object on counter
-                    if (playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
-                    {
-                        // After adding ingredient, destroy it on counter
-                        GetKitchenObject().DestroySelf();
-                        _isComplete = true;
-                    }
-                }
-                else
-                {
-                    //Player is holding an ingredient
-                    this.KOParent = KOParent;
-                    TryAddPlayerIngredient();
-                }
-            }
-        }
-        else
-        {
-            //Counter don't have kitchen object
-            if (KOParent.HasKitchenObject())
-            {
-                //Player carrying something
-                //Move kitchen object to counter
-                KOParent.GetKitchenObject().SetKitchenObjectParent(this);
-                if (GetKitchenObjectSO().CanCut())
-                {
-                    _cuttingProcess = 0;
-                    _isComplete = false;
-                }
-            }
-            //else
-            //Player carrying nothing
-            //Do no thing
         }
     }
-    public override void Chop(IKitchenObjectParent KOParent)
+
+    public void CmdChop(int id)
     {
+        photonView.RPC("RPCChop", RpcTarget.All, id);
+    }
+
+    [PunRPC]
+    public void RPCChop(int id)
+    {
+        var player = PhotonManager.s.GetPlayerView(id);
+        Chop(player);
+    }
+
+    public void Chop(IContainable KOParent)
+    {
+        if(!GetKitchenObjectSO().CanCut()){
+            Debug.Log("Can't cut");
+        }
         if (HasKitchenObject() && GetKitchenObjectSO().CanCut())
         {
             //There is a kitchenObject on this counter and it can be cut.
@@ -97,7 +70,6 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             {
                 processNormalize = (float)_cuttingProcess / cuttingProgressNumber
             });
-
             OnCutAction?.Invoke(this, EventArgs.Empty);
             OnCut?.Invoke(this, EventArgs.Empty);
             if (_cuttingProcess >= cuttingProgressNumber)
@@ -121,7 +93,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
         //Do nothing
     }
 
-    public void AltInteract(IKitchenObjectParent kitchenObjectParent)
+    public void AltInteract(IContainable kitchenObjectParent)
     {
         Debug.Log("AltInteract");
         Chop(kitchenObjectParent);
@@ -132,33 +104,4 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     }
     #endregion
 
-    private void TryAddPlayerIngredient()
-    {
-        KitchenObjectSO playerKitchenObjectSO = KOParent.GetKitchenObject().GetKitchenObjectSO();
-        if (GetKitchenObject() is CompleteDishKitchenObject)
-        {
-            // Kitchen object on counter is a set of kitchen object
-            CompleteDishKitchenObject counterCompleteDish = GetKitchenObject() as CompleteDishKitchenObject;
-            if (counterCompleteDish.TryAddIngredient(playerKitchenObjectSO))
-            {
-                KOParent.GetKitchenObject().DestroySelf();
-                _isComplete = true;
-            }
-        }
-        else
-        {
-            // Kitchen object on counter is not a set of kitchen object
-            // Try combine kitchen object on table and player
-            if (CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
-            {
-                KOParent.GetKitchenObject().DestroySelf();
-
-                KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-                KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] { playerKitchenObjectSO, counterKitchenObjectSO }, KOParent);
-
-                GetKitchenObject().DestroySelf();
-                _isComplete = true;
-            }
-        }
-    }
 }

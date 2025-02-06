@@ -7,10 +7,10 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    private IKitchenObjectParent _kitchenObjectParent;
+    private IContainable _containerParent;
     PhotonView photonView;
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IContainable kitchenObjectParent)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
@@ -31,10 +31,10 @@ public class KitchenObject : MonoBehaviour
         else
         {
             var obj = Instantiate(kitchenObjectSO.prefab, kitchenObjectParentGameObject.transform);
-            obj.GetComponent<KitchenObject>().SetKitchenObjectParent(kitchenObjectParent);
+            obj.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
         }
     }
-    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients, IKitchenObjectParent kitchenObjectParent)
+    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients, IContainable kitchenObjectParent)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
@@ -62,7 +62,7 @@ public class KitchenObject : MonoBehaviour
         {
             var obj = Instantiate(completeDishSO.prefab);
             CompleteDishKitchenObject completeDish = obj.GetComponent<CompleteDishKitchenObject>();
-            completeDish.SetKitchenObjectParent(kitchenObjectParent);
+            completeDish.SetContainerParent(kitchenObjectParent);
             for (int i = 0; i < ingredients.Length; i++)
             {
                 KitchenObjectSO ingredient = ingredients[i];
@@ -88,14 +88,14 @@ public class KitchenObject : MonoBehaviour
         var findId = PhotonNetwork.GetPhotonView(photonId);
         if (findId == null)
             Debug.LogError("cant find id: " + photonId);
-        var kitchenObjectParent = findId.GetComponent<IKitchenObjectParent>();
+        var kitchenObjectParent = findId.GetComponent<IContainable>();
 
         if (kitchenObjectParent == null)
             Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
 
-        MonoBehaviour monoBehaviour = this._kitchenObjectParent as MonoBehaviour;
+        MonoBehaviour monoBehaviour = this._containerParent as MonoBehaviour;
         if (monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
-            SetKitchenObjectParent(kitchenObjectParent);
+            SetContainerParent(kitchenObjectParent);
     }
 
 
@@ -107,7 +107,7 @@ public class KitchenObject : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
 
-            var kitchenObjectParentGameObject = _kitchenObjectParent as MonoBehaviour;
+            var kitchenObjectParentGameObject = _containerParent as MonoBehaviour;
             var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
             // Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
 
@@ -136,30 +136,30 @@ public class KitchenObject : MonoBehaviour
         return kitchenObjectSO;
     }
 
-    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
+    public void SetContainerParent(IContainable otherContainer)
     {
-        if (kitchenObjectParent == null)
+        if (otherContainer == null)
         {
             this.transform.position = Vector3.zero;
             this.transform.parent = null;
-            this._kitchenObjectParent = kitchenObjectParent;
+            this._containerParent = otherContainer;
             return;
         }
 
-        if (this._kitchenObjectParent != null)
+        if (this._containerParent != null)
         {
-            this._kitchenObjectParent.ClearKitchenObject();
+            this._containerParent.ClearKitchenObject();
         }
-        this._kitchenObjectParent = kitchenObjectParent;
+        this._containerParent = otherContainer;
 
-        kitchenObjectParent.SetKitchenObject(this);
-        this.transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
+        otherContainer.SetKitchenObject(this);
+        this.transform.parent = otherContainer.GetKitchenObjectFollowTransform();
         this.transform.localPosition = Vector3.zero;
     }
 
-    public IKitchenObjectParent GetKitchenObjectParent()
+    public IContainable GetKitchenObjectParent()
     {
-        return _kitchenObjectParent;
+        return _containerParent;
     }
 
     public void DestroySelf()
@@ -168,8 +168,8 @@ public class KitchenObject : MonoBehaviour
             CmdDestroy();
         else
         {
-            if (_kitchenObjectParent != null)
-                _kitchenObjectParent.ClearKitchenObject();
+            if (_containerParent != null)
+                _containerParent.ClearKitchenObject();
             Destroy(this.gameObject);
         }
     }
@@ -182,8 +182,8 @@ public class KitchenObject : MonoBehaviour
     [PunRPC]
     public void RpcDestroy()
     {
-        if (_kitchenObjectParent != null)
-            _kitchenObjectParent.ClearKitchenObject();
+        if (_containerParent != null)
+            _containerParent.ClearKitchenObject();
         Destroy(this.gameObject);
     }
 }

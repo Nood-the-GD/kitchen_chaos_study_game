@@ -14,7 +14,6 @@ public class PlatesCounter : BaseCounter
 
     private int plateNumberMax = 4;
     private int plateNumber = 0;
-    private Player player;
 
     private void Update()
     {
@@ -33,7 +32,7 @@ public class PlatesCounter : BaseCounter
     }
 
 
-    public override void Interact(IKitchenObjectParent player)
+    public override void Interact(IContainable player)
     {
         if (plateNumber <= 0) return;
 

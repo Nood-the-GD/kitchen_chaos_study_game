@@ -60,8 +60,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     if (PhotonNetwork.IsMasterClient)
                     {
                         GetKitchenObject().DestroySelf();
-
-
                         KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
 
@@ -93,8 +91,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                         KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
                     ChangeState(State.Burned);
-
-
                 }
                 break;
             case State.Burned:
@@ -108,58 +104,16 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     #endregion
 
     #region Interact
-    public override void Interact(IKitchenObjectParent player)
+    public override void Interact(IContainable player)
     {
-        if (HasKitchenObject())
-        {
-            //Counter has kitchen object
-            if (!player.HasKitchenObject())
-            {
-                //Player carrying nothing    
-                //Move kitchen object to player
-                GetKitchenObject().SetKitchenObjectParent(player);
-                ChangeState(State.Idle);
-            }
-            else
-            {
-                KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
-                //Player is carrying something
-                if (player.GetKitchenObject() is CompleteDishKitchenObject)
-                {
-                    //Player is holding a set of kitchen object 
-                    if (player.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDish))
-                    {
-                        if (completeDish.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
-                        {
-                            GetKitchenObject().DestroySelf();
-                            ChangeState(State.Idle);
-                        }
-                    }
-                }
-                else
-                {
-                    //Player is holding an ingredient
-                    if (CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
-                    {
-                        player.GetKitchenObject().DestroySelf();
-
-                        KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-                        KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] { playerKitchenObjectSO, counterKitchenObjectSO }, player);
-
-                        GetKitchenObject().DestroySelf();
-                        ChangeState(State.Idle);
-                    }
-                }
-            }
-        }
-        else
+        if (!HasKitchenObject())
         {
             //Counter don't have kitchen object
             if (player.HasKitchenObject() && GetKitchenObjectSO().CanFried())
             {
                 //Player carrying something that can be fried
                 //Move kitchen object to counter
-                player.GetKitchenObject().SetKitchenObjectParent(this);
+                player.GetKitchenObject().SetContainerParent(this);
                 _curRecipe = GetKitchenObjectSO().GetFriedOnlyRecipe();
                 ChangeState(State.Frying);
                 _fryingTimer = 0;
@@ -168,6 +122,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             //Player carrying nothing or something can not be cut
             //Do no thing
         }
+
     }
     #endregion
 

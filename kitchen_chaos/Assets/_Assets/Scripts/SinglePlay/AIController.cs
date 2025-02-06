@@ -155,7 +155,7 @@ public class AIController : MonoBehaviour, IPlayer
         }
         else
         {
-            Debug.Log("Check enough ingredients");
+            //Debug.Log("Check enough ingredients");
             bool isEnough = EnoughAllIngredients(out KitchenObjectSO lackOfKitchenObject);
             if (HasKitchenObject())
             {
@@ -272,9 +272,9 @@ public class AIController : MonoBehaviour, IPlayer
     }
     private void MakeKitchenObject(KitchenObjectSO kitchenObjectSO)
     {
-        Debug.Log("make kitchen object: " + kitchenObjectSO);
+        //Debug.Log("make kitchen object: " + kitchenObjectSO);
         KitchenObjectSO original = AIKitchenObjectManager.s.GetKitchenObjectSoOriginal(kitchenObjectSO);
-        Debug.Log("try get original: " + original);
+        //Debug.Log("try get original: " + original);
         if (AICounterManager.s.TryGetCounterHasKitchenObject(original, out BaseCounter resultCounter))
         {
             SetSelectedCounter(resultCounter);

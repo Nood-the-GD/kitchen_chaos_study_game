@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IAltInteractable
 {
-    public void AltInteract(IKitchenObjectParent kitchenObjectParent);
+    public void AltInteract(IContainable kitchenObjectParent);
     public bool CanAltInteract();
     public bool HasKitchenObject();
 }

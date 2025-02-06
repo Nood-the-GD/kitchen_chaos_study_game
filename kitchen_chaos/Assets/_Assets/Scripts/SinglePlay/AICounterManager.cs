@@ -38,7 +38,7 @@ public class AICounterManager : Singleton<AICounterManager>
     {
         foreach (var counter in _allCounters)
         {
-            if (!counter.HasKitchenObject() && counter is ClearCounter)
+            if (!counter.HasKitchenObject() && counter.GetType() == typeof(BaseCounter))
             {
                 resultCounter = counter;
                 return true;
