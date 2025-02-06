@@ -10,6 +10,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 {
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
+
+    public KitchenObject kitchenObject { get; set; }
+
     public static event EventHandler OnSomethingPlacedHere;
     public static void ResetStaticData()
     {
@@ -17,18 +20,20 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     }
 
     [SerializeField] private Transform counterTopPoint;
-    private KitchenObject kitchenObject;
 
-    public virtual void Interact(IKitchenContainable otherContainer) { 
-        if(otherContainer == null){
+    public virtual void Interact(IKitchenContainable otherContainer)
+    {
+        Debug.Log("Interact");
+        if (otherContainer == null)
+        {
             Debug.LogError("player is null");
             return;
         }
 
-        if(HasKitchenObject())
+        if (HasKitchenObject())
         {
             //Player is not holding
-            if(!otherContainer.HasKitchenObject())
+            if (!otherContainer.HasKitchenObject())
             {
                 Debug.Log("player is not holding");
                 GetKitchenObject().SetContainerParent(otherContainer);
@@ -37,12 +42,12 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             {
                 Debug.Log("player is holding");
                 //Player is carrying something
-                if(otherContainer.GetKitchenObject() is CompleteDishKitchenObject)
+                if (otherContainer.GetKitchenObject() is CompleteDishKitchenObject)
                 {
                     //Player is holding a set of kitchen object
                     CompleteDishKitchenObject playerCompleteDish = otherContainer.GetKitchenObject() as CompleteDishKitchenObject;
                     // Try add ingredient with the current kitchen object on counter
-                    if(playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
+                    if (playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
                     {
                         // After adding ingredient, destroy it on counter
                         GetKitchenObject().DestroySelf();
@@ -58,7 +63,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
         else
         {
             //Counter don't have kitchen object
-            if(otherContainer.HasKitchenObject())
+            if (otherContainer.HasKitchenObject())
             {
                 //Player carrying something
                 //Move kitchen object to counter
@@ -71,22 +76,22 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     private void TryAddPlayerIngredient(KitchenObject playerKitchenObject)
     {
         var playerObjectSO = playerKitchenObject.GetKitchenObjectSO();
-        if(GetKitchenObject() is CompleteDishKitchenObject)
+        if (GetKitchenObject() is CompleteDishKitchenObject)
         {
             // Kitchen object on counter is a set of kitchen object
             CompleteDishKitchenObject counterCompleteDish = GetKitchenObject() as CompleteDishKitchenObject;
-            if(counterCompleteDish.TryAddIngredient(playerObjectSO))
+            if (counterCompleteDish.TryAddIngredient(playerObjectSO))
             {
-               playerKitchenObject.DestroySelf();
+                playerKitchenObject.DestroySelf();
             }
         }
         else
         {
-            if(CompleteDishManager.Instance.TryCombineDish(playerObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
+            if (CompleteDishManager.Instance.TryCombineDish(playerObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
             {
                 playerKitchenObject.DestroySelf();
                 KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-                KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerObjectSO, counterKitchenObjectSO}, this);
+                KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] { playerObjectSO, counterKitchenObjectSO }, this);
 
                 GetKitchenObject().DestroySelf();
             }
@@ -137,7 +142,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
         return this.kitchenObject;
     }
 
-    public KitchenObjectSO GetKitchenObjectSO(){
+    public KitchenObjectSO GetKitchenObjectSO()
+    {
         return this.kitchenObject.GetKitchenObjectSO();
     }
 

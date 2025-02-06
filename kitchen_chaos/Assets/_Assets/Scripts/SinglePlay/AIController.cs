@@ -34,7 +34,10 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
 
     public PhotonView photonView => _photonView;
     public BotStage botStage => _stage;
+
+    public KitchenObject kitchenObject { get; set; }
     #endregion
+
 
     #region Unity functions
     void Start()

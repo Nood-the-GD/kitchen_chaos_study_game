@@ -16,4 +16,5 @@ public interface IKitchenContainable
     public bool HasKitchenObject();
 
     public PhotonView photonView { get; }
+    public KitchenObject kitchenObject { get; set; }
 }

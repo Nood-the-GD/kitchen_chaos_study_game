@@ -24,10 +24,10 @@ public class Player : MonoBehaviour, IPlayer
     }
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Transform kitchenObjectHoldPoint;
+
+    public KitchenObject kitchenObject { get; set; }
+
     private GameInput gameInput => GameInput.Instance;
-
-
-    private KitchenObject kitchenObject;
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     private bool isWalking;
@@ -79,7 +79,8 @@ public class Player : MonoBehaviour, IPlayer
 
         if (selectedCounter != null)
         {
-            if(selectedCounter is CuttingCounter){
+            if (selectedCounter is CuttingCounter)
+            {
                 ((CuttingCounter)selectedCounter).CmdChop(viewId);
                 Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
                 this.transform.forward = direction;
