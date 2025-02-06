@@ -18,7 +18,7 @@ public enum BotStage
 }
 #endregion
 
-public class AIController : MonoBehaviour, IPlayer
+public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
 {
     #region Variables
     [SerializeField] private Transform _objectHoldingPoint;

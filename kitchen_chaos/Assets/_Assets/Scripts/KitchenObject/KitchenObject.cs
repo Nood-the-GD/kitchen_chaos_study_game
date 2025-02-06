@@ -7,10 +7,10 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-    private IContainable _containerParent;
+    private IKitchenContainable _containerParent;
     PhotonView photonView;
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IContainable kitchenObjectParent)
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
@@ -34,7 +34,7 @@ public class KitchenObject : MonoBehaviour
             obj.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
         }
     }
-    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients, IContainable kitchenObjectParent)
+    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients, IKitchenContainable kitchenObjectParent)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
@@ -88,7 +88,7 @@ public class KitchenObject : MonoBehaviour
         var findId = PhotonNetwork.GetPhotonView(photonId);
         if (findId == null)
             Debug.LogError("cant find id: " + photonId);
-        var kitchenObjectParent = findId.GetComponent<IContainable>();
+        var kitchenObjectParent = findId.GetComponent<IKitchenContainable>();
 
         if (kitchenObjectParent == null)
             Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
@@ -136,7 +136,7 @@ public class KitchenObject : MonoBehaviour
         return kitchenObjectSO;
     }
 
-    public void SetContainerParent(IContainable otherContainer)
+    public void SetContainerParent(IKitchenContainable otherContainer)
     {
         if (otherContainer == null)
         {
@@ -157,7 +157,7 @@ public class KitchenObject : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
     }
 
-    public IContainable GetKitchenObjectParent()
+    public IKitchenContainable GetKitchenObjectParent()
     {
         return _containerParent;
     }

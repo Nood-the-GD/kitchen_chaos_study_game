@@ -25,7 +25,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     #endregion
 
     #region Interact
-    public override void Interact(IContainable otherContainer)
+    public override void Interact(IKitchenContainable otherContainer)
     {
 
         base.Interact(otherContainer);
@@ -55,7 +55,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
         Chop(player);
     }
 
-    public void Chop(IContainable KOParent)
+    public void Chop(IKitchenContainable KOParent)
     {
         if(!GetKitchenObjectSO().CanCut()){
             Debug.Log("Can't cut");
@@ -93,7 +93,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
         //Do nothing
     }
 
-    public void AltInteract(IContainable kitchenObjectParent)
+    public void AltInteract(IKitchenContainable kitchenObjectParent)
     {
         Debug.Log("AltInteract");
         Chop(kitchenObjectParent);

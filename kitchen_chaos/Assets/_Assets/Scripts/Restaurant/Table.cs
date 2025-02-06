@@ -5,7 +5,7 @@ using System.Linq;
 using DG.Tweening;
 using System.Security.Cryptography;
 
-public class Table : BaseCounter, IPlaceable, IContainable
+public class Table : BaseCounter, IPlaceable, IKitchenContainable
 {
     #region Variables
     [SerializeField] private List<Transform> _chairTransforms;
@@ -27,7 +27,7 @@ public class Table : BaseCounter, IPlaceable, IContainable
     #endregion
 
     #region Override
-    public override void Interact(IContainable KOParent)
+    public override void Interact(IKitchenContainable KOParent)
     {
         if (CanServe(KOParent.GetKitchenObject().GetKitchenObjectSO()))
         {
@@ -101,7 +101,7 @@ public class Table : BaseCounter, IPlaceable, IContainable
         TableModel tableModel = TableManager.s.GetTableModel(this);
         return tableModel.CanServe(kitchenObjectSO);
     }
-    public void Serve(IContainable KOParent)
+    public void Serve(IKitchenContainable KOParent)
     {
         TableModel tableModel = TableManager.s.GetTableModel(this);
         KitchenObject kitchenObject = KOParent.GetKitchenObject();

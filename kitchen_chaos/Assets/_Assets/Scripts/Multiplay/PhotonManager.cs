@@ -424,9 +424,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId)
     {
-        IContainable kitchenObjectParent = null;
+        IKitchenContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
-            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IContainable>();
+            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenContainable>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
@@ -435,9 +435,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RpcSpawnCompleteDish(string objectType, string[] ingredientString, int parentPhotonId, int viewId)
     {
-        IContainable kitchenObjectParent = null;
+        IKitchenContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
-            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IContainable>();
+            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenContainable>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;

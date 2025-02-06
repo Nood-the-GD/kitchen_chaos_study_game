@@ -104,7 +104,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     #endregion
 
     #region Interact
-    public override void Interact(IContainable player)
+    public override void Interact(IKitchenContainable player)
     {
         if (!HasKitchenObject())
         {

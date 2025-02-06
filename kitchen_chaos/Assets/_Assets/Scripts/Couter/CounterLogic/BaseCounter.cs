@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 
 
-public class BaseCounter : MonoBehaviour, IContainable
+public class BaseCounter : MonoBehaviour, IKitchenContainable
 {
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
@@ -19,7 +19,7 @@ public class BaseCounter : MonoBehaviour, IContainable
     [SerializeField] private Transform counterTopPoint;
     private KitchenObject kitchenObject;
 
-    public virtual void Interact(IContainable otherContainer) { 
+    public virtual void Interact(IKitchenContainable otherContainer) { 
         if(otherContainer == null){
             Debug.LogError("player is null");
             return;

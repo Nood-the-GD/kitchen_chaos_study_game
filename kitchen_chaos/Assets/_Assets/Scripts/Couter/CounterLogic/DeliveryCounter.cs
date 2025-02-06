@@ -14,7 +14,7 @@ public class DeliveryCounter : BaseCounter
         if(Instance == null) Instance = this;
     }
 
-    public override void Interact(IContainable KOParent)
+    public override void Interact(IKitchenContainable KOParent)
     {
         if(KOParent.HasKitchenObject())
         {

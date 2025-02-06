@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Photon.Pun;
 
-public class Player : MonoBehaviour, IPlayer, IContainable
+public class Player : MonoBehaviour, IPlayer
 {
     #region Instance
     public static Player Instance { get; private set; }

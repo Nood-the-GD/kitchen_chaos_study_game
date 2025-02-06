@@ -32,7 +32,7 @@ public class PlatesCounter : BaseCounter
     }
 
 
-    public override void Interact(IContainable player)
+    public override void Interact(IKitchenContainable player)
     {
         if (plateNumber <= 0) return;
 
