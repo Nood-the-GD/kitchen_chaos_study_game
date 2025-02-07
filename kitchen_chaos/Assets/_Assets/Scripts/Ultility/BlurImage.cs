@@ -10,15 +10,16 @@ using System.IO;
 public class BlurImage : MonoBehaviour
 {
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     public Texture2D tex;
     public RawImage rawImage => GetComponent<RawImage>();
     Texture2D texture2D;
-        //size kernal
+    //size kernal
     public int size = 3;
     public int integration = 1;
     [Button]
-    public string GetImagePath(){
+    public string GetImagePath()
+    {
         if (rawImage != null)
         {
             string dataPath = Application.dataPath;
@@ -39,12 +40,14 @@ public class BlurImage : MonoBehaviour
     }
 
     [Button]
-    public void StartBlur(){
+    public void StartBlur()
+    {
         string texturePath = GetImagePath();
-        if(string.IsNullOrEmpty(texturePath)){
+        if (string.IsNullOrEmpty(texturePath))
+        {
             return;
         }
-        
+
         var textureTemp = new Texture2D(2, 2);
         textureTemp.LoadImage(System.IO.File.ReadAllBytes(texturePath));
         //textureTemp.ReadPixels(new Rect(0, 0, 2, 2), 0, 0);
@@ -67,10 +70,11 @@ public class BlurImage : MonoBehaviour
 
         rawImage.texture = texture2D;
         //Resources.UnloadUnusedAssets();
-        
+
     }
     [Button]
-    void Dispose(){
+    void Dispose()
+    {
         Resources.UnloadUnusedAssets();
     }
 
@@ -80,8 +84,13 @@ public class BlurImage : MonoBehaviour
         if (texture2D != null)
         {
             // Define a path to save the image (change this as needed).
-            string filePath = Application.dataPath + "/MainAsset/SavedImages/"+texture2D.name+".png";
-            Debug.Log("filePath: "+filePath);
+            string filePath = Application.dataPath + "/MainAsset/SavedImages/" + texture2D.name + ".png";
+            var directory = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            Debug.Log("filePath: " + filePath);
             // Encode the texture to a PNG format.
             byte[] bytes = texture2D.EncodeToPNG();
 
@@ -98,7 +107,7 @@ public class BlurImage : MonoBehaviour
 
     public Color[,] GaussianBlur(Color[,] colors)
     {
-        
+
         int w = colors.GetLength(0);
         int h = colors.GetLength(1);
 
@@ -114,9 +123,9 @@ public class BlurImage : MonoBehaviour
                 float sumR = 0;
                 float sumG = 0;
                 float sumB = 0;
-                for (int y = i-size; y < i+size; y++)
+                for (int y = i - size; y < i + size; y++)
                 {
-                    for (int x = j-size; x < j+size; x++)
+                    for (int x = j - size; x < j + size; x++)
                     {
                         try
                         {
@@ -167,7 +176,7 @@ public class BlurImage : MonoBehaviour
                 newArr[j, i].r = sumR / num;
                 newArr[j, i].g = sumG / num;
                 newArr[j, i].b = sumB / num;
-                
+
                 newArr[j, i].a = sumA / num;
 
 
@@ -175,7 +184,7 @@ public class BlurImage : MonoBehaviour
 
             }
 
-            
+
         }
 
         return newArr;
