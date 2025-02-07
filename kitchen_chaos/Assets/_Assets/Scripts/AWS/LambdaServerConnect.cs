@@ -53,7 +53,6 @@ public static class ServerConnect
     // Public settings
     // ================================
     // Set this property externally after login (for example, using Firebase or your own auth).
-    public static string CurrentUserUid;  
     public static bool NotiMessage = true;
     public static bool AutoReconnect = true;
 
@@ -68,14 +67,14 @@ public static class ServerConnect
         _isConnecting = true;
         Debug.Log("Connecting to server...");
 
-        if (string.IsNullOrEmpty(CurrentUserUid))
+        if (string.IsNullOrEmpty(UserData.currentUser.uid))
         {
             Debug.LogError("No user logged in!");
             _isConnecting = false;
             return;
         }
 
-        string uid = CurrentUserUid;
+        string uid = UserData.currentUser.uid;
         Debug.Log("Connect for uid: " + uid);
         string urlString = $"wss://4vup7tn95f.execute-api.ap-southeast-1.amazonaws.com/production/?uid={uid}";
 

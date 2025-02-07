@@ -9,13 +9,10 @@ public class TutorialData : MonoBehaviour
     private int confirmTutorialNumber = 0;
     public static TutorialData Instance;
 
-    void Awake()
-    {
-        skipTutorialNumber = 0;
-        Instance = this;
-    }
     void Start()
     {
+                skipTutorialNumber = 0;
+        Instance = this;
         if(PhotonManager.s == null){
             Debug.LogError("PhotonManager is null");
             return;

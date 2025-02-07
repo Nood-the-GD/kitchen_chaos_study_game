@@ -6,6 +6,10 @@ public class AppManager : MonoBehaviour
 {
     private void OnEnable()
     {
+                if(!SaveData.isInited)
+        {
+            SetUserNamePopup.ShowPopup();
+        }
         if(SaveData.isInited){
           connectServer();
         }

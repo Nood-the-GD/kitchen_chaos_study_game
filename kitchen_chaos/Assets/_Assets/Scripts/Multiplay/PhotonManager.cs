@@ -137,12 +137,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
 
-    void Start()
-    {
-        Init();
-    }
-
-    void Init()
+    public void Init()
     {
         //set name to player
         if (UserData.currentUser.userName.IsNullOrEmpty())

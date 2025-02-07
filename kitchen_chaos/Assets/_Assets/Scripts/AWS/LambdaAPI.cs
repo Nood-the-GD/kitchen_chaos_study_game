@@ -26,11 +26,6 @@ public class LambdaAPI : MonoBehaviour
         Debug.LogError("<color=red>ERROR: " + message + "</color>");
     }
 
-    private static void TestLog(string message)
-    {
-        Debug.Log("TEST: " + message);
-    }
-
     #endregion
 
     #region HTTP Request Method

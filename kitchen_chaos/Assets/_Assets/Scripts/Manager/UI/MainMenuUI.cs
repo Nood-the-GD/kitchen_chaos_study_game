@@ -31,11 +31,6 @@ public class MainMenuUI : MonoBehaviour
         photonManager.onConnectToServer -= PhotonManager_OnConnectToServerHandler;
     }
     void Start(){
-
-        if(!SaveData.isInited)
-        {
-            SetUserNamePopup.ShowPopup();
-        }
         if(PhotonManager.s == null || !PhotonManager.s.isServerConnected)
         {
             playBtn.gameObject.GetComponent<Image>().color = Color.gray;
