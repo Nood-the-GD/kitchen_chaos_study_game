@@ -59,3 +59,4 @@ sysinfo.txt
 crashlytics-build.properties
 
 kitchen_chaos/Recordings/
+kitchen_chaos/.env
