@@ -32,7 +32,7 @@ public class MainMenuUI : MonoBehaviour
     }
     void Start(){
 
-        if(!UserData.isInitName)
+        if(!SaveData.isInited)
         {
             SetUserNamePopup.ShowPopup();
         }

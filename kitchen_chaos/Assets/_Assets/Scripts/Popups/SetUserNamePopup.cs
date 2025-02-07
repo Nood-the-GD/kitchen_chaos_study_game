@@ -9,7 +9,7 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
     public GameObject closeButton;
     string userName;
     public void Start(){
-        SetCloseButton(UserData.isInitName);
+        SetCloseButton(SaveData.isInited);
     }
 
     public void SetName(string name){
@@ -18,7 +18,7 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
     }
 
     public void Next(){
-        UserData.userName = userName;
+        UserData.currentUser.userName = userName;
         PhotonNetwork.NickName = userName;
         HidePopup();
     }

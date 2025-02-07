@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,16 +27,30 @@ public class UserSetting
     }
 }
 
+public class SaveData{
+    public static string userId 
+    {
+        get => PlayerPrefs.GetString("userId", "null");
+        set => PlayerPrefs.SetString("userId", value);
+    }
+
+    public static string userToken{
+        get => PlayerPrefs.GetString("userToken", "null");
+        set => PlayerPrefs.SetString("userToken", value);
+    }
+
+    public static bool isInited{
+        get => PlayerPrefs.HasKey("userId");
+       
+    }
+}
+
 [System.Serializable]
 public class UserData
 {
-    // public static UserData myPlayerData{
-    //     get =>
-    // }
-    public static bool isInitName => PlayerPrefs.HasKey("userName");
-    public static string userName
-    {
-        get => PlayerPrefs.GetString("userName", "Player");
-        set => PlayerPrefs.SetString("userName", value);
-    }
+    public String userName;
+    public String userGender;
+    public String uid;
+
+    public static UserData currentUser;
 }

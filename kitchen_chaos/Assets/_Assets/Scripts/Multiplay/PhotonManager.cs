@@ -6,6 +6,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using System;
 using System.Linq;
+using DG.DemiEditor;
 
 public class CmdOrder
 {
@@ -144,13 +145,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     void Init()
     {
         //set name to player
-        if (!UserData.isInitName)
+        if (UserData.currentUser.userName.IsNullOrEmpty())
         {
             PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
         }
         else
         {
-            PhotonNetwork.NickName = UserData.userName;
+            PhotonNetwork.NickName = UserData.currentUser.userName;
         }
 
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
