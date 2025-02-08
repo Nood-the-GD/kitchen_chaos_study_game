@@ -44,6 +44,9 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
     }
 
     public void Next(){
+        if(isCreateUser){
+            
+        }
         UserData.currentUser.userName = userName;
         PhotonNetwork.NickName = userName;
         // Optionally, assign the gender selection to the user:
