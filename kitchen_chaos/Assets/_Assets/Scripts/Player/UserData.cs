@@ -41,7 +41,6 @@ public class SaveData{
 
     public static bool isInited{
         get => PlayerPrefs.HasKey("userId");
-       
     }
 }
 

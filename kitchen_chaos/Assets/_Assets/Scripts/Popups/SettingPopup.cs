@@ -14,7 +14,7 @@ public class SettingPopup : BasePopup<SettingPopup>
     }
 
     public void OnClickResetName(){
-        SetUserNamePopup.ShowPopup();
+        SetUserNamePopup.ShowPopup(false);
     }
 
     
