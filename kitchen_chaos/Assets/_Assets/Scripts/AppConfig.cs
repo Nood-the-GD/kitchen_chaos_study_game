@@ -203,7 +203,7 @@ public class AppConfig : MonoBehaviour
 
         yield return LambdaAPI.TryLogin(SaveData.userId, SaveData.userToken, (response) => {
             if(response != null){
-                UserData.SetCurrentUser(response["body"].ToObject<UserData>());
+                UserData.SetCurrentUser(response.ToObject<UserData>());
                 callback(true);
             }else{
                 

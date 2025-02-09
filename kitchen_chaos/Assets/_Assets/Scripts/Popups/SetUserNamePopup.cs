@@ -49,11 +49,11 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
             StartCoroutine(LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
                 if(response != null){
                    
-                    var data=response["body"]["userData"];
+                    var data=response["userData"];
                     
                     UserData.SetCurrentUser(data.ToObject<UserData>());
                     SaveData.userId = UserData.currentUser.uid;
-                    SaveData.userToken = response["body"]["tempToken"].ToString();
+                    SaveData.userToken = response["tempToken"].ToString();
                     SaveData.userName = userName;
 
                     Debug.Log("Done Create User");                    

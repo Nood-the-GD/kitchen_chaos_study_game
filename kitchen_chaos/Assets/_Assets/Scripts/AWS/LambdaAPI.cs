@@ -274,7 +274,7 @@ public class LambdaAPI : MonoBehaviour
     public static IEnumerator CallLambdaBase(
         string func, 
         string parameters, 
-        Action<JObject> onComplete = null, 
+        Action<JToken> onComplete = null, 
         Action<string> onError = null)
     {
         // Validate input.
@@ -315,41 +315,47 @@ public class LambdaAPI : MonoBehaviour
                 onError?.Invoke(errorMsg);
                 return;
             }
-
-            // Retrieve the status code and body from the JSON.
-            // (Adjust these if your API’s structure is different.)
-            int statusCode = json["statusCode"]?.Value<int>() ?? 0;
-            string body = json["body"]?.Type == JTokenType.String 
-            ? json["body"].Value<string>() 
-            : json["body"]?.ToString() ?? "No message provided";
-
-            // If statusCode is 200, consider it a success.
-            if (statusCode == 200)
+            
+            if (useAws)
             {
-                onComplete?.Invoke(json);
+                // AWS response is expected to include "statusCode" and "body".
+                int statusCode = json["statusCode"]?.Value<int>() ?? 0;
+                string body = json["body"]?.Type == JTokenType.String 
+                    ? json["body"].Value<string>() 
+                    : json["body"]?.ToString() ?? "No message provided";
+
+                if (statusCode == 200)
+                {
+                    onComplete?.Invoke(json["body"]);
+                }
+                else
+                {
+                    Notification(body);
+                    onError?.Invoke(body);
+                }
             }
             else
             {
-                // In case of error, show a notification and call the error callback.
-                Notification(body);
-                onError?.Invoke(body);
+                // Non-AWS response is assumed to have a different structure.
+                // Simply pass the parsed JSON without attempting to access "body".
+                onComplete?.Invoke(json);
             }
         };
 
         // Call the appropriate method.
         if (useAws)
         {
-            yield return CallAwsLambda(func, parameters, responseHandler, (error)=>{ 
-                    Notification(error);
-                    onError.Invoke(error);
-                } );
+            yield return CallAwsLambda(func, parameters, responseHandler, error => { 
+                Notification(error);
+                onError?.Invoke(error);
+            });
         }
         else
         {
-            yield return CallFuncWithURL(func, parameters, responseHandler, (error)=>{ 
-                    Notification(error);
-                    onError.Invoke(error);
-                });
+            yield return CallFuncWithURL(func, parameters, responseHandler, error => { 
+                Notification(error);
+                onError?.Invoke(error);
+            });
         }
     }
 
@@ -362,42 +368,42 @@ public class LambdaAPI : MonoBehaviour
     // Assumes you have a UserData class with a currentUser property that has a uid field.
     // Also assumes SaveData.userToken, SocialData.GetChatSummaryFor(string), and AppController.CurrentRoomData exist.
 
-    public static IEnumerator FindFriend(string searchName, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator FindFriend(string searchName, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Build payload: { "uid": "...", "searchName": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"searchName\":\"" + searchName + "\"}";
         yield return CallLambdaBase("findFriend", payload, onComplete, onError);
     }
 
-    public static IEnumerator SendFriendRequest(string otherUid, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator SendFriendRequest(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"otherUid\":\"" + otherUid + "\"}";
         yield return CallLambdaBase("sendFriendRequest", payload, onComplete, onError);
     }
 
-    public static IEnumerator GetMySocial(Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator GetMySocial(Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
         yield return CallLambdaBase("getMySocial", payload, onComplete, onError);
     }
 
-    public static IEnumerator TryLogin(string uid, string token, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator TryLogin(string uid, string token, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + uid + "\",\"token\":\"" + token + "\"}";
         yield return CallLambdaBase("login", payload, onComplete, onError);
     }
 
-    public static IEnumerator TryLoginUsingAuth(string authToken, string gmail, string fuid, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator TryLoginUsingAuth(string authToken, string gmail, string fuid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "authToken": "...", "gmail": "...", "fuid": "..." }
         string payload = "{\"authToken\":\"" + authToken + "\",\"gmail\":\"" + gmail + "\",\"fuid\":\"" + fuid + "\"}";
         yield return CallLambdaBase("loginAuth", payload, onComplete, onError);
     }
 
-    public static IEnumerator CreateUser(string userName, string gender, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator CreateUser(string userName, string gender, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "username": "...", "gender": "...", "email": "...", "authId": "...", "quote": "...", "fuid": "...", "timezone": "..." }
         string payload = "{\"username\":\"" + userName +
@@ -406,7 +412,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("createUser", payload, onComplete, onError);
     }
 
-    public static IEnumerator AcceptFriend(string otherUid, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator AcceptFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
@@ -415,7 +421,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("acceptFriend", payload, onComplete, onError);
     }
 
-    public static IEnumerator DeclineFriend(string otherUid, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator DeclineFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
@@ -424,7 +430,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("declineFriend", payload, onComplete, onError);
     }
 
-    public static IEnumerator DeleteFriend(string otherUid, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator DeleteFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
@@ -433,7 +439,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("deleteFriend", payload, onComplete, onError);
     }
 
-    public static IEnumerator LoadConvoData(string conversationId, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator LoadConvoData(string conversationId, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "token": "...", "convoId": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
@@ -442,7 +448,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("getConvoId", payload, onComplete, onError);
     }
 
-    public static IEnumerator CreateChatMessage(string otherUid, string message, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator CreateChatMessage(string otherUid, string message, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "...", "message": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
@@ -451,7 +457,7 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("createChatMessage", payload, onComplete, onError);
     }
 
-    public static IEnumerator SendChatMessage(string convoId, string message, Action<JObject> onComplete = null, Action<string> onError = null)
+    public static IEnumerator SendChatMessage(string convoId, string message, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "convoId": "...", "uid": "...", "message": "..." }
         string payload = "{\"convoId\":\"" + convoId +
