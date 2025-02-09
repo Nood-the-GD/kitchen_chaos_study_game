@@ -131,10 +131,10 @@ public class AppConfig : MonoBehaviour
                 // Calculate the target fill amount based on completed tasks
                 float targetFill = (float)completedTasks / tasks.Count;
 
-                // Tween the progress bar fill from its current value to the target value over 0.5 seconds
+                // Tween the progress bar fill from its current value to the target value over 0.2 seconds
                 if (progressBar != null)
                 {
-                    yield return StartCoroutine(AnimateProgressBar(progressBar.fillAmount, targetFill, 0.5f));
+                    yield return StartCoroutine(AnimateProgressBar(progressBar.fillAmount, targetFill, 0.2f));
                 }
                 if (progressText != null)
                 {
@@ -200,7 +200,7 @@ public class AppConfig : MonoBehaviour
             callback(true);
             yield break;
         }
-        
+
         yield return LambdaAPI.TryLogin(SaveData.userId, SaveData.userToken, (response) => {
             if(response != null){
                 UserData.SetCurrentUser(response["body"].ToObject<UserData>());
