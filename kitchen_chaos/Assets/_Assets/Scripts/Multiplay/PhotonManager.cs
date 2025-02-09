@@ -99,13 +99,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         if (s == null)
         {
-            s = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            DestroyImmediate(gameObject);
-            return;
+            s = this; 
         }
     }
 
@@ -140,14 +134,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void Init()
     {
         //set name to player
-        if (UserData.currentUser.userName.IsNullOrEmpty())
-        {
-            PhotonNetwork.NickName = "User " + UnityEngine.Random.Range(0, 1000);
-        }
-        else
-        {
-            PhotonNetwork.NickName = UserData.currentUser.userName;
-        }
+        PhotonNetwork.NickName = UserData.currentUser.userName;
 
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if (autoConnectToPhotonTest)

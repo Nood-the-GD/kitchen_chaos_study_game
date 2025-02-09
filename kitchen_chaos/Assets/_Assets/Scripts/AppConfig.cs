@@ -25,7 +25,7 @@ public class ConfigTask
 }
 
 //-----------------------------------------------------------------------------
-// AppInit: Main initializer using a task system similar to the Flutter version.
+// AppConfig: Main initializer using a task system similar to the Flutter version.
 //-----------------------------------------------------------------------------
 public class AppConfig : MonoBehaviour
 {
@@ -34,9 +34,9 @@ public class AppConfig : MonoBehaviour
     int completedTasks = 0;      // Number of tasks successfully completed
 
     // UI references (assign these in the Inspector)
-    public Slider progressBar;    // A Slider with its min value = 0 and max value = 1
-    public Text progressText;     // Displays percentage of tasks completed
-    public Text currentTaskText;  // Displays the name of the current task
+    public Image progressBar;    // An Image that acts as a slider (with its type set to Filled)
+    public Text progressText;    // Displays percentage of tasks completed
+    public Text currentTaskText; // Displays the name of the current task
 
     void Start()
     {
@@ -50,7 +50,7 @@ public class AppConfig : MonoBehaviour
         // Initialize UI elements
         if (progressBar != null)
         {
-            progressBar.value = 0;
+            progressBar.fillAmount = 0;
         }
         if (progressText != null)
         {
@@ -65,6 +65,7 @@ public class AppConfig : MonoBehaviour
     // Check every FixedUpdate if the user is initialized before starting the app
     private void FixedUpdate()
     {
+        // Once we've begun initialization, do nothing further.
         if (initApp)
             return;
 
@@ -86,18 +87,12 @@ public class AppConfig : MonoBehaviour
                 (callback) => DummyTask(0.1f, true, callback)
             ),
             new ConfigTask(
-                "Get server config 1",
-                (callback) => DummyTask(0.1f, true, callback),
-                autoRetry: true,
-                maxRetries: 5
-            ),
-            new ConfigTask(
-                "Get user config",
-                (callback) => DummyTask(0.1f, true, callback)
+                "Loggin",
+                (callback) => LoginTask(0.1f, true, callback)
             )
         };
 
-        // Run tasks sequentially while updating the UI
+        // Run tasks sequentially while updating the UI with tweened progress
         yield return StartCoroutine(RunTasks());
     }
 
@@ -133,14 +128,17 @@ public class AppConfig : MonoBehaviour
                 Debug.Log("Task completed: " + task.name);
                 completedTasks++;
 
-                // Update progress UI (assuming tasks.Count is the total number of tasks)
+                // Calculate the target fill amount based on completed tasks
+                float targetFill = (float)completedTasks / tasks.Count;
+
+                // Tween the progress bar fill from its current value to the target value over 0.5 seconds
                 if (progressBar != null)
                 {
-                    progressBar.value = (float)completedTasks / tasks.Count;
+                    yield return StartCoroutine(AnimateProgressBar(progressBar.fillAmount, targetFill, 0.5f));
                 }
                 if (progressText != null)
                 {
-                    progressText.text = string.Format("{0}% Completed", (int)(progressBar.value * 100));
+                    progressText.text = string.Format("{0}% Completed", (int)(targetFill * 100));
                 }
             }
         }
@@ -196,10 +194,49 @@ public class AppConfig : MonoBehaviour
         callback(result);
     }
 
+    IEnumerator LoginTask(float delay, bool result, System.Action<bool> callback ){
+        yield return new WaitForSeconds(delay);
+        if(UserData.currentUser != null){
+            callback(true);
+            yield break;
+        }
+        
+        yield return LambdaAPI.TryLogin(SaveData.userId, SaveData.userToken, (response) => {
+            if(response != null){
+                UserData.SetCurrentUser(response["body"].ToObject<UserData>());
+                callback(true);
+            }else{
+                
+                callback(false);
+            }
+        },(error)=>{
+            callback(false);
+        });
+    }
+
+    // Tween the progress bar fill amount over a given duration.
+    IEnumerator AnimateProgressBar(float fromValue, float toValue, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float newFill = Mathf.Lerp(fromValue, toValue, elapsed / duration);
+            progressBar.fillAmount = newFill;
+            yield return null;
+        }
+        progressBar.fillAmount = toValue;
+    }
+
     // Called when all tasks have been successfully completed.
     void onDoneInitApp()
     {
+        // Option 1: Load a different scene (recommended)
         // Replace "MainMenuScene" with the name of your target scene.
+        Debug.Log("Going to MainMenuScene...");
         SceneManager.LoadScene(SceneType.MainMenuScene.ToString());
+
+        // Option 2: If you intend to stay in the same scene, disable this script to avoid re-running
+        // this.enabled = false;
     }
 }

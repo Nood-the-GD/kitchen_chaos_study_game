@@ -48,13 +48,18 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
             Debug.Log("Creating User");
             StartCoroutine(LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
                 if(response != null){
+                   
+                    var data=response["body"]["userData"];
                     
-                    var data=response["userData"];
                     UserData.SetCurrentUser(data.ToObject<UserData>());
-                    //UserData.currentUser = response;
+                    SaveData.userId = UserData.currentUser.uid;
+                    SaveData.userToken = response["body"]["tempToken"].ToString();
+                    SaveData.userName = userName;
+
+                    Debug.Log("Done Create User");                    
+                    Debug.Log("userId: " + UserData.currentUser.uid);
                     PhotonNetwork.NickName = userName;
                     HidePopup();
-                    
                 }
             }));
         }

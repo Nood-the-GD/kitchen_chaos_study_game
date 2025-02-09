@@ -255,6 +255,12 @@ public class LambdaAPI : MonoBehaviour
         }
     }
 
+    static void Notification(string error){
+        Debug.LogError(error);
+        var p = SlideNotificationPopup.ShowPopup();
+        p.ShowMessage(error, true);
+    }
+
     /// <summary>
     /// Base method to call a Lambda function.
     /// If <paramref name="useAws"/> is false, it will use the HTTP method (CallFuncWithURL),
@@ -271,48 +277,82 @@ public class LambdaAPI : MonoBehaviour
         Action<JObject> onComplete = null, 
         Action<string> onError = null)
     {
-        var useAws = false;
+        // Validate input.
+        if (string.IsNullOrEmpty(func))
+        {
+            string errorMsg = "Function name is required.";
+            Notification(errorMsg);
+            onError?.Invoke(errorMsg);
+            yield break;
+        }
 
+        // Determine which call method to use based on platform or editor settings.
+        bool useAws = false;
         if (Application.isEditor)
         {
-            // Assuming env.TryParseEnvironmentVariable is available in your context.
+            // Try to read an environment variable (if available) to determine lambda mode.
             if (env.TryParseEnvironmentVariable("lambdaMode", out int mode))
             {
-                // If mode == 0, disable AWS; if mode == 1, enable AWS.
-                useAws = mode == 1;
+                useAws = (mode == 1);
             }
         }
-        // For mobile platforms, don't use AWS.
         else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
+            // For mobile platforms, always use the HTTP method.
             useAws = false;
         }
 
         Debug.Log($"useAws: {useAws} | Calling: {func} with parameters: {parameters}");
 
+        // Define a common response handler.
+        Action<string> responseHandler = data =>
+        {
+            JObject json = StringToJObject(data);
+            if (json == null)
+            {
+                string errorMsg = "Error parsing JSON response.";
+                Notification(errorMsg);
+                onError?.Invoke(errorMsg);
+                return;
+            }
+
+            // Retrieve the status code and body from the JSON.
+            // (Adjust these if your API’s structure is different.)
+            int statusCode = json["statusCode"]?.Value<int>() ?? 0;
+            string body = json["body"]?.Type == JTokenType.String 
+            ? json["body"].Value<string>() 
+            : json["body"]?.ToString() ?? "No message provided";
+
+            // If statusCode is 200, consider it a success.
+            if (statusCode == 200)
+            {
+                onComplete?.Invoke(json);
+            }
+            else
+            {
+                // In case of error, show a notification and call the error callback.
+                Notification(body);
+                onError?.Invoke(body);
+            }
+        };
+
+        // Call the appropriate method.
         if (useAws)
         {
-            yield return CallAwsLambda(func, parameters, (data) => 
-            {
-                JObject json = StringToJObject(data);
-                if (json != null && onComplete != null)
-                {
-                    onComplete(json);
-                }
-            }, onError);
+            yield return CallAwsLambda(func, parameters, responseHandler, (error)=>{ 
+                    Notification(error);
+                    onError.Invoke(error);
+                } );
         }
         else
         {
-            yield return CallFuncWithURL(func, parameters, (data) => 
-            {
-                JObject json = StringToJObject(data);
-                if (json != null && onComplete != null)
-                {
-                    onComplete(json);
-                }
-            }, onError);
+            yield return CallFuncWithURL(func, parameters, responseHandler, (error)=>{ 
+                    Notification(error);
+                    onError.Invoke(error);
+                });
         }
     }
+
 
 
     #endregion

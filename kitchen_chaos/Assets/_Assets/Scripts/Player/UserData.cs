@@ -39,6 +39,11 @@ public class SaveData{
         set => PlayerPrefs.SetString("userToken", value);
     }
 
+    public static string userName{
+        get => PlayerPrefs.GetString("userName", "null");
+        set => PlayerPrefs.SetString("userName", value);
+    }
+
     public static bool isInited{
         get => PlayerPrefs.HasKey("userId");
     }
