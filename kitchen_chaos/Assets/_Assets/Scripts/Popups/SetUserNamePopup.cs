@@ -45,13 +45,18 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
 
     public void Next(){
         if(isCreateUser){
-            
+            Debug.Log("Creating User");
+            StartCoroutine(LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
+                if(response != null){
+                    //UserData.currentUser = response;
+                    PhotonNetwork.NickName = userName;
+                    HidePopup();
+                }
+            }));
         }
-        UserData.currentUser.userName = userName;
-        PhotonNetwork.NickName = userName;
-        // Optionally, assign the gender selection to the user:
-        // UserData.currentUser.gender = selectedGender.ToString();
-        HidePopup();
+        else{
+             Debug.Log("Updating User");
+        }
     }
 
     public void SetCloseButton(bool isShow){
