@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;  // For Button and CanvasGroup
-
+using Newtonsoft.Json;
 public class SetUserNamePopup : BasePopup<SetUserNamePopup>
 {
     [HideInInspector]
@@ -24,7 +24,7 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
 
     public void Start(){
         SetCloseButton(!isCreateUser);
-
+        
         // Ensure each gender button has a CanvasGroup component
         EnsureCanvasGroup(nullGenderButton);
         EnsureCanvasGroup(maleGenderButton);
@@ -48,9 +48,13 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
             Debug.Log("Creating User");
             StartCoroutine(LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
                 if(response != null){
+                    
+                    var data=response["userData"];
+                    UserData.SetCurrentUser(data.ToObject<UserData>());
                     //UserData.currentUser = response;
                     PhotonNetwork.NickName = userName;
                     HidePopup();
+                    
                 }
             }));
         }

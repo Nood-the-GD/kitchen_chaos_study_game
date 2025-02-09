@@ -52,4 +52,8 @@ public class UserData
     public String uid;
 
     public static UserData currentUser;
+
+    public static void SetCurrentUser(UserData user){
+        currentUser = user;
+    }
 }
