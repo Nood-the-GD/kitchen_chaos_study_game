@@ -12,21 +12,22 @@ public class Player : MonoBehaviour, IPlayer
     public static event Action<Player> OnPlayerSpawn;
     public event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public BaseCounter selectedCounter;
+    }
     #endregion
 
     #region Variables
     private PhotonView _photonView;
     public int viewId => _photonView.ViewID;
     public PhotonView photonView => _photonView;
-    public class OnSelectedCounterChangedEventArgs : EventArgs
-    {
-        public BaseCounter selectedCounter;
-    }
+    public KitchenObject kitchenObject { get; set; }
+    public PlayerAnimator playerAnimator;
+    public bool IsControlling { get; set; }
+
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Transform kitchenObjectHoldPoint;
-
-    public KitchenObject kitchenObject { get; set; }
-
     private GameInput gameInput => GameInput.Instance;
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
@@ -47,10 +48,9 @@ public class Player : MonoBehaviour, IPlayer
     }
     private void Start()
     {
-        if (_photonView.IsMine)
+        if (_photonView.IsMine && this.gameObject.tag == "MainPlayer")
         {
-            gameInput.OnInteractAction += GameInput_OnInteractAction;
-            gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+            RegisterGameInputEvent();
             OnPlayerSpawn?.Invoke(this);
             var colorSkin = UserSetting.colorSkin;
             CmdSetSkinColor(colorSkin);
@@ -67,12 +67,24 @@ public class Player : MonoBehaviour, IPlayer
                 placeable.StartPlacing();
             }
         }
+
+        if (!IsControlling) return;
         HandleMovement();
         HandleSelection();
     }
     #endregion
 
     #region Events functions
+    public void RegisterGameInputEvent()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
+    }
+    public void UnregisterGameInputEvent()
+    {
+        gameInput.OnInteractAction -= GameInput_OnInteractAction;
+        gameInput.OnUseAction -= GameInput_OnInteractAlternateAction;
+    }
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
     {
         if (!GameManager.Instance.IsGamePlaying()) return;

@@ -10,6 +10,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnInteractAction;
     public event EventHandler OnUseAction;
     public event EventHandler OnPauseAction;
+    public event EventHandler OnChangeCharacterAction;
 
     private PlayerInputAction playerInputAction;
     [SerializeField] private MobileController mobileController;
@@ -24,13 +25,14 @@ public class GameInput : MonoBehaviour
         playerInputAction.Player.Interaction.performed += Interaction_performed;
         playerInputAction.Player.Chop.performed += Chop_performed;
         playerInputAction.Player.Pause.performed += Pause_performed;
-
+        playerInputAction.Player.ChangeCharacter.performed += ChangeCharacter_performed;
     }
 
     void Start()
     {
         mobileController?.OnInteractBtnPress(() => OnInteractAction?.Invoke(this, EventArgs.Empty));
         mobileController?.OnUseBtnPress(() => OnUseAction?.Invoke(this, EventArgs.Empty));
+        mobileController?.OnChangeCharacterBtnPress(() => OnChangeCharacterAction?.Invoke(this, EventArgs.Empty));
     }
 
     private void Update()
@@ -50,6 +52,11 @@ public class GameInput : MonoBehaviour
     private void Interaction_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnInteractAction?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ChangeCharacter_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnChangeCharacterAction?.Invoke(this, EventArgs.Empty);
     }
 
     public Vector2 GetMovementVectorNormalize()

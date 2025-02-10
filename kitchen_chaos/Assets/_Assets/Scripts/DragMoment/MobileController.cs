@@ -8,9 +8,9 @@ using UnityEngine.UI;
 
 public class MobileController : MonoBehaviour
 {
-    [SerializeField]  private FloatingJoystick _floatingJoystick;
-    [SerializeField]  private Button _interactBtn, _useBtn;
-    private Action _onInteract, _onUse;
+    [SerializeField] private FloatingJoystick _floatingJoystick;
+    [SerializeField] private Button _interactBtn, _useBtn;
+    private Action _onInteract, _onUse, _onChangeCharacter;
 
     void Awake()
     {
@@ -22,6 +22,12 @@ public class MobileController : MonoBehaviour
         {
             _onUse?.Invoke();
         });
+        //TODO: Add change character button
+
+        // _changeCharacterBtn.onClick.AddListener(() =>
+        // {
+        //     _onChangeCharacter?.Invoke();
+        // });
     }
 
     void Update()
@@ -35,10 +41,14 @@ public class MobileController : MonoBehaviour
 
     public void OnInteractBtnPress(Action onPress)
     {
-        _onInteract = onPress;  
+        _onInteract = onPress;
     }
     public void OnUseBtnPress(Action onPress)
     {
         _onUse = onPress;
+    }
+    public void OnChangeCharacterBtnPress(Action onPress)
+    {
+        _onChangeCharacter = onPress;
     }
 }

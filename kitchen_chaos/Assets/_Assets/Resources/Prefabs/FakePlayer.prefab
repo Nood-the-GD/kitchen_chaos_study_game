@@ -46,8 +46,8 @@ GameObject:
   - component: {fileID: 8525692102432909788}
   - component: {fileID: 1353064732740629896}
   m_Layer: 0
-  m_Name: MainPlayer
-  m_TagString: MainPlayer
+  m_Name: FakePlayer
+  m_TagString: FakePlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,6 +161,11 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2007765376490622047}
+    - target: {fileID: 1625363947118703361, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+        type: 3}
+      propertyPath: m_Text
+      value: FakePlayer
+      objectReference: {fileID: 0}
     - target: {fileID: 3157479410049616276, guid: 1c5dda3c7cd3cf742afcade5419faeab,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class PlayerAnimator : MonoBehaviour
 {
     #region Constants
@@ -41,6 +42,10 @@ public class PlayerAnimator : MonoBehaviour
         {
             arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
         }
+    }
+    public void SetPlayerName(string name)
+    {
+        usernameUI.text = name;
     }
     #endregion
 }
