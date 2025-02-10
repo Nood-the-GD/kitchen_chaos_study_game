@@ -19,6 +19,10 @@ public class FloatingBubble : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     [Tooltip("Event fired when the bubble is clicked.")]
     public UnityEvent onClickEvent;
 
+    [Header("Edge Settings")]
+    [Tooltip("Gap between the bubble and the edge of the screen.")]
+    public float edgeGap = 20f;
+
     // Cached references.
     private RectTransform rectTransform;
     private RectTransform canvasRectTransform;
@@ -55,6 +59,39 @@ public class FloatingBubble : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         // Set initial docking side based on the current x position.
         isDockedLeft = rectTransform.anchoredPosition.x <= 0;
+        // Snap bubble to the edge on start with the specified gap.
+        SnapToEdge();
+    }
+
+    /// <summary>
+    /// Snaps the bubble to its designated edge using the provided gap.
+    /// </summary>
+    private void SnapToEdge()
+    {
+        if (canvasRectTransform == null)
+            return;
+
+        float canvasWidth = canvasRectTransform.rect.width;
+        float canvasHeight = canvasRectTransform.rect.height;
+        float bubbleHalfWidth = rectTransform.rect.width / 2f;
+        float bubbleHalfHeight = rectTransform.rect.height / 2f;
+
+        float leftBoundary = -canvasWidth / 2f;
+        float rightBoundary = canvasWidth / 2f;
+        float topBoundary = canvasHeight / 2f;
+        float bottomBoundary = -canvasHeight / 2f;
+
+        // Apply the gap to the docking positions.
+        float leftDockX = leftBoundary + bubbleHalfWidth + edgeGap;
+        float rightDockX = rightBoundary - bubbleHalfWidth - edgeGap;
+
+        Vector2 newAnchoredPosition = rectTransform.anchoredPosition;
+        newAnchoredPosition.x = isDockedLeft ? leftDockX : rightDockX;
+        newAnchoredPosition.y = Mathf.Clamp(newAnchoredPosition.y,
+            bottomBoundary + bubbleHalfHeight,
+            topBoundary - bubbleHalfHeight);
+
+        rectTransform.anchoredPosition = newAnchoredPosition;
     }
 
     /// <summary>
@@ -112,11 +149,11 @@ public class FloatingBubble : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         float leftBoundary = -canvasWidth / 2f;
         float rightBoundary = canvasRectTransform.rect.width / 2f;
 
-        // Compute ideal docking positions.
-        float leftDockX = leftBoundary + bubbleHalfWidth;
-        float rightDockX = rightBoundary - bubbleHalfWidth;
+        // Compute ideal docking positions with the specified gap.
+        float leftDockX = leftBoundary + bubbleHalfWidth + edgeGap;
+        float rightDockX = rightBoundary - bubbleHalfWidth - edgeGap;
 
-        // Calculate the threshold (now adjustable via dragThresholdFraction).
+        // Calculate the threshold (adjustable via dragThresholdFraction).
         float threshold = canvasWidth * dragThresholdFraction;
 
         // Determine the horizontal displacement from where the drag started.

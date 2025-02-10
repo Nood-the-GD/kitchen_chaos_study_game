@@ -43,10 +43,10 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
         userName = name;
     }
 
-    public void Next(){
+    public async void Next(){
         if(isCreateUser){
             Debug.Log("Creating User");
-            StartCoroutine(LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
+            await LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
                 if(response != null){
                    
                     var data=response["userData"];
@@ -61,7 +61,7 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
                     PhotonNetwork.NickName = userName;
                     HidePopup();
                 }
-            }));
+            });
         }
         else{
              Debug.Log("Updating User");

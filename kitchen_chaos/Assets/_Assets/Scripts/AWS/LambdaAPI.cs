@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Amazon;
 using Amazon.Lambda;
 using Amazon.Lambda.Model;
@@ -12,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using CandyCoded.env;
 using Newtonsoft.Json.Linq;
+using Cysharp.Threading.Tasks;
 
 public class LambdaAPI : MonoBehaviour
 {
@@ -27,7 +26,7 @@ public class LambdaAPI : MonoBehaviour
 
     private static void GreenLog(string message)
     {
-        Debug.Log("<color=green>GREEN: " + "</color>" +message );
+        Debug.Log("<color=green>GREEN: </color>" + message);
     }
 
     private static void ErrorLog(string message)
@@ -37,9 +36,12 @@ public class LambdaAPI : MonoBehaviour
 
     #endregion
 
-    #region HTTP Request Method
+    #region HTTP Request Methods (UniTask)
 
-    public static IEnumerator BuildResponse1(string data, Action<UnityWebRequest> callback)
+    /// <summary>
+    /// Sends a HTTP POST request with the provided data.
+    /// </summary>
+    public static async UniTask<UnityWebRequest> BuildResponse1Async(string data)
     {
         AttentionLog(serverUrlEndpoint);
         string url = serverUrlEndpoint.Replace("\"", "");
@@ -52,7 +54,7 @@ public class LambdaAPI : MonoBehaviour
         };
         request.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
 
-        yield return request.SendWebRequest();
+        await request.SendWebRequest().ToUniTask();
 
 #if UNITY_2020_1_OR_NEWER
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
@@ -62,11 +64,14 @@ public class LambdaAPI : MonoBehaviour
         {
             ErrorLog("BuildResponse1 error: " + request.error);
         }
-        
-        callback(request);
+
+        return request;
     }
 
-    public static IEnumerator CallFuncWithURL(string func, string parameters, Action<string> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Calls the Lambda function using the HTTP URL endpoint.
+    /// </summary>
+    public static async UniTask<string> CallFuncWithURLAsync(string func, string parameters)
     {
         GreenLog("called: " + func);
 
@@ -79,23 +84,7 @@ public class LambdaAPI : MonoBehaviour
         string payload = JsonUtility.ToJson(payloadObj);
         GreenLog("request: " + func + " with: " + payload);
 
-        UnityWebRequest responseRequest = null;
-        bool done = false;
-        yield return BuildResponse1(payload, (request) =>
-        {
-            responseRequest = request;
-            done = true;
-        });
-
-        while (!done)
-            yield return null;
-
-        if (responseRequest == null)
-        {
-            ErrorLog("No response received.");
-            onError?.Invoke("No response received.");
-            yield break;
-        }
+        UnityWebRequest responseRequest = await BuildResponse1Async(payload);
 
 #if UNITY_2020_1_OR_NEWER
         bool isError = responseRequest.result == UnityWebRequest.Result.ConnectionError || responseRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -107,22 +96,16 @@ public class LambdaAPI : MonoBehaviour
         {
             string responseString = responseRequest.downloadHandler.text;
             GreenLog("server response: " + responseString);
-            try
-            {
-                onComplete?.Invoke(responseString);
-            }
-            catch (Exception e)
-            {
-                GreenLog("JSON parsing error: " + e.Message + ". Returning raw response.");
-                onComplete?.Invoke(responseString);
-            }
+            return responseString;
         }
         else
         {
             string errorMessage = "Lambda invocation " + func + " failed with status code " + responseRequest.responseCode + ".";
             ErrorLog(errorMessage);
-            string errorResponse = (!string.IsNullOrEmpty(responseRequest.downloadHandler.text)) ? responseRequest.downloadHandler.text : errorMessage;
-            onError?.Invoke(errorResponse);
+            string errorResponse = (!string.IsNullOrEmpty(responseRequest.downloadHandler.text))
+                ? responseRequest.downloadHandler.text
+                : errorMessage;
+            throw new Exception(errorResponse);
         }
     }
 
@@ -137,15 +120,11 @@ public class LambdaAPI : MonoBehaviour
         public string @params;
     }
 
-    #region AWS Lambda SDK Invocation
-
-    // These methods use the AWS SDK for .NET to call your Lambda function directly.
-    // (Be sure to securely store or retrieve your AWS credentials in a production app.)
+    #region AWS Lambda SDK Invocation (UniTask)
 
     /// <summary>
     /// Returns an AmazonLambdaClient configured for the ap-southeast-1 region.
     /// </summary>
-    /// <returns>AmazonLambdaClient instance.</returns>
     public static AmazonLambdaClient GetAwsLambdaService()
     {
         var awsAccessKey = "awsAccesskey";
@@ -154,33 +133,26 @@ public class LambdaAPI : MonoBehaviour
         {
             awsAccessKey = key;
         }
-
         if (env.TryParseEnvironmentVariable("awsSecretKey", out string secret))
         {
             awsSecretKey = secret;
         }
 
-        
         var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         var config = new AmazonLambdaConfig { RegionEndpoint = RegionEndpoint.APSoutheast1 };
         return new AmazonLambdaClient(credentials, config);
     }
 
     /// <summary>
-    /// Invokes the 'playbond-connections' Lambda function with the specified payload.
+    /// Invokes the 'kitchen-main' Lambda function with the specified payload.
     /// </summary>
-    /// <param name="service">AmazonLambdaClient instance.</param>
-    /// <param name="data">Payload data as string.</param>
-    /// <returns>InvokeResponse from AWS Lambda.</returns>
-    public static async Task<InvokeResponse> BuildResponse2(AmazonLambdaClient service, string data)
+    public static async UniTask<InvokeResponse> BuildResponse2Async(AmazonLambdaClient service, string data)
     {
         var request = new InvokeRequest
         {
-            // The AWS Lambda function name is hardcoded here.
-            // You can change this if you need to dynamically select the function.
             FunctionName = "kitchen-main",
             InvocationType = InvocationType.RequestResponse, // Wait for the response
-            LogType = Amazon.Lambda.LogType.Tail, // Change to 'None' if you do not need logs
+            LogType = Amazon.Lambda.LogType.Tail,             // Change to 'None' if you do not need logs
             Payload = data
         };
 
@@ -189,15 +161,8 @@ public class LambdaAPI : MonoBehaviour
 
     /// <summary>
     /// AWS Lambda invocation using the AWS SDK.
-    /// This version accepts a function name and parameters, builds a JSON payload,
-    /// and then invokes the Lambda function.
     /// </summary>
-    /// <param name="func">The function name to call (as defined in your Lambda payload).</param>
-    /// <param name="parameters">The parameters to pass.</param>
-    /// <param name="onComplete">Callback with the response string on success.</param>
-    /// <param name="onError">Callback with error message on failure.</param>
-    /// <returns>IEnumerator for coroutine.</returns>
-    public static IEnumerator CallAwsLambda(string func, string parameters, Action<string> onComplete = null, Action<string> onError = null)
+    public static async UniTask<string> CallAwsLambdaAsync(string func, string parameters)
     {
         // Build the JSON payload using our LambdaPayload helper.
         LambdaPayload payloadObj = new LambdaPayload
@@ -209,38 +174,32 @@ public class LambdaAPI : MonoBehaviour
         GreenLog("AWS request: " + func + " with: " + payload);
 
         AmazonLambdaClient service = GetAwsLambdaService();
-        Task<InvokeResponse> task = BuildResponse2(service, payload);
-
-        // Wait until the asynchronous task is done.
-        yield return new WaitUntil(() => task.IsCompleted);
-
-        if (task.Exception != null)
+        InvokeResponse response;
+        try
         {
-            string errorMsg = task.Exception.Message;
-            ErrorLog("AWS Lambda Invocation error: " + errorMsg);
-            ErrorLog("Full error: " + task.Exception.ToString());
-            
-            onError?.Invoke(errorMsg);
+            response = await BuildResponse2Async(service, payload);
         }
-        else
+        catch (Exception ex)
         {
-            InvokeResponse response = task.Result;
-            string resultString = string.Empty;
-            using (StreamReader sr = new StreamReader(response.Payload))
-            {
-                resultString = sr.ReadToEnd();
-            }
-            GreenLog("AWS Lambda response: " + resultString);
-            onComplete?.Invoke(resultString);
+            ErrorLog("AWS Lambda Invocation error: " + ex.Message);
+            ErrorLog("Full error: " + ex.ToString());
+            throw;
         }
+
+        string resultString = string.Empty;
+        using (StreamReader sr = new StreamReader(response.Payload))
+        {
+            resultString = sr.ReadToEnd();
+        }
+        GreenLog("AWS Lambda response: " + resultString);
+        return resultString;
     }
 
     #endregion
 
     #endregion
 
-    #region Combined Lambda Call
-
+    #region Combined Lambda Call (UniTask)
 
     static JObject StringToJObject(string data)
     {
@@ -255,7 +214,8 @@ public class LambdaAPI : MonoBehaviour
         }
     }
 
-    static void Notification(string error){
+    static void Notification(string error)
+    {
         Debug.LogError(error);
         var p = SlideNotificationPopup.ShowPopup();
         p.ShowMessage(error, true);
@@ -263,34 +223,20 @@ public class LambdaAPI : MonoBehaviour
 
     /// <summary>
     /// Base method to call a Lambda function.
-    /// If <paramref name="useAws"/> is false, it will use the HTTP method (CallFuncWithURL),
-    /// and if true, it will call the AWS Lambda via the AWS SDK (CallAwsLambda).
+    /// Determines whether to use the HTTP method or the AWS SDK.
     /// </summary>
-    /// <param name="func">The function name to call.</param>
-    /// <param name="parameters">The parameters for the function call.</param>
-    /// <param name="onComplete">Callback with the response JObject on success.</param>
-    /// <param name="onError">Callback with error message on failure.</param>
-    /// <returns>IEnumerator for coroutine.</returns>
-    public static IEnumerator CallLambdaBase(
-        string func, 
-        string parameters, 
-        Action<JToken> onComplete = null, 
-        Action<string> onError = null)
+    public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters)
     {
-        // Validate input.
         if (string.IsNullOrEmpty(func))
         {
             string errorMsg = "Function name is required.";
             Notification(errorMsg);
-            onError?.Invoke(errorMsg);
-            yield break;
+            throw new Exception(errorMsg);
         }
 
-        // Determine which call method to use based on platform or editor settings.
         bool useAws = false;
         if (Application.isEditor)
         {
-            // Try to read an environment variable (if available) to determine lambda mode.
             if (env.TryParseEnvironmentVariable("lambdaMode", out int mode))
             {
                 useAws = (mode == 1);
@@ -298,226 +244,327 @@ public class LambdaAPI : MonoBehaviour
         }
         else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
-            // For mobile platforms, always use the HTTP method.
             useAws = false;
         }
 
         Debug.Log($"useAws: {useAws} | Calling: {func} with parameters: {parameters}");
 
-        // Define a common response handler.
-        Action<string> responseHandler = data =>
+        string data;
+        try
         {
-            JObject json = StringToJObject(data);
-            if (json == null)
-            {
-                string errorMsg = "Error parsing JSON response.";
-                Notification(errorMsg);
-                onError?.Invoke(errorMsg);
-                return;
-            }
-            
             if (useAws)
             {
-                // AWS response is expected to include "statusCode" and "body".
-                int statusCode = json["statusCode"]?.Value<int>() ?? 0;
-                string body = json["body"]?.Type == JTokenType.String 
-                    ? json["body"].Value<string>() 
-                    : json["body"]?.ToString() ?? "No message provided";
-
-                if (statusCode == 200)
-                {
-                    onComplete?.Invoke(json["body"]);
-                }
-                else
-                {
-                    Notification(body);
-                    onError?.Invoke(body);
-                }
+                data = await CallAwsLambdaAsync(func, parameters);
             }
             else
             {
-                // Non-AWS response is assumed to have a different structure.
-                // Simply pass the parsed JSON without attempting to access "body".
-                onComplete?.Invoke(json);
+                data = await CallFuncWithURLAsync(func, parameters);
             }
-        };
+        }
+        catch (Exception ex)
+        {
+            Notification(ex.Message);
+            throw;
+        }
 
-        // Call the appropriate method.
+        JObject json = StringToJObject(data);
+        if (json == null)
+        {
+            string errorMsg = "Error parsing JSON response.";
+            Notification(errorMsg);
+            throw new Exception(errorMsg);
+        }
+
         if (useAws)
         {
-            yield return CallAwsLambda(func, parameters, responseHandler, error => { 
-                Notification(error);
-                onError?.Invoke(error);
-            });
+            // AWS response is expected to include "statusCode" and "body".
+            int statusCode = json["statusCode"]?.Value<int>() ?? 0;
+            string body = json["body"]?.Type == JTokenType.String
+                ? json["body"].Value<string>()
+                : json["body"]?.ToString() ?? "No message provided";
+
+            if (statusCode == 200)
+            {
+                return json["body"];
+            }
+            else
+            {
+                Notification(body);
+                throw new Exception(body);
+            }
         }
         else
         {
-            yield return CallFuncWithURL(func, parameters, responseHandler, error => { 
-                Notification(error);
-                onError?.Invoke(error);
-            });
+            return json;
         }
     }
 
-
-
     #endregion
 
-    #region Converted Lambda Functions
+    #region Converted Lambda Functions (with onComplete and onError callbacks)
 
-    // Assumes you have a UserData class with a currentUser property that has a uid field.
-    // Also assumes SaveData.userToken, SocialData.GetChatSummaryFor(string), and AppController.CurrentRoomData exist.
-
-    public static IEnumerator FindFriend(string searchName, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Finds a friend using the provided search name.
+    /// </summary>
+    public static async UniTask FindFriend(string searchName, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Build payload: { "uid": "...", "searchName": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"searchName\":\"" + searchName + "\"}";
-        yield return CallLambdaBase("findFriend", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("findFriend", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator SendFriendRequest(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Sends a friend request.
+    /// </summary>
+    public static async UniTask SendFriendRequest(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"otherUid\":\"" + otherUid + "\"}";
-        yield return CallLambdaBase("sendFriendRequest", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("sendFriendRequest", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator GetMySocial(Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Retrieves social data.
+    /// </summary>
+    public static async UniTask GetMySocial(Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
-        yield return CallLambdaBase("getMySocial", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("getMySocial", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator TryLogin(string uid, string token, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Tries logging in with uid and token.
+    /// </summary>
+    public static async UniTask TryLogin(string uid, string token, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + uid + "\",\"token\":\"" + token + "\"}";
-        yield return CallLambdaBase("login", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("login", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator TryLoginUsingAuth(string authToken, string gmail, string fuid, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Tries logging in using authentication details.
+    /// </summary>
+    public static async UniTask TryLoginUsingAuth(string authToken, string gmail, string fuid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "authToken": "...", "gmail": "...", "fuid": "..." }
         string payload = "{\"authToken\":\"" + authToken + "\",\"gmail\":\"" + gmail + "\",\"fuid\":\"" + fuid + "\"}";
-        yield return CallLambdaBase("loginAuth", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("loginAuth", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator CreateUser(string userName, string gender, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Creates a new user.
+    /// (Renamed from CreateUserAsync to CreateUser.)
+    /// </summary>
+    public static async UniTask CreateUser(string userName, string gender, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "username": "...", "gender": "...", "email": "...", "authId": "...", "quote": "...", "fuid": "...", "timezone": "..." }
         string payload = "{\"username\":\"" + userName +
                          "\",\"gender\":\"" + gender +
                          "\",\"timezone\":\"" + GetCurrentTimeZoneOffset() + "\"}";
-        yield return CallLambdaBase("createUser", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("createUser", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator GetUser(string otherUid,Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Retrieves data for a specific user.
+    /// </summary>
+    public static async UniTask GetUser(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
-        yield return CallLambdaBase("getUser", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("getUser", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-
-    public static IEnumerator AcceptFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Accepts a friend request.
+    /// </summary>
+    public static async UniTask AcceptFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
-        yield return CallLambdaBase("acceptFriend", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("acceptFriend", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    
-
-
-    public static IEnumerator DeclineFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Declines a friend request.
+    /// </summary>
+    public static async UniTask DeclineFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
-        yield return CallLambdaBase("declineFriend", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("declineFriend", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator DeleteFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Deletes a friend.
+    /// </summary>
+    public static async UniTask DeleteFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
-        yield return CallLambdaBase("deleteFriend", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("deleteFriend", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator LoadConvoData(string conversationId, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Loads conversation data.
+    /// </summary>
+    public static async UniTask LoadConvoData(string conversationId, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "token": "...", "convoId": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"token\":\"" + SaveData.userToken +
                          "\",\"convoId\":\"" + conversationId + "\"}";
-        yield return CallLambdaBase("getConvoId", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("getConvoId", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator CreateChatMessage(string otherUid, string message, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Creates a chat message.
+    /// </summary>
+    public static async UniTask CreateChatMessage(string otherUid, string message, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "uid": "...", "otherUid": "...", "message": "..." }
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"message\":\"" + message + "\"}";
-        yield return CallLambdaBase("createChatMessage", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("createChatMessage", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
 
-    public static IEnumerator SendChatMessage(string convoId, string message, Action<JToken> onComplete = null, Action<string> onError = null)
+    /// <summary>
+    /// Sends a chat message.
+    /// </summary>
+    public static async UniTask SendChatMessage(string convoId, string message, Action<JToken> onComplete = null, Action<string> onError = null)
     {
-        // Payload: { "convoId": "...", "uid": "...", "message": "..." }
         string payload = "{\"convoId\":\"" + convoId +
                          "\",\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"message\":\"" + message + "\"}";
-        yield return CallLambdaBase("syncChatMessage", payload, onComplete, onError);
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("syncChatMessage", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+        }
     }
-
-    // Uncomment and modify as needed.
-    // public static IEnumerator SendInviteRoom(string otherUid, Action<string> onComplete = null, Action<string> onError = null)
-    // {
-    //     // Build the invitation message from the current room data.
-    //     // Assumes SocialData.GetChatSummaryFor(string) returns an object with an id field.
-    //     var chatSummary = SocialData.GetChatSummaryFor(otherUid);
-    //     string message = "{\"type\":\"inviteRoom\",\"roomId\":\"" + AppController.CurrentRoomData.id +
-    //                      "\",\"roomMode\":\"" + AppController.CurrentRoomData.type + "\"}";
-    //
-    //     if (chatSummary == null)
-    //     {
-    //         // If no chat summary exists, create a new chat message.
-    //         yield return CreateChatMessage(otherUid, message, onComplete, onError);
-    //     }
-    //     else
-    //     {
-    //         // Otherwise, send the message to the existing conversation.
-    //         yield return SendChatMessage(chatSummary.id, message, onComplete, onError);
-    //     }
-    // }
 
     [Button]
-    public void hello()
+    public void Hello()
     {
         Debug.Log("Hello World1");
-        StartCoroutine(HelloWorld());
+        // Example call using the callback pattern.
+        HelloWorld(
+            onComplete: (result) => Debug.Log("HelloWorld response: " + result),
+            onError: (err) => Debug.LogError("HelloWorld error: " + err)
+        ).Forget();
     }
 
-    public IEnumerator HelloWorld()
+    public static async UniTask HelloWorld(Action<JToken> onComplete = null, Action<string> onError = null)
     {
         string payload = "";
         Debug.Log("Hello World");
-        yield return CallLambdaBase("helloWorld", payload,(response) =>
+        try
         {
-            Debug.Log(response);
-        }, (error) =>
+            JToken result = await CallLambdaBaseAsync("helloWorld", payload);
+            onComplete?.Invoke(result);
+        }
+        catch (Exception ex)
         {
-            Debug.LogError(error);
-        });
+            onError?.Invoke(ex.Message);
+        }
     }
 
     #endregion
@@ -525,13 +572,11 @@ public class LambdaAPI : MonoBehaviour
     #region Helper Methods
 
     /// <summary>
-    /// Returns the current timezone offset as a string.
+    /// Returns the current timezone offset as a string (e.g., "+02:00" or "-05:00").
     /// </summary>
-    /// <returns>A string representing the timezone offset (for example, "+02:00").</returns>
     private static string GetCurrentTimeZoneOffset()
     {
         TimeSpan offset = DateTimeOffset.Now.Offset;
-        // Format the offset as a string, e.g. "+02:00" or "-05:00"
         return (offset < TimeSpan.Zero ? "-" : "+") + offset.ToString(@"hh\:mm");
     }
 
