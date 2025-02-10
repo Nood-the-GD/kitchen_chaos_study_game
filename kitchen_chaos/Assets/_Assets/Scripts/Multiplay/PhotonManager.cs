@@ -134,7 +134,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void Init()
     {
         //set name to player
-        PhotonNetwork.NickName = UserData.currentUser.userName;
+        PhotonNetwork.NickName = UserData.currentUser.username;
 
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if (autoConnectToPhotonTest)

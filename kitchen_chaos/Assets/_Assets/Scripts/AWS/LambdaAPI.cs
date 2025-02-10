@@ -412,6 +412,16 @@ public class LambdaAPI : MonoBehaviour
         yield return CallLambdaBase("createUser", payload, onComplete, onError);
     }
 
+    public static IEnumerator GetUser(string otherUid,Action<JToken> onComplete = null, Action<string> onError = null)
+    {
+        // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
+        string payload = "{\"uid\":\"" + UserData.currentUser.uid +
+                         "\",\"otherUid\":\"" + otherUid +
+                         "\",\"token\":\"" + SaveData.userToken + "\"}";
+        yield return CallLambdaBase("getUser", payload, onComplete, onError);
+    }
+
+
     public static IEnumerator AcceptFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {
         // Payload: { "uid": "...", "otherUid": "...", "token": "..." }
@@ -420,6 +430,9 @@ public class LambdaAPI : MonoBehaviour
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
         yield return CallLambdaBase("acceptFriend", payload, onComplete, onError);
     }
+
+    
+
 
     public static IEnumerator DeclineFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
     {

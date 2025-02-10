@@ -52,13 +52,17 @@ public class SaveData{
 [System.Serializable]
 public class UserData
 {
-    public String userName;
-    public String userGender;
-    public String uid;
-
+    public string username;
+    public string userGender;
+    public string uid;
+    public string activeStatus = "online";
     public static UserData currentUser;
 
     public static void SetCurrentUser(UserData user){
         currentUser = user;
+    }
+
+    public bool IsOnline{
+        get => activeStatus == "online";
     }
 }

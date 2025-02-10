@@ -7,37 +7,29 @@ public class FriendChatItemView : MonoBehaviour
 {   
     public Text userName;
     public Text message;
-    public Text time;
-    public GameObject activeStatus;
-    public 
+    public Image activeStatus;
+    public ChatSummary chatSummary;
     
-    // Start is called before the first frame update
-    void Start()
+    public void SetData(ChatSummary chatSummary)
     {
-
-        // Example: Creating a MessageData instance.
-        MessageData message = new MessageData("Hello, Unity!", 123456789, "User123");
-
-        // Converting the MessageData instance to a JSON string.
-        string json = message.ToJson();
-        Debug.Log("MessageData as JSON: " + json);
-
-        // Parsing the JSON back into a MessageData instance.
-        MessageData parsedMessage = MessageData.FromJson(json);
-        Debug.Log("Parsed MessageData: " + parsedMessage.ToString());
-
-        // Using the CopyWith method to create a modified copy.
-        MessageData modifiedMessage = message.CopyWith(content: "Hello again!");
-        Debug.Log("Modified MessageData: " + modifiedMessage.ToString());
-
-        // Creating a MessageDataChannel instance.
-        MessageDataChannel channel = new MessageDataChannel("General", message);
-        Debug.Log("MessageDataChannel: channel = " + channel.channel + ", message = " + channel.messageData.ToString());
+        this.chatSummary = chatSummary;
+        userName.text = "";
+        message.text = chatSummary.content;
+        Init();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Your update logic here.
+    async void Init(){
+        UserData user = await UserManager.GetUser(chatSummary.otherUid);
+        userName.text = user.username;
+        if(user.activeStatus == "online"){
+            activeStatus.color = Color.green;
+        }
+        if(user.activeStatus == "offline"){
+            activeStatus.color = Color.gray;
+        }
+        if(user.activeStatus == "inGame"){
+            activeStatus.color = Color.yellow;
+        }
     }
+
 }
