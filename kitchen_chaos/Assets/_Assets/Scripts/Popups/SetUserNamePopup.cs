@@ -46,22 +46,21 @@ public class SetUserNamePopup : BasePopup<SetUserNamePopup>
     public async void Next(){
         if(isCreateUser){
             Debug.Log("Creating User");
-            await LambdaAPI.CreateUser(userName, selectedGender.ToString(), (response) => {
-                if(response != null){
-                   
-                    var data=response["userData"];
-                    
-                    UserData.SetCurrentUser(data.ToObject<UserData>());
-                    SaveData.userId = UserData.currentUser.uid;
-                    SaveData.userToken = response["tempToken"].ToString();
-                    SaveData.userName = userName;
+            var p = await LambdaAPI.CreateUser(userName, selectedGender.ToString());
+            if(p.jToken != null){
+                var data=p.jToken["userData"];
+                
+                UserData.SetCurrentUser(data.ToObject<UserData>());
+                SaveData.userId = UserData.currentUser.uid;
+                SaveData.userToken = p.jToken["tempToken"].ToString();
+                SaveData.userName = userName;
 
-                    Debug.Log("Done Create User");                    
-                    Debug.Log("userId: " + UserData.currentUser.uid);
-                    PhotonNetwork.NickName = userName;
-                    HidePopup();
-                }
-            });
+                Debug.Log("Done Create User");                    
+                Debug.Log("userId: " + UserData.currentUser.uid);
+                PhotonNetwork.NickName = userName;
+                HidePopup();
+            }
+             
         }
         else{
              Debug.Log("Updating User");

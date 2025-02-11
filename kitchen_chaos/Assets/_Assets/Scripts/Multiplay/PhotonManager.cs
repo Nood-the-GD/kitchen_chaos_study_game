@@ -197,7 +197,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             foreach (var i in callback.EnabledRegions)
             {
                 allRegionPing.Add(new RegionPing(i.Code, i.Ping));
-                Debug.Log(i.Code + " " + i.Ping);
+                //Debug.Log(i.Code + " " + i.Ping);
             }
             SortPing();
             //SortPing();

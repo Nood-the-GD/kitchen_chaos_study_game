@@ -195,24 +195,27 @@ public class ChatSummary
 [Serializable]
 public class SocialData
 {
+    // Other fields remain unchanged.
     public List<string> friends;
-    public List<OtherRequest> otherRequest;
+    // Changed type from Dictionary<string, OtherRequest> to Dictionary<string, int>
+    public Dictionary<string, long> otherRequest;
     public List<string> myRequest;
-    public List<ChatSummary> chatSummary;
+    public Dictionary<string, ChatSummary> chatSummary;
 
     // Static instance similar to Rxn<SocialData> in Dart.
     public static SocialData mySocialData;
 
-    // Constructor (with default empty lists if none provided)
-    public SocialData(List<string> friends = null,
-                      List<OtherRequest> otherRequest = null,
-                      List<string> myRequest = null,
-                      List<ChatSummary> chatSummary = null)
+    // Constructor with default empty collections if none provided.
+    public SocialData(
+        List<string> friends = null,
+        Dictionary<string, long> otherRequest = null,
+        List<string> myRequest = null,
+        Dictionary<string, ChatSummary> chatSummary = null)
     {
         this.friends = friends ?? new List<string>();
-        this.otherRequest = otherRequest ?? new List<OtherRequest>();
+        this.otherRequest = otherRequest ?? new Dictionary<string, long>();
         this.myRequest = myRequest ?? new List<string>();
-        this.chatSummary = chatSummary ?? new List<ChatSummary>();
+        this.chatSummary = chatSummary ?? new Dictionary<string, ChatSummary>();
     }
 
     /// <summary>
@@ -223,7 +226,7 @@ public class SocialData
         if (mySocialData == null || mySocialData.chatSummary == null)
             return null;
 
-        foreach (var cs in mySocialData.chatSummary)
+        foreach (var cs in mySocialData.chatSummary.Values)
         {
             if (cs.otherUid == user)
                 return cs;
@@ -239,12 +242,8 @@ public class SocialData
         if (mySocialData == null || mySocialData.chatSummary == null)
             return null;
 
-        foreach (var cs in mySocialData.chatSummary)
-        {
-            if (cs.id == id)
-                return cs;
-        }
-        return null;
+        mySocialData.chatSummary.TryGetValue(id, out ChatSummary cs);
+        return cs;
     }
 
     /// <summary>
@@ -258,7 +257,7 @@ public class SocialData
     }
 
     /// <summary>
-    /// Adds a new ChatSummary to the list.
+    /// Adds a new ChatSummary to the dictionary.
     /// </summary>
     public static void AddChatSummary(string id, string content, string otherUid)
     {
@@ -266,9 +265,9 @@ public class SocialData
             return;
 
         if (mySocialData.chatSummary == null)
-            mySocialData.chatSummary = new List<ChatSummary>();
+            mySocialData.chatSummary = new Dictionary<string, ChatSummary>();
 
-        mySocialData.chatSummary.Add(new ChatSummary(id, TruncateString(content), otherUid));
+        mySocialData.chatSummary[id] = new ChatSummary(id, TruncateString(content), otherUid);
     }
 
     /// <summary>
@@ -279,13 +278,10 @@ public class SocialData
         if (mySocialData == null || mySocialData.chatSummary == null)
             return;
 
-        foreach (var cs in mySocialData.chatSummary)
+        if (mySocialData.chatSummary.TryGetValue(id, out ChatSummary cs))
         {
-            if (cs.id == id)
-            {
-                cs.content = TruncateString(content);
-                // In Unity you might trigger an event here to update UI, etc.
-            }
+            cs.content = TruncateString(content);
+            // Optionally trigger an event to update UI, etc.
         }
     }
 
@@ -307,15 +303,15 @@ public class SocialData
 
     /// <summary>
     /// Creates a SocialData instance from a dictionary.
-    /// The expected keys in the dictionary are "friends", "otherRequest", "chatSummary", and "myRequest".
+    /// Expected keys: "friends", "otherRequest", "chatSummary", and "myRequest".
     /// </summary>
     public static SocialData FromDictionary(Dictionary<string, object> json)
     {
-        // Parse friends
+        // Parse friends.
         List<string> friends = json.ContainsKey("friends") ? ParseToList(json["friends"]) : new List<string>();
 
         // Parse otherRequest: expected as a dictionary where each key is a uid and value is a timestamp.
-        List<OtherRequest> otherRequest = new List<OtherRequest>();
+        Dictionary<string, long> otherRequest = new Dictionary<string, long>();
         if (json.ContainsKey("otherRequest") && json["otherRequest"] is Dictionary<string, object> otherReqDict)
         {
             foreach (var entry in otherReqDict)
@@ -328,24 +324,24 @@ public class SocialData
                 else if (entry.Value is string)
                     int.TryParse((string)entry.Value, out timestamp);
 
-                otherRequest.Add(new OtherRequest(entry.Key, timestamp));
+                otherRequest[entry.Key] = timestamp;
             }
         }
 
-        // Parse chatSummary: expected as a dictionary where key is id and value is another dictionary with details.
-        List<ChatSummary> chatSummary = new List<ChatSummary>();
+        // Parse chatSummary: expected as a dictionary where the key is an id and the value is another dictionary with details.
+        Dictionary<string, ChatSummary> chatSummary = new Dictionary<string, ChatSummary>();
         if (json.ContainsKey("chatSummary") && json["chatSummary"] is Dictionary<string, object> chatSummaryDict)
         {
             foreach (var entry in chatSummaryDict)
             {
                 if (entry.Value is Dictionary<string, object> csData)
                 {
-                    chatSummary.Add(ChatSummary.FromDictionary(entry.Key, csData));
+                    chatSummary[entry.Key] = ChatSummary.FromDictionary(entry.Key, csData);
                 }
             }
         }
 
-        // Parse myRequest
+        // Parse myRequest.
         List<string> myRequest = json.ContainsKey("myRequest") ? ParseToList(json["myRequest"]) : new List<string>();
 
         return new SocialData(friends, otherRequest, myRequest, chatSummary);
@@ -399,7 +395,7 @@ public class SocialData
             mySocialData.friends = new List<string>();
 
         mySocialData.friends.Add(uid);
-        // Optionally, trigger an event or update UI
+        // Optionally, trigger an event or update UI.
     }
 
     /// <summary>
@@ -417,7 +413,7 @@ public class SocialData
     }
 
     /// <summary>
-    /// Adds an OtherRequest using uid and timestamp.
+    /// Adds a timestamp entry for a uid in otherRequest.
     /// </summary>
     public static void AddOtherRequest(string uid, int timestamp)
     {
@@ -425,9 +421,9 @@ public class SocialData
             return;
 
         if (mySocialData.otherRequest == null)
-            mySocialData.otherRequest = new List<OtherRequest>();
+            mySocialData.otherRequest = new Dictionary<string, long>();
 
-        mySocialData.otherRequest.Add(new OtherRequest(uid, timestamp));
+        mySocialData.otherRequest[uid] = timestamp;
     }
 
     /// <summary>
@@ -453,14 +449,14 @@ public class SocialData
     }
 
     /// <summary>
-    /// Removes any OtherRequest with the specified uid.
+    /// Removes the otherRequest entry for the specified uid.
     /// </summary>
     public static void RemoveOtherRequest(string uid)
     {
         if (mySocialData == null || mySocialData.otherRequest == null)
             return;
 
-        mySocialData.otherRequest.RemoveAll(request => request.uid == uid);
+        mySocialData.otherRequest.Remove(uid);
     }
 }
 

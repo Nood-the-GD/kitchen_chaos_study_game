@@ -198,26 +198,19 @@ public class AppConfig : MonoBehaviour
         // Wrap the callback-based LambdaAPI.TryLogin call into a UniTask.
         var tcs = new UniTaskCompletionSource<bool>();
 
-        await LambdaAPI.TryLogin(
+        var p = await LambdaAPI.TryLogin(
             SaveData.userId,
-            SaveData.userToken,
-            response =>
-            {
-                if (response != null)
-                {
-                    UserData.SetCurrentUser(response.ToObject<UserData>());
-                    tcs.TrySetResult(true);
-                }
-                else
-                {
-                    tcs.TrySetResult(false);
-                }
-            },
-            error =>
-            {
-                tcs.TrySetResult(false);
-            }
+            SaveData.userToken
         );
+
+        if(p.IsError){
+            tcs.TrySetResult(false);
+        }
+        else{
+            UserData.SetCurrentUser(p.jToken.ToObject<UserData>());
+            tcs.TrySetResult(true);
+        }
+        
 
         return await tcs.Task;
     }

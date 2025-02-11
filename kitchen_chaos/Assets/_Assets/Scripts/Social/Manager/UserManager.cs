@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Newtonsoft.Json.Linq; // Needed to work with JToken
+using Newtonsoft.Json.Linq;
 
 public static class UserManager
 {
@@ -12,8 +11,8 @@ public static class UserManager
     private static List<UserData> users = new List<UserData>();
 
     // Dictionary to track ongoing fetch requests.
-    // Key: uid, Value: Task that will eventually return a UserData.
-    private static Dictionary<string, Task<UserData>> _pendingRequests = new Dictionary<string, Task<UserData>>();
+    // Key: uid, Value: UniTask that will eventually return a UserData.
+    private static Dictionary<string, UniTask<UserData>> _pendingRequests = new Dictionary<string, UniTask<UserData>>();
 
     // Maximum number of concurrent pending requests.
     private const int _maxPendingRequests = 10;
@@ -25,7 +24,7 @@ public static class UserManager
     /// Attempts to return the cached user for the specified uid.
     /// If not found, fetches from the backend.
     /// </summary>
-    public static async Task<UserData> GetUser(string uid)
+    public static async UniTask<UserData> GetUser(string uid)
     {
         // Try to find the user in the cache.
         UserData existingUser = users.FirstOrDefault(user => user.uid == uid);
@@ -35,7 +34,7 @@ public static class UserManager
         }
 
         // Check if there's an ongoing fetch for this uid.
-        if (_pendingRequests.TryGetValue(uid, out Task<UserData> pendingTask))
+        if (_pendingRequests.TryGetValue(uid, out UniTask<UserData> pendingTask))
         {
             return await pendingTask;
         }
@@ -43,11 +42,11 @@ public static class UserManager
         // Wait if too many pending requests are active.
         while (_pendingRequests.Count >= _maxPendingRequests)
         {
-            await Task.Delay(_pendingWaitDuration);
+            await UniTask.Delay(_pendingWaitDuration);
         }
 
         // Start a new fetch request.
-        Task<UserData> fetchTask = FetchUserFromBackend(uid);
+        UniTask<UserData> fetchTask = FetchUserFromBackend(uid);
         _pendingRequests[uid] = fetchTask;
 
         try
@@ -94,42 +93,28 @@ public static class UserManager
 
     /// <summary>
     /// Private method to fetch user data from the backend using LambdaAPI.
-    /// This version uses a coroutine and returns a Task that completes with a UserData instance.
+    /// This version uses UniTask instead of coroutines.
     /// </summary>
-    private static Task<UserData> FetchUserFromBackend(string uid)
+    private static async UniTask<UserData> FetchUserFromBackend(string uid)
     {
-        var tcs = new TaskCompletionSource<UserData>();
-        CoroutineRunner.Instance.StartCoroutine(FetchUserCoroutine(uid, tcs));
-        return tcs.Task;
-    }
+        // Call LambdaAPI.GetUser, which returns a ServerRespone containing the user data.
+        ServerRespone response = await LambdaAPI.GetUser(uid);
+        if (response.IsError)
+        {
+            throw new Exception("Failed to fetch user from backend: " + response.error);
+        }
 
-    /// <summary>
-    /// Coroutine that calls LambdaAPI.GetUser and sets the TaskCompletionSource when done.
-    /// </summary>
-    private static IEnumerator FetchUserCoroutine(string uid, TaskCompletionSource<UserData> tcs)
-    {
-        // Call the updated LambdaAPI.GetUser coroutine.
-        yield return LambdaAPI.GetUser(
-            uid,
-            onComplete: (JToken response) =>
-            {
-                try
-                {
-                    // Assuming UserData.FromJson now accepts a JToken.
-                    UserData user = response.ToObject<UserData>();
-                    AddUserCache(user);
-                    tcs.SetResult(user);
-                }
-                catch (Exception ex)
-                {
-                    tcs.SetException(new Exception("Failed to parse user data: " + ex.Message));
-                }
-            },
-            onError: (string error) =>
-            {
-                tcs.SetException(new Exception("Failed to fetch user from backend: " + error));
-            }
-        );
+        try
+        {
+            // Convert the JToken to a UserData instance.
+            UserData user = response.jToken.ToObject<UserData>();
+            AddUserCache(user);
+            return user;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to parse user data: " + ex.Message);
+        }
     }
 
     /// <summary>

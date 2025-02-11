@@ -11,6 +11,15 @@ using UnityEngine.Networking;
 using CandyCoded.env;
 using Newtonsoft.Json.Linq;
 using Cysharp.Threading.Tasks;
+using DG.DemiEditor;
+
+public class ServerRespone
+{
+    public JToken jToken;
+    public string error;
+
+    public bool IsError => !string.IsNullOrEmpty(error);
+}
 
 public class LambdaAPI : MonoBehaviour
 {
@@ -43,7 +52,7 @@ public class LambdaAPI : MonoBehaviour
     /// </summary>
     public static async UniTask<UnityWebRequest> BuildResponse1Async(string data)
     {
-        AttentionLog(serverUrlEndpoint);
+        //AttentionLog(serverUrlEndpoint);
         string url = serverUrlEndpoint.Replace("\"", "");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
 
@@ -201,15 +210,15 @@ public class LambdaAPI : MonoBehaviour
 
     #region Combined Lambda Call (UniTask)
 
-    static JObject StringToJObject(string data)
+    static JToken StringToJObject(string data)
     {
         try
         {
-            return JObject.Parse(data);
+            return JToken.Parse(data);
         }
         catch (Exception e)
         {
-            Debug.LogError("Error parsing JSON: " + e.Message);
+            // Optionally log the error.
             return null;
         }
     }
@@ -267,12 +276,11 @@ public class LambdaAPI : MonoBehaviour
             throw;
         }
 
-        JObject json = StringToJObject(data);
+        var json = StringToJObject(data);
         if (json == null)
         {
-            string errorMsg = "Error parsing JSON response.";
-            Notification(errorMsg);
-            throw new Exception(errorMsg);
+            Debug.Log("Cannot parse the JSON");
+            return null;
         }
 
         if (useAws)
@@ -301,270 +309,303 @@ public class LambdaAPI : MonoBehaviour
 
     #endregion
 
-    #region Converted Lambda Functions (with onComplete and onError callbacks)
+    #region Lambda Functions Returning ServerRespone
 
     /// <summary>
     /// Finds a friend using the provided search name.
     /// </summary>
-    public static async UniTask FindFriend(string searchName, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> FindFriend(string searchName)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"searchName\":\"" + searchName + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("findFriend", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Sends a friend request.
     /// </summary>
-    public static async UniTask SendFriendRequest(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> SendFriendRequest(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\",\"otherUid\":\"" + otherUid + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("sendFriendRequest", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Retrieves social data.
     /// </summary>
-    public static async UniTask GetMySocial(Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> GetMySocial()
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("getMySocial", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Tries logging in with uid and token.
     /// </summary>
-    public static async UniTask TryLogin(string uid, string token, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> TryLogin(string uid, string token)
     {
         string payload = "{\"uid\":\"" + uid + "\",\"token\":\"" + token + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("login", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Tries logging in using authentication details.
     /// </summary>
-    public static async UniTask TryLoginUsingAuth(string authToken, string gmail, string fuid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> TryLoginUsingAuth(string authToken, string gmail, string fuid)
     {
         string payload = "{\"authToken\":\"" + authToken + "\",\"gmail\":\"" + gmail + "\",\"fuid\":\"" + fuid + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("loginAuth", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Creates a new user.
-    /// (Renamed from CreateUserAsync to CreateUser.)
     /// </summary>
-    public static async UniTask CreateUser(string userName, string gender, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> CreateUser(string userName, string gender)
     {
         string payload = "{\"username\":\"" + userName +
                          "\",\"gender\":\"" + gender +
                          "\",\"timezone\":\"" + GetCurrentTimeZoneOffset() + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("createUser", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Retrieves data for a specific user.
     /// </summary>
-    public static async UniTask GetUser(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> GetUser(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("getUser", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Accepts a friend request.
     /// </summary>
-    public static async UniTask AcceptFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> AcceptFriend(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("acceptFriend", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Declines a friend request.
     /// </summary>
-    public static async UniTask DeclineFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> DeclineFriend(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("declineFriend", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Deletes a friend.
     /// </summary>
-    public static async UniTask DeleteFriend(string otherUid, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> DeleteFriend(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"token\":\"" + SaveData.userToken + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("deleteFriend", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Loads conversation data.
     /// </summary>
-    public static async UniTask LoadConvoData(string conversationId, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> LoadConvoData(string conversationId)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"token\":\"" + SaveData.userToken +
                          "\",\"convoId\":\"" + conversationId + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("getConvoId", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Creates a chat message.
     /// </summary>
-    public static async UniTask CreateChatMessage(string otherUid, string message, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> CreateChatMessage(string otherUid, string message)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
                          "\",\"message\":\"" + message + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("createChatMessage", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     /// <summary>
     /// Sends a chat message.
     /// </summary>
-    public static async UniTask SendChatMessage(string convoId, string message, Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> SendChatMessage(string convoId, string message)
     {
         string payload = "{\"convoId\":\"" + convoId +
                          "\",\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"message\":\"" + message + "\"}";
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("syncChatMessage", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     [Button]
     public void Hello()
     {
         Debug.Log("Hello World1");
-        // Example call using the callback pattern.
-        HelloWorld(
-            onComplete: (result) => Debug.Log("HelloWorld response: " + result),
-            onError: (err) => Debug.LogError("HelloWorld error: " + err)
-        ).Forget();
+        // Example call for testing the HelloWorld function.
+        HelloWorld().ContinueWith(response => {
+            if (response.IsError)
+            {
+                Debug.LogError("HelloWorld error: " + response.error);
+            }
+            else
+            {
+                Debug.Log("HelloWorld response: " + response.jToken);
+            }
+        });
     }
 
-    public static async UniTask HelloWorld(Action<JToken> onComplete = null, Action<string> onError = null)
+    public static async UniTask<ServerRespone> HelloWorld()
     {
         string payload = "";
         Debug.Log("Hello World");
+        ServerRespone response = new ServerRespone();
         try
         {
             JToken result = await CallLambdaBaseAsync("helloWorld", payload);
-            onComplete?.Invoke(result);
+            response.jToken = result;
         }
         catch (Exception ex)
         {
-            onError?.Invoke(ex.Message);
+            response.error = ex.Message;
         }
+        return response;
     }
 
     #endregion
