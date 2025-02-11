@@ -149,6 +149,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2513651689412138050, guid: d72bee846803d074784ffb8f64e993ca,
         type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2513651689412138050, guid: d72bee846803d074784ffb8f64e993ca,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: ba51762250288174286a39d013b8f1df, type: 2}
@@ -161,6 +166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.019
+      objectReference: {fileID: 0}
+    - target: {fileID: 4171094756720850327, guid: d72bee846803d074784ffb8f64e993ca,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     - target: {fileID: 4589716710238282922, guid: d72bee846803d074784ffb8f64e993ca,
         type: 3}
@@ -227,6 +237,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.026
       objectReference: {fileID: 0}
+    - target: {fileID: 5224288035316877376, guid: d72bee846803d074784ffb8f64e993ca,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016978675324250517, guid: d72bee846803d074784ffb8f64e993ca,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6016978675324250517, guid: d72bee846803d074784ffb8f64e993ca,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -236,6 +256,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8150137353173463151, guid: d72bee846803d074784ffb8f64e993ca,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -389,10 +414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   counterTopPoint: {fileID: 4974159282063765358}
-  cuttingRecipeSOArray:
-  - {fileID: 11400000, guid: 54b8d5351aca3471f926e0b6c4bd373c, type: 2}
-  - {fileID: 11400000, guid: 690b9a0340a0b4940be8c6ffcc214d9a, type: 2}
-  - {fileID: 11400000, guid: 9ee75eabb21ad45e6aaa98931c0d2f6a, type: 2}
+  _isComplete: 0
 --- !u!4 &4974159282063765358 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8219861146861415944, guid: 598a201f2eb3f4546bc075921709d996,
@@ -469,6 +491,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 8ec5b425fd423f443b74bd15691cbefe,
         type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 8ec5b425fd423f443b74bd15691cbefe,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1e6211e03208ad44f94dabbfdbc1c2be, type: 2}
@@ -476,6 +503,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: kitchencounter_straight_A_backsplash
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ec5b425fd423f443b74bd15691cbefe,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

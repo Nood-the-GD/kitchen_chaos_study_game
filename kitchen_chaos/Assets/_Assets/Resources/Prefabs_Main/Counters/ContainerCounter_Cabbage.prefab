@@ -60,6 +60,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 427318c8582529c40a1e87a0df63511d,
         type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 427318c8582529c40a1e87a0df63511d,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1e6211e03208ad44f94dabbfdbc1c2be, type: 2}
@@ -67,6 +72,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: crate_lettuce
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 427318c8582529c40a1e87a0df63511d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -186,11 +196,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 550fe4e1301bbf54697a9181ddbd260b,
         type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1490036287757508894, guid: e6265501f01a789488682bd611849740, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1683454163218131017, guid: e6265501f01a789488682bd611849740,
         type: 3}
-      insertIndex: 4
+      insertIndex: -1
       addedObject: {fileID: 2680922820411798210}
     - targetCorrespondingSourceObject: {fileID: 2648926405417925799, guid: e6265501f01a789488682bd611849740,
         type: 3}

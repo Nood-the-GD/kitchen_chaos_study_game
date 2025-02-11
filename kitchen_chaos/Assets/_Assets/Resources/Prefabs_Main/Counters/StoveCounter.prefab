@@ -202,6 +202,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 36b33a8de4d92ab46bf085764555e02c,
         type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 36b33a8de4d92ab46bf085764555e02c,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1e6211e03208ad44f94dabbfdbc1c2be, type: 2}
@@ -209,6 +214,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: stove_single
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 36b33a8de4d92ab46bf085764555e02c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -229,6 +239,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5127516040711763266}
     m_Modifications:
+    - target: {fileID: 1525295098496322999, guid: 82d353a3235b44284a71a1c980f58d76,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1528802859609179580, guid: 82d353a3235b44284a71a1c980f58d76,
         type: 3}
       propertyPath: hasProgressBarGameObject
@@ -489,10 +504,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   counterTopPoint: {fileID: 3738375835106427504}
-  _firingRecipeSOArray:
-  - {fileID: 11400000, guid: 792a7448fa47b4ee7914d64c38771475, type: 2}
-  _burningRecipeSOArray:
-  - {fileID: 11400000, guid: e524d52b929f8432daf99914d82e06ea, type: 2}
 --- !u!1001 &8278048141721165322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -501,10 +512,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5127516040711763266}
     m_Modifications:
+    - target: {fileID: 17251720544094565, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 17251720544094567, guid: 93af8b85a17635f40a5b76ed82a86c18,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 17251720544094567, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 17251720544094571, guid: 93af8b85a17635f40a5b76ed82a86c18,
         type: 3}
@@ -611,17 +632,29 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6918696954688420558, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7732670207956082804, guid: 93af8b85a17635f40a5b76ed82a86c18,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.203
       objectReference: {fileID: 0}
+    - target: {fileID: 8864449973679823643, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4386361873462607087, guid: 93af8b85a17635f40a5b76ed82a86c18, type: 3}
+    - {fileID: 4998458208842551057, guid: 93af8b85a17635f40a5b76ed82a86c18, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4589716710238282923, guid: 93af8b85a17635f40a5b76ed82a86c18,
         type: 3}
-      insertIndex: 4
+      insertIndex: 2
       addedObject: {fileID: 1323512353005813993}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4589716710238282922, guid: 93af8b85a17635f40a5b76ed82a86c18,
