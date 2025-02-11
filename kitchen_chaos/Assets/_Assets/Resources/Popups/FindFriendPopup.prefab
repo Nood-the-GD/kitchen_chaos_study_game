@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2316331670402051361}
   - component: {fileID: 3936633523884715031}
   - component: {fileID: 4088880868457679215}
+  - component: {fileID: 5261137843561490058}
   m_Layer: 5
   m_Name: FindFriendPopup
   m_TagString: Untagged
@@ -129,7 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55109249f2e3740d68e713c41e11b31c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _closeButton: []
+  _closeButton:
+  - {fileID: 7113638811355060731}
   hidePopupTime: 0
   onCallHidePopup:
     m_PersistentCalls:
@@ -139,6 +141,26 @@ MonoBehaviour:
   textField: {fileID: 5572898389800711811}
   btnSearch: {fileID: 2648103004264860397}
   findFriendItemView: {fileID: 7342109649266309011}
+--- !u!114 &5261137843561490058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 76668019334688433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ea5b2da0aa4144d0a60d5ec25df302e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleFrom: 0.7
+  scaleTo: 1
+  alphaFrom: 0
+  alphaTo: 1
+  time: 0.5
+  enhanceFadeOut: 0
+  delayFadeOut: 3
+  parent: {fileID: 0}
 --- !u!1 &628828134804910127
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,9 +270,9 @@ RectTransform:
   - {fileID: 445770692281954093}
   m_Father: {fileID: 3644282088528211671}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350.98636, y: -61.15}
   m_SizeDelta: {x: 701.9727, y: 122.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &519195951725367959
@@ -1157,8 +1179,8 @@ RectTransform:
   - {fileID: 6788680984872085508}
   m_Father: {fileID: 4398028879961017721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 646.9048, y: 90.486}
   m_Pivot: {x: 0, y: 1}
@@ -2030,9 +2052,9 @@ RectTransform:
   - {fileID: 1272041926206328862}
   m_Father: {fileID: 4398028879961017721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 715.8566, y: -45.243}
   m_SizeDelta: {x: 97.9037, y: 90.486}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4240217830955914972

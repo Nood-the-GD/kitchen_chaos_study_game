@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class AppManager : MonoBehaviour
 {
+    public SocialData debugSocialData;
     async void Start(){
         PhotonManager.s.Init();
         var p = await LambdaAPI.GetMySocial();
         SocialData.mySocialData = p.jToken.ToObject<SocialData>(); 
+        debugSocialData = SocialData.mySocialData;
     }
 
     private void OnDisable() {

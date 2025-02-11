@@ -40,18 +40,20 @@ public class FindFriendPopup : BasePopup<FindFriendPopup>
 
         p.jToken.ToObject<List<UserData>>().ForEach((userData) =>
         {
-            // Instantiate the prefab as a new item under the same parent
-            var item = Instantiate(findFriendItemView, findFriendItemView.transform.parent);
-            item.gameObject.SetActive(true);
+            if(!userData.IsMine()){
+                // Instantiate the prefab as a new item under the same parent
+                var item = Instantiate(findFriendItemView, findFriendItemView.transform.parent);
+                item.gameObject.SetActive(true);
 
-            // Set the initial scale to zero so it can be animated in.
-            item.transform.localScale = Vector3.zero;
+                // Set the initial scale to zero so it can be animated in.
+                item.transform.localScale = Vector3.zero;
 
-            // Set the friend data (e.g., name, image, etc.)
-            item.SetData(userData);
+                // Set the friend data (e.g., name, image, etc.)
+                item.SetData(userData);
 
-            // Add the item to the list for later animation
-            friendItems.Add(item);
+                // Add the item to the list for later animation
+                friendItems.Add(item);
+            }
         });
 
         // Animate friend items sequentially using DOTween

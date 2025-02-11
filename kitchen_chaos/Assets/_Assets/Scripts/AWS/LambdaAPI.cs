@@ -19,6 +19,7 @@ public class ServerRespone
     public string error;
 
     public bool IsError => !string.IsNullOrEmpty(error);
+    public bool IsSuccess => !IsError;
 }
 
 public class LambdaAPI : MonoBehaviour

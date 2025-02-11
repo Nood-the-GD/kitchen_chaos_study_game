@@ -198,7 +198,7 @@ public class SocialData
     // Other fields remain unchanged.
     public List<string> friends;
     // Changed type from Dictionary<string, OtherRequest> to Dictionary<string, int>
-    public Dictionary<string, long> otherRequest;
+    public Dictionary<string, long> otherRequest; //uid, time utc
     public List<string> myRequest;
     public Dictionary<string, ChatSummary> chatSummary;
 

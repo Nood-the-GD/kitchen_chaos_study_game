@@ -42,9 +42,11 @@ public class FloatingBubble : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     // Track which side the bubble is docked to.
     // True = docked left, false = docked right.
     private bool isDockedLeft = true;
+    public static FloatingBubble s;
 
     private void Awake()
     {
+        s = this;
         // Cache our RectTransform.
         rectTransform = GetComponent<RectTransform>();
 
@@ -206,6 +208,8 @@ public class FloatingBubble : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         if (Vector2.Distance(pointerDownPos, eventData.position) < clickThreshold)
         {
+            FriendPopup.ShowPopup();
+            gameObject.SetActive(false);
             onClickEvent?.Invoke();
         }
     }

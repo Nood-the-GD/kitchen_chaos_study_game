@@ -58,6 +58,10 @@ public class UserData
     public string activeStatus = "online";
     public static UserData currentUser;
 
+    public bool IsMine(){
+        return currentUser.uid == uid;
+    }
+
     public static void SetCurrentUser(UserData user){
         currentUser = user;
     }
