@@ -60,3 +60,4 @@ crashlytics-build.properties
 
 kitchen_chaos/Recordings/
 kitchen_chaos/.env
+kitchen_chaos/Assets/env-main

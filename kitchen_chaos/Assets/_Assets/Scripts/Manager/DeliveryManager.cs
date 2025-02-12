@@ -64,7 +64,7 @@ public class DeliveryManager : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient)
             return;
 
-        if (GameManager.Instance.IsGamePlaying() == false || GameManager.Instance.isTesting) return;
+        if (GameManager.s.IsGamePlaying() == false || GameManager.s.isTesting) return;
 
         spawnRecipeTimer -= Time.deltaTime;
         if (spawnRecipeTimer <= 0f)
@@ -128,7 +128,7 @@ public class DeliveryManager : MonoBehaviour
     #region Delay functions
     IEnumerator UpdateOrder()
     {
-        while (GameManager.Instance.IsGameOver() == false)
+        while (GameManager.s.IsGameOver() == false)
         {
             yield return new WaitForSeconds(1f);
 
@@ -158,7 +158,7 @@ public class DeliveryManager : MonoBehaviour
     }
     private IEnumerator CR_UpdateTimerClass()
     {
-        while (GameManager.Instance.IsGameOver() == false)
+        while (GameManager.s.IsGameOver() == false)
         {
             yield return new WaitForSeconds(1f);
 

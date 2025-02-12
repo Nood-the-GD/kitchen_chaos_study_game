@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class PlayerAnimator : MonoBehaviour
     #region Variables
     [SerializeField] private GameObject arrowGO;
     [SerializeField] private Text usernameUI;
-    private IPlayer player;
+    private Player player;
     private Animator animator;
     private GameInput gameInput => GameInput.Instance;
     #endregion
@@ -21,16 +22,21 @@ public class PlayerAnimator : MonoBehaviour
     #region Unity functions
     private void Awake()
     {
-        player = GetComponentInParent<IPlayer>();
+        player = GetComponentInParent<Player>();
         animator = GetComponent<Animator>();
+        SinglePlayManager.s.OnPlayerChange += SinglePlayManager_OnPlayerChange;
+    }
+    private void OnDestroy()
+    {
+        SinglePlayManager.s.OnPlayerChange -= SinglePlayManager_OnPlayerChange;
     }
     void Start()
     {
-        if (!player.photonView.IsMine)
+        if (!player.IsControlling)
         {
             arrowGO.gameObject.SetActive(false);
         }
-        if (player is AIController)
+        if (player.gameObject.tag == "FakePlayer")
             return;
         usernameUI.text = player.photonView.Owner.NickName;
     }
@@ -38,14 +44,27 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator.SetBool(ANIM_IS_WALKING, player.IsWalking());
         animator.SetBool(ANIM_IS_HOLDING, player.IsHolding());
-        if (player.photonView.IsMine)
+        if (player.IsControlling)
         {
             arrowGO.transform.forward = gameInput.GetMovementVectorNormalize().ToVector3XZ(arrowGO.transform.position.y);
         }
     }
+    #endregion
+
+    private void SinglePlayManager_OnPlayerChange(Player player)
+    {
+        if (player == this.player)
+        {
+            arrowGO.gameObject.SetActive(true);
+        }
+        else
+        {
+            arrowGO.gameObject.SetActive(false);
+        }
+    }
+
     public void SetPlayerName(string name)
     {
         usernameUI.text = name;
     }
-    #endregion
 }

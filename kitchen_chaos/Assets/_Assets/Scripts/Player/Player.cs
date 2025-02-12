@@ -10,7 +10,7 @@ public class Player : MonoBehaviour, IPlayer
 
     #region Events
     public static event Action<Player> OnPlayerSpawn;
-    public event EventHandler OnPickupSomething;
+    public static event EventHandler OnPickupSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour, IPlayer
     }
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
     {
-        if (!GameManager.Instance.IsGamePlaying()) return;
+        if (!GameManager.s.IsGamePlaying()) return;
 
         if (selectedCounter != null)
         {
@@ -156,7 +156,7 @@ public class Player : MonoBehaviour, IPlayer
     }
     private void GetMovementInput()
     {
-        if (!_photonView.IsMine)
+        if (!_photonView.IsMine && SectionData.s.isSinglePlay == false)
             return;
 
         moveDir = gameInput.GetMovementVectorNormalize().ToVector3XZ();
@@ -168,13 +168,14 @@ public class Player : MonoBehaviour, IPlayer
      */
     private void HandlePCMovement()
     {
-        if (!_photonView.IsMine) return;
+        if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
         // Get normalized direction of movement
         var direction = moveDir;
+        Debug.Log("direction: " + direction);
 
         // Check if movement is possible
         var movementCheck = CanMove(direction, moveDistance);
-
+        Debug.Log("movementCheck: " + movementCheck);
         // If movement is not possible
         if (!movementCheck)
         {
@@ -201,7 +202,7 @@ public class Player : MonoBehaviour, IPlayer
 
     private void HandleMobileMovement()
     {
-        if (!_photonView.IsMine) return;
+        if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
 
         // Get normalized direction of movement
         var direction = moveDir;
@@ -232,7 +233,7 @@ public class Player : MonoBehaviour, IPlayer
 
     private void HandleRotation(Vector3 direction)
     {
-        if (!_photonView.IsMine) return;
+        if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
 
         // Rotate player to calculated direction
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);

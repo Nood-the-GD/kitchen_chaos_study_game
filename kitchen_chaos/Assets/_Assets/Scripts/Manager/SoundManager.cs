@@ -5,14 +5,14 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     #region Variables
-    public static SoundManager Instance {get; private set;}
+    public static SoundManager Instance { get; private set; }
     [SerializeField] private AudioClipRefSO audioClipRef;
     #endregion
 
     #region Unity functions
     private void Awake()
     {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
     }
     void OnEnable()
     {
@@ -37,7 +37,7 @@ public class SoundManager : MonoBehaviour
     #region GameManager events
     private void GameManager_OnPlayerSpawn(Player e)
     {
-        Player.Instance.OnPickupSomething += Player_OnPickupSomething;
+        Player.OnPickupSomething += Player_OnPickupSomething;
     }
     #endregion
 
@@ -69,7 +69,7 @@ public class SoundManager : MonoBehaviour
     #region Player events
     private void Player_OnPickupSomething(object sender, System.EventArgs e)
     {
-        PlaySound(audioClipRef.objectPickup, Player.Instance.transform.position);
+        PlaySound(audioClipRef.objectPickup, (sender as Player).transform.position);
     }
     #endregion
 

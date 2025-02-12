@@ -10,18 +10,20 @@ public class GamePauseUI : MonoBehaviour
 
     private void Awake()
     {
-        resumeBtn.onClick.AddListener(() => {
-            GameManager.Instance.PauseGame();
+        resumeBtn.onClick.AddListener(() =>
+        {
+            GameManager.s.PauseGame();
         });
-        mainMenuBtn.onClick.AddListener(() => {
+        mainMenuBtn.onClick.AddListener(() =>
+        {
             Loader.Load(Loader.Scene.MainMenuScene);
         });
     }
 
     private void Start()
     {
-        GameManager.Instance.OnGamePause += GameManager_OnGamePause;
-        GameManager.Instance.OnGameUnPause += GameManager_OnGameUnPause;
+        GameManager.s.OnGamePause += GameManager_OnGamePause;
+        GameManager.s.OnGameUnPause += GameManager_OnGameUnPause;
 
         gameObject.SetActive(false);
     }

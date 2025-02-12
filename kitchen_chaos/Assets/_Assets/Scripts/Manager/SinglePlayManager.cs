@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SinglePlayManager : Singleton<SinglePlayManager>
 {
+    public Action<Player> OnPlayerChange;
+
     const string FAKE_PLAYER_PATH = "Prefabs/FakePlayer";
     private Player _fakePlayer;
     private Player _mainPlayer;
@@ -16,6 +18,7 @@ public class SinglePlayManager : Singleton<SinglePlayManager>
     }
     private void OnDestroy()
     {
+        Player.OnPlayerSpawn -= Player_OnPlayerSpawnHandler;
         GameInput.Instance.OnChangeCharacterAction -= GameInput_OnChangeCharacterActionHandler;
     }
 
@@ -31,15 +34,15 @@ public class SinglePlayManager : Singleton<SinglePlayManager>
     private void GameInput_OnChangeCharacterActionHandler(object sender, EventArgs e)
     {
         ChangePlayer();
-        ReassignCamera();
     }
     #endregion
 
     public void Init()
     {
         //Spawn fake player
-        SpawnFakePlayer();
         GameInput.Instance.OnChangeCharacterAction += GameInput_OnChangeCharacterActionHandler;
+        SpawnFakePlayer();
+        OnPlayerChange?.Invoke(_mainPlayer);
     }
 
     #region private functions
@@ -55,18 +58,16 @@ public class SinglePlayManager : Singleton<SinglePlayManager>
         if (_currentPlayer == _mainPlayer)
         {
             CameraController.Instance.SetFollowTarget(_mainPlayer.transform);
-            CameraController.Instance.SetLookAtTarget(_mainPlayer.transform);
         }
         else
         {
             CameraController.Instance.SetFollowTarget(_fakePlayer.transform);
-            CameraController.Instance.SetLookAtTarget(_fakePlayer.transform);
         }
     }
     private void ChangePlayer()
     {
-        _currentPlayer.IsControlling = false;
         _currentPlayer.UnregisterGameInputEvent();
+        _currentPlayer.IsControlling = false;
         if (_currentPlayer == _mainPlayer)
         {
             _currentPlayer = _fakePlayer;
@@ -77,9 +78,10 @@ public class SinglePlayManager : Singleton<SinglePlayManager>
         }
         _currentPlayer.IsControlling = true;
         _currentPlayer.RegisterGameInputEvent();
+        ReassignCamera();
+        OnPlayerChange?.Invoke(_currentPlayer);
     }
     private void SpawnFakePlayer()
-
     {
         //Spawn fake player
         Transform spawnPosition = GameManager.s.spawnPoints[0];

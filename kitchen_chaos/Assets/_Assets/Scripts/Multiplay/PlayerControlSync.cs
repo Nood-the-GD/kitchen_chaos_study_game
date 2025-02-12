@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using Game;
-namespace Photon.Pun.UtilityScripts{
+namespace Photon.Pun.UtilityScripts
+{
     public class PlayerControlSync : Photon.Pun.MonoBehaviourPun, IPunObservable
     {
         public float SmoothingMoveDelay = 5;
@@ -29,7 +30,7 @@ namespace Photon.Pun.UtilityScripts{
 
         public void Update()
         {
-            if (!photonView.IsMine)
+            if (!photonView.IsMine && SectionData.s.isSinglePlay == false)
             {
                 //Update remote player (smooth this, this looks good, at the cost of some accuracy)
                 transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * this.SmoothingMoveDelay);

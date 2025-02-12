@@ -5,22 +5,22 @@ using UnityEngine;
 
 public class GameStartCountdownUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI countdownText; 
+    [SerializeField] private TextMeshProUGUI countdownText;
 
     private void Start()
     {
-        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+        GameManager.s.OnStateChanged += GameManager_OnStateChanged;
         gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        countdownText.text = Mathf.Ceil(GameManager.Instance.GetCountdownToStartTimer()).ToString();
+        countdownText.text = Mathf.Ceil(GameManager.s.GetCountdownToStartTimer()).ToString();
     }
 
     private void GameManager_OnStateChanged(object sender, System.EventArgs e)
     {
-        if(GameManager.Instance.IsCountdownToStartActive())
+        if (GameManager.s.IsCountdownToStartActive())
         {
             gameObject.SetActive(true);
         }

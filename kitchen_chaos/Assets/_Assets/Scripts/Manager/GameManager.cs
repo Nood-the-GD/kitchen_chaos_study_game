@@ -11,10 +11,6 @@ public class GameManager : Singleton<GameManager>
     public event EventHandler OnGameUnPause;
     #endregion
 
-    #region Instance
-    public static GameManager Instance { get; private set; }
-    #endregion
-
     #region Enum
     private enum State
     {
