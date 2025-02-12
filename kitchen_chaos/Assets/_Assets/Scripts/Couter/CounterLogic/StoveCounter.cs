@@ -60,12 +60,12 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     if (PhotonNetwork.IsMasterClient)
                     {
                         GetKitchenObject().DestroySelf();
-                        KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
+                        // KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
 
                     ChangeState(State.Fried);
                     _burningTimer = 0;
-                    _curRecipe = GetKitchenObjectSO().GetFriedOnlyRecipe();
+                    _curRecipe = CookingBookSO.s.GetFryingRecipe(GetKitchenObjectSO());
                 }
                 break;
             case State.Fried:
@@ -88,7 +88,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     {
                         GetKitchenObject().DestroySelf();
 
-                        KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
+                        // KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
                     }
                     ChangeState(State.Burned);
                 }
@@ -114,7 +114,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 //Player carrying something that can be fried
                 //Move kitchen object to counter
                 player.GetKitchenObject().SetContainerParent(this);
-                _curRecipe = GetKitchenObjectSO().GetFriedOnlyRecipe();
+                _curRecipe = CookingBookSO.s.GetFryingRecipe(GetKitchenObjectSO());
                 ChangeState(State.Frying);
                 _fryingTimer = 0;
             }

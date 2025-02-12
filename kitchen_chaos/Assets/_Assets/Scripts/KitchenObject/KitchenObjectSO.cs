@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 
@@ -8,16 +9,22 @@ public enum KitchenObjectType
     None,
     NeedChop,
     NeedFried,
-    Original
 }
 [System.Serializable]
 public class Recipe
 {
+    [Space(20)]
+    [LabelText("Recipe Name", SdfIconType.Activity)]
+    public string name;
     public List<KitchenObjectSO> ingredients;
     public KitchenObjectType actionType;
     public KitchenObjectSO output;
-    public KitchenObjectSO overCookOutput;
     public float step;
+
+    public override string ToString()
+    {
+        return name;
+    }
 }
 
 
@@ -29,29 +36,15 @@ public class KitchenObjectSO : ScriptableObject
     public Sprite sprite;
     public int point;
     public string objectName;
-    public List<Recipe> recipes = new List<Recipe>();
-
-
-    public Recipe GetCutOnlyRecipe()
-    {
-        return recipes.Find(x => x.actionType == KitchenObjectType.NeedChop && x.ingredients.Count == 0);
-    }
-
-    public Recipe GetFriedOnlyRecipe()
-    {
-        return recipes.Find(x => x.actionType == KitchenObjectType.NeedFried && x.ingredients.Count == 1);
-    }
+    public KitchenObjectType kitchenObjectType;
 
     public bool CanCut()
     {
-        return GetCutOnlyRecipe() != null;
+        return kitchenObjectType == KitchenObjectType.NeedChop;
     }
 
     public bool CanFried()
     {
-        return GetFriedOnlyRecipe() != null;
+        return kitchenObjectType == KitchenObjectType.NeedFried;
     }
-
-
-
 }

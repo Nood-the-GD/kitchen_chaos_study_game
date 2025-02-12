@@ -16,3 +16,10 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: dff2d7cb67217f9479b47f16535fdab6, type: 3}
   point: 2
   objectName: TomatoSlices
+  recipes:
+  - name: 
+    ingredients:
+    - {fileID: 11400000, guid: 77fa4fa7a1aab43aaa4daef679339c08, type: 2}
+    actionType: 0
+    output: {fileID: 0}
+    step: 0

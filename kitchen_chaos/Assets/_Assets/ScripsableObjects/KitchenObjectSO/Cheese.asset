@@ -16,4 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 0c928c219be72f34095ef7a783dabf4d, type: 3}
   point: 1
   objectName: Cheese Block
-  kitchenObjectType: 2
+  kitchenObjectType: 1

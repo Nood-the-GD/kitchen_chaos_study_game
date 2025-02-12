@@ -38,6 +38,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             {
                 _cuttingProcess = 0;
                 _isComplete = false;
+
             }
         }
     }
@@ -56,7 +57,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
     public void Chop(IKitchenContainable KOParent)
     {
-        if (!GetKitchenObjectSO().CanCut())
+        if (HasKitchenObject() == false || !GetKitchenObjectSO().CanCut())
         {
             Debug.Log("Can't cut");
         }
@@ -65,7 +66,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             //There is a kitchenObject on this counter and it can be cut.
             //Get output kitchenObject base on input with recipe.
             _cuttingProcess++;
-            int cuttingProgressNumber = (int)GetKitchenObjectSO().GetCutOnlyRecipe().step;
+            int cuttingProgressNumber = (int)CookingBookSO.s.GetCuttingRecipe(GetKitchenObjectSO()).step;
             OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
             {
                 processNormalize = (float)_cuttingProcess / cuttingProgressNumber
@@ -76,7 +77,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
             {
                 if (SectionData.s.isSinglePlay || KOParent.photonView.IsMine)
                 {
-                    KitchenObjectSO outputKitchenObject = GetKitchenObjectSO().GetCutOnlyRecipe().output;
+                    KitchenObjectSO outputKitchenObject = CookingBookSO.s.GetCuttingRecipe(GetKitchenObjectSO()).output;
 
                     //Destroy input kitchenObject.
                     GetKitchenObject().DestroySelf();

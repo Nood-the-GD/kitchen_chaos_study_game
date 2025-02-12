@@ -16,4 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 3928afb5321bb3d489bbd4ac581b29a2, type: 3}
   point: 0
   objectName: Plate
-  kitchenObjectType: 2
+  kitchenObjectType: 0

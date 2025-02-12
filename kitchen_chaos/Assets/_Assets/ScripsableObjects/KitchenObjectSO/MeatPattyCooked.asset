@@ -16,4 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: addf42c8e34880646b4605ea5b3ccc23, type: 3}
   point: 2
   objectName: MeatPattyCooked
-  kitchenObjectType: 1
+  kitchenObjectType: 2

@@ -16,9 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: aee6ab7448134dd4e95a9727133c3d8c, type: 3}
   point: 1
   objectName: Cabbage
-  recipes:
-  - ingredients: []
-    actionType: 1
-    output: {fileID: 0}
-    overCookOutput: {fileID: 0}
-    step: 0
+  kitchenObjectType: 1
