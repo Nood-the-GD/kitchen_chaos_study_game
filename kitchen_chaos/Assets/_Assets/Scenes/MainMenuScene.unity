@@ -2128,6 +2128,7 @@ MonoBehaviour:
   playBtn: {fileID: 2004432188}
   loadingGO: {fileID: 1977906608}
   photonManager: {fileID: 860623926}
+  username: {fileID: 0}
 --- !u!1 &1163430587
 GameObject:
   m_ObjectHideFlags: 0
@@ -2512,7 +2513,7 @@ GameObject:
   - component: {fileID: 1343418859}
   - component: {fileID: 1343418858}
   m_Layer: 5
-  m_Name: Verison
+  m_Name: UserName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2550,7 +2551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2559,10 +2560,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 203081854b7d9e342aac0b2bc2e86c67, type: 3}
-    m_FontSize: 47
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 8
+    m_MinSize: 3
     m_MaxSize: 61
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -2570,7 +2571,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Verison: 1.0.0'
+  m_Text: 'Username: '
 --- !u!222 &1343418859
 CanvasRenderer:
   m_ObjectHideFlags: 0

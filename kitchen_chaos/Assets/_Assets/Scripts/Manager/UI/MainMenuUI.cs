@@ -10,7 +10,7 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Button playBtn; 
     [SerializeField] private GameObject loadingGO;
     [SerializeField] private PhotonManager photonManager;
-
+    [SerializeField] private Text username;
 
     private void Awake()
     {
@@ -21,13 +21,22 @@ public class MainMenuUI : MonoBehaviour
         Time.timeScale = 1f;
         playBtn.gameObject.GetComponent<Image>().color = Color.gray;
         playBtn.interactable = false;
+        username.text = UserData.currentUser.username;
     }
+
+
     void OnEnable()
     {
+        UserData.currentUser.OnUpdateUserName += OnUpdateUserName;
         photonManager.onConnectToServer += PhotonManager_OnConnectToServerHandler;
+    }
+
+    void OnUpdateUserName(){
+        username.text = UserData.currentUser.username;
     }
     void OnDisable()
     {
+        UserData.currentUser.OnUpdateUserName -= OnUpdateUserName;
         photonManager.onConnectToServer -= PhotonManager_OnConnectToServerHandler;
     }
     void Start(){
