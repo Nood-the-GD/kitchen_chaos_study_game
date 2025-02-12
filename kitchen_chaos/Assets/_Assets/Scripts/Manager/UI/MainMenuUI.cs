@@ -21,7 +21,7 @@ public class MainMenuUI : MonoBehaviour
         Time.timeScale = 1f;
         playBtn.gameObject.GetComponent<Image>().color = Color.gray;
         playBtn.interactable = false;
-        username.text = UserData.currentUser.username;
+        username.text = "Username: "+ UserData.currentUser.username;
     }
 
 
@@ -32,7 +32,7 @@ public class MainMenuUI : MonoBehaviour
     }
 
     void OnUpdateUserName(){
-        username.text = UserData.currentUser.username;
+        username.text = "Username: "+ UserData.currentUser.username;
     }
     void OnDisable()
     {

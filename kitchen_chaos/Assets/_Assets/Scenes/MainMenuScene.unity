@@ -2128,7 +2128,7 @@ MonoBehaviour:
   playBtn: {fileID: 2004432188}
   loadingGO: {fileID: 1977906608}
   photonManager: {fileID: 860623926}
-  username: {fileID: 0}
+  username: {fileID: 1343418858}
 --- !u!1 &1163430587
 GameObject:
   m_ObjectHideFlags: 0
