@@ -22,6 +22,9 @@ public class MainMenuUI : MonoBehaviour
         playBtn.gameObject.GetComponent<Image>().color = Color.gray;
         playBtn.interactable = false;
         username.text = "Username: "+ UserData.currentUser.username;
+        if(Application.isEditor){
+            username.text += "\n userId: " + UserData.currentUser.uid;
+        }
     }
 
 
