@@ -431,7 +431,7 @@ public class LambdaAPI : MonoBehaviour
     /// <summary>
     /// Retrieves data for a specific user.
     /// </summary>
-    public static async UniTask<ServerRespone> GetUser(string otherUid)
+    public static async UniTask<ServerRespone> GetUser(string otherUid) 
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +

@@ -10,6 +10,7 @@ public class FriendRequestItemView : MonoBehaviour
     public Text userName;
     public UserData userData;
     public async void SetData(string uid){
+        Debug.Log("item view: "+ uid);
         var p = await UserManager.GetUser(uid);
         this.userData = p;
         userName.text = userData.username;

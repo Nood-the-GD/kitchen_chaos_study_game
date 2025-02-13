@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,17 +10,34 @@ public class FriendChatItemView : MonoBehaviour
     public Text message;
     public Image activeStatus;
     public ChatSummary chatSummary;
+    public string uid;
+    Button button;
+
+    void Start(){
+       
+    }
     
-    public void SetData(ChatSummary chatSummary)
-    {
-        this.chatSummary = chatSummary;
-        userName.text = "";
-        message.text = chatSummary.content;
+    public void SetData(string uid,Action<FriendChatItemView> onClick)
+    {  
+        button = GetComponent<Button>(); 
+        button.onClick.AddListener(()=>{
+            onClick(this);
+        });
+        this.uid = uid;
+        var chatSummary = SocialData.GetChatSummaryFor(uid);
+        if(chatSummary != null){
+            this.chatSummary = chatSummary;
+            userName.text = "";
+            message.text = chatSummary.content;
+        }
+        else{
+            message.text = "Say hi to your friend";
+        }
         Init();
     }
 
     async void Init(){
-        UserData user = await UserManager.GetUser(chatSummary.otherUid);
+        UserData user = await UserManager.GetUser(uid);
         userName.text = user.username;
         if(user.activeStatus == "online"){
             activeStatus.color = Color.green;
@@ -31,5 +49,4 @@ public class FriendChatItemView : MonoBehaviour
             activeStatus.color = Color.yellow;
         }
     }
-
 }
