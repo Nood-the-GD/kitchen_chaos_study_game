@@ -10,9 +10,15 @@ public class SelectedCounterVisual : MonoBehaviour
     [SerializeField] private BaseCounter baseCounter;
     [SerializeField] private GameObject[] visualGameObjectArray;
     #endregion
-    
 
     #region Unity functions
+    void Awake()
+    {
+        if (baseCounter == null)
+        {
+            baseCounter = GetComponentInParent<BaseCounter>();
+        }
+    }
     void OnEnable()
     {
         Player.OnPlayerSpawn += Player_OnPlayerSpawn;
@@ -34,13 +40,13 @@ public class SelectedCounterVisual : MonoBehaviour
     }
     private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
     {
-        if(baseCounter == e.selectedCounter)
+        if (baseCounter == e.selectedCounter)
         {
             ShowVisual();
         }
         else
         {
-            HideVisual();  
+            HideVisual();
         }
     }
     #endregion
@@ -48,14 +54,14 @@ public class SelectedCounterVisual : MonoBehaviour
     #region Support
     private void ShowVisual()
     {
-        foreach(GameObject visualGameObject in visualGameObjectArray)
+        foreach (GameObject visualGameObject in visualGameObjectArray)
         {
             visualGameObject.SetActive(true);
         }
     }
     private void HideVisual()
     {
-        foreach(GameObject visualGameObject in visualGameObjectArray)
+        foreach (GameObject visualGameObject in visualGameObjectArray)
         {
             visualGameObject.SetActive(false);
         }

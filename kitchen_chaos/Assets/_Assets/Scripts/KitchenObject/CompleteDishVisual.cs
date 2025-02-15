@@ -11,18 +11,18 @@ public class CompleteDishVisual : MonoBehaviour
     void Awake()
     {
         completeDishKitchenObject.OnIngredientAdded += CompleteDish_OnIngredientAdded;
-        foreach(KitchenObjectSO_GameObject kitchenObjectSO_GameObject in kitchenObjectSO_GameObjectsList)
+        foreach (KitchenObjectSO_GameObject kitchenObjectSO_GameObject in kitchenObjectSO_GameObjectsList)
         {
             kitchenObjectSO_GameObject.gameObject.SetActive(false);
         }
     }
 
-    private void CompleteDish_OnIngredientAdded(object sender, CompleteDishKitchenObject.OnIngredientAddedEventArgs e)
+    private void CompleteDish_OnIngredientAdded(object sender, CompleteDishKitchenObject.OnIngredientAddedEventArgs ingredient)
     {
         // Debug.Log("On added ingredient ");
-        foreach(KitchenObjectSO_GameObject kitchenObjectSO_GameObject in kitchenObjectSO_GameObjectsList)
+        foreach (KitchenObjectSO_GameObject kitchenObjectSO_GameObject in kitchenObjectSO_GameObjectsList)
         {
-            if(kitchenObjectSO_GameObject.kitchenObjectSO == e.addedIngredientKitchenObjectSO)
+            if (kitchenObjectSO_GameObject.kitchenObjectSO == ingredient.addedIngredientKitchenObjectSO)
             {
                 kitchenObjectSO_GameObject.gameObject.SetActive(true);
             }

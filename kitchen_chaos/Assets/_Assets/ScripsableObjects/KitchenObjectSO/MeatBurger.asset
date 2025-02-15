@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3098f300e5d54484ea0fe3af8bea741c, type: 3}
+  m_Script: {fileID: 11500000, guid: bf3a9efd6f5d6b0448ab70ababd5bf6c, type: 3}
   m_Name: MeatBurger
   m_EditorClassIdentifier: 
-  kitchenObjectSOList:
-  - {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
-  - {fileID: 11400000, guid: 7ffad2276f64d8b4d86f2f382128696f, type: 2}
-  recipeName: Meat Burger
+  prefab: {fileID: 2417010048206763156, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
+  sprite: {fileID: 21300000, guid: 0df08aaa4a2dd6e42852469fb4012216, type: 3}
+  point: 2
+  objectName: CompleteBurger

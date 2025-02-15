@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4589716710238282922
+--- !u!1 &4332479683644458929
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,53 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4589716710238282923}
+  - component: {fileID: 4332479683644458928}
+  - component: {fileID: 2359258226963716334}
   m_Layer: 0
-  m_Name: ClearCounter_Visual
+  m_Name: Selected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4589716710238282923
+--- !u!4 &4332479683644458928
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4589716710238282922}
+  m_GameObject: {fileID: 4332479683644458929}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.01, y: 1.01, z: 1.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 2224295651265702749}
+  - {fileID: 2112106082384447558}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1825348049864363190
+--- !u!114 &2359258226963716334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4332479683644458929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b9b15a0e3bfd34448c6d7d0caa77e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseCounter: {fileID: 0}
+  visualGameObjectArray:
+  - {fileID: 1586505008244314876}
+--- !u!1001 &1928961449498701741
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4589716710238282923}
+    m_TransformParent: {fileID: 4332479683644458928}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d3679999e73ef2d4898d06d32df9e55e,
         type: 3}
@@ -107,6 +123,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: d3679999e73ef2d4898d06d32df9e55e,
         type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: d3679999e73ef2d4898d06d32df9e55e,
+        type: 3}
       propertyPath: m_StaticShadowCaster
       value: 1
       objectReference: {fileID: 0}
@@ -114,11 +135,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1e6211e03208ad44f94dabbfdbc1c2be, type: 2}
+      objectReference: {fileID: 2100000, guid: 1a0afd856a35421469b28b916116fd9c, type: 2}
     - target: {fileID: 919132149155446097, guid: d3679999e73ef2d4898d06d32df9e55e,
         type: 3}
       propertyPath: m_Name
       value: kitchencounter_innercorner_backsplash (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d3679999e73ef2d4898d06d32df9e55e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d3679999e73ef2d4898d06d32df9e55e,
         type: 3}
@@ -130,9 +156,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3679999e73ef2d4898d06d32df9e55e, type: 3}
---- !u!4 &2224295651265702749 stripped
+--- !u!1 &1586505008244314876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d3679999e73ef2d4898d06d32df9e55e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1928961449498701741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2112106082384447558 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d3679999e73ef2d4898d06d32df9e55e,
     type: 3}
-  m_PrefabInstance: {fileID: 1825348049864363190}
+  m_PrefabInstance: {fileID: 1928961449498701741}
   m_PrefabAsset: {fileID: 0}

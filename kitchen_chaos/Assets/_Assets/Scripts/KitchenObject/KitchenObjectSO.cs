@@ -13,12 +13,17 @@ public enum KitchenObjectType
 [System.Serializable]
 public class Recipe
 {
+    [FoldoutGroup("@name")]
     [Space(20)]
     [LabelText("Recipe Name", SdfIconType.Activity)]
     public string name;
+    [FoldoutGroup("@name")]
     public List<KitchenObjectSO> ingredients;
+    [FoldoutGroup("@name")]
     public KitchenObjectType actionType;
+    [FoldoutGroup("@name")]
     public KitchenObjectSO output;
+    [FoldoutGroup("@name")]
     public float step;
 
     public override string ToString()
@@ -36,6 +41,7 @@ public class KitchenObjectSO : ScriptableObject
     public Sprite sprite;
     public int point;
     public string objectName;
+    [EnumToggleButtons]
     public KitchenObjectType kitchenObjectType;
 
     public bool CanCut()

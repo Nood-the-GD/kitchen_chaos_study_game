@@ -14,12 +14,16 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public KitchenObject kitchenObject { get; set; }
 
     public static event EventHandler OnSomethingPlacedHere;
+    [SerializeField] private Transform counterTopPoint;
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
     }
 
-    [SerializeField] private Transform counterTopPoint;
+    protected virtual void Awake()
+    {
+        _photonView = GetComponent<PhotonView>();
+    }
 
     public virtual void Interact(IKitchenContainable otherContainer)
     {
@@ -98,22 +102,16 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
         }
     }
 
-    protected virtual void Awake()
-    {
-        _photonView = GetComponent<PhotonView>();
-    }
 
     #region Multiplay
 
     public void CmdInteract(int id)
     {
-        _photonView.RPC("RPCIntertact", RpcTarget.All, id);
+        _photonView.RPC(nameof(RPCInteract), RpcTarget.All, id);
     }
 
-
-
     [PunRPC]
-    public void RPCIntertact(int id)
+    public void RPCInteract(int id)
     {
         var player = PhotonManager.s.GetPlayerView(id);
         Interact(player);
@@ -121,6 +119,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     #endregion
 
+    #region Public Methods
     public Transform GetKitchenObjectFollowTransform()
     {
         return counterTopPoint;
@@ -157,4 +156,5 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     {
         return kitchenObject != null;
     }
+    #endregion
 }

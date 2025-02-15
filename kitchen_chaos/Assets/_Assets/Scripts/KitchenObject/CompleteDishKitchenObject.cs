@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CompleteDishKitchenObject : KitchenObject
 {
@@ -14,27 +15,28 @@ public class CompleteDishKitchenObject : KitchenObject
     #endregion
 
     #region Variables
-    [SerializeField] private List<KitchenObjectSO> ingredientsList;
-    private List<KitchenObjectSO> kitchenObjectSOList = new List<KitchenObjectSO>();
-    private bool isHasPlate = false;
+    [FormerlySerializedAs("ingredientsList")]
+    [SerializeField] private List<KitchenObjectSO> _ingredientsList;
+    private List<KitchenObjectSO> _currentIngredients = new List<KitchenObjectSO>();
+    private bool _isHasPlate = false;
     #endregion
 
     #region Support
     public bool IsHasIngredient(KitchenObjectSO kitchenObjectSO)
     {
-        return ingredientsList.Contains(kitchenObjectSO);
+        return _ingredientsList.Contains(kitchenObjectSO);
     }
     public bool IsHasPlate()
     {
-        return isHasPlate;
+        return _isHasPlate;
     }
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
     {
-        if(kitchenObjectSO.objectName == "Plate" && isHasPlate)
+        if (kitchenObjectSO.objectName == "Plate" && _isHasPlate)
         {
             return false;
         }
-        if (!ingredientsList.Contains(kitchenObjectSO) || kitchenObjectSOList.Contains(kitchenObjectSO))
+        if (!_ingredientsList.Contains(kitchenObjectSO) || _currentIngredients.Contains(kitchenObjectSO))
         {
             return false;
         }
@@ -43,26 +45,26 @@ public class CompleteDishKitchenObject : KitchenObject
         {
             addedIngredientKitchenObjectSO = kitchenObjectSO
         });
-        if(kitchenObjectSO.objectName == "Plate")
+        if (kitchenObjectSO.objectName == "Plate")
         {
             // Do not add plate to kitchenObjectSOList
-            isHasPlate = true;
+            _isHasPlate = true;
             return true;
         }
 
-        kitchenObjectSOList.Add(kitchenObjectSO);
+        _currentIngredients.Add(kitchenObjectSO);
         return true;
     }
     public List<KitchenObjectSO> GetKitchenObjectSOList()
     {
-        return kitchenObjectSOList;
+        return _currentIngredients;
     }
     public bool IsCorrectRecipe(RecipeSO recipeSO)
     {
-        if (recipeSO.kitchenObjectSOList.Count != kitchenObjectSOList.Count) return false;
-        foreach(KitchenObjectSO kitchenObjectSO in kitchenObjectSOList)
+        if (recipeSO.kitchenObjectSOList.Count != _currentIngredients.Count) return false;
+        foreach (KitchenObjectSO kitchenObjectSO in _currentIngredients)
         {
-            if(!recipeSO.kitchenObjectSOList.Contains(kitchenObjectSO))
+            if (!recipeSO.kitchenObjectSOList.Contains(kitchenObjectSO))
             {
                 return false;
             }
