@@ -11,7 +11,10 @@ public class AppManager : MonoBehaviour
         var p = await LambdaAPI.GetMySocial();
         SocialData.mySocialData = p.jToken.ToObject<SocialData>(); 
         debugSocialData = SocialData.mySocialData;
+        await ServerConnect.ConnectServer();
     }
+
+    
 
     private void OnDisable() {
         ServerConnect.Dispose();

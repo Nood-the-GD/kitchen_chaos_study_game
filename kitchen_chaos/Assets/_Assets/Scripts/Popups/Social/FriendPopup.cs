@@ -18,6 +18,8 @@ public class FriendPopup : BasePopup<FriendPopup>
     public float animDur = 0.3f;
     
     private FriendChatItemView currentChat;
+    public InputField chatInputField;
+    public Button sendMessage;
 
     void Start()
     {
@@ -47,6 +49,12 @@ public class FriendPopup : BasePopup<FriendPopup>
             friendItem.gameObject.SetActive(true);
             friendItem.SetData(friend, OnClick);
         }
+    }
+
+
+    void SendMessage()
+    {
+        
     }
 
     void OnClick(FriendChatItemView friendChatItemView)
