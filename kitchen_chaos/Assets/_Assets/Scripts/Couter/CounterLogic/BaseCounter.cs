@@ -67,6 +67,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                     var recipe = combineResult.recipe;
                     if(kitchenObject.GetKitchenObjectSO() != recipe.output){
                         ClearKitchenObject();
+                        var isHavePlate = kitchenObject.IsHavingPlate ||otherContainer.GetKitchenObject().IsHavingPlate;
+                        
                         KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex());
                     }
                     else{

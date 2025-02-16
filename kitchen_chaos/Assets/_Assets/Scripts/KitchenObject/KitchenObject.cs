@@ -86,7 +86,7 @@ public class KitchenObject : MonoBehaviour
         SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent, new List<int>{0});
     }
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient)
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient, bool isHavePlate = false)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
@@ -97,7 +97,9 @@ public class KitchenObject : MonoBehaviour
             p.kitchenObjectSO = kitchenObjectSO;
             p.SetContainerParent(kitchenObjectParent);
             p.AddIngredientIndexs(ingredient.ToArray());
-            
+            if(isHavePlate){
+                p.TryAddPlate();
+            }
         }
         else
         {
