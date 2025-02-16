@@ -45,9 +45,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             else
             {
                 Debug.Log("player is holding");
-
+                var ottherKo = otherContainer.GetKitchenObject();
                 //holding plate
-                if(otherContainer.GetKitchenObject().IsPlate){
+                if(ottherKo.IsPlate){
                     if(kitchenObject.TryAddPlate()){
                         otherContainer.ClearKitchenObject();
                         return;
@@ -60,16 +60,16 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                     }
                 }
 
-                var combineResult = CookingBookSO.s.TryCombine(otherContainer.GetKitchenObject(), GetKitchenObject());
+                var combineResult = CookingBookSO.s.TryCombine(ottherKo, GetKitchenObject());
                 if(combineResult != null){
                     otherContainer.ClearKitchenObject();
                     
                     var recipe = combineResult.recipe;
                     if(kitchenObject.GetKitchenObjectSO() != recipe.output){
                         ClearKitchenObject();
-                        var isHavePlate = kitchenObject.IsHavingPlate ||otherContainer.GetKitchenObject().IsHavingPlate;
-                        
-                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex());
+                       
+                        var isHavePlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (ottherKo!= null && ottherKo.IsHavingPlate);
+                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex(), isHavePlate);
                     }
                     else{
                         kitchenObject.AddIngredient(otherContainer.GetKitchenObject().GetKitchenObjectSO());
