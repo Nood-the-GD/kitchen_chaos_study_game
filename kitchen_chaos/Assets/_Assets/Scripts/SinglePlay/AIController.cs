@@ -26,7 +26,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     private NavMeshAgent _navMeshAgent;
     private BotStage _stage;
     private BaseCounter _selectedCounter;
-    private Recipe _currentRecipeSO;
+    private RecipeSO _currentRecipeSO;
     private KitchenObject _currentKitchenObject;
     private float _altInteractDelay = 0.5f;
     private float _altInteractDelayTimer = 0;
@@ -162,45 +162,44 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
             bool isEnough = EnoughAllIngredients(out KitchenObjectSO lackOfKitchenObject);
             if (HasKitchenObject())
             {
-                switch (_currentKitchenObject)
-                {
-                    case CompleteDishKitchenObject completeDishKitchenObject:
-                        if (completeDishKitchenObject.IsHasPlate())
-                        {
-                            DeliverDish();
-                        }
-                        else
-                        {
-                            GetPlate();
-                        }
-                        break;
-                    default:
-                        if (CheckChopOrFry())
-                        {
-                            // Check if kitchen object is need chop or fry
-                            // If yes, move to the counter
-                            _stage = BotStage.Move;
-                        }
-                        else
-                        {
-                            // If not, check all ingredient
-                            // if have all ingredient, begin combine 
-                            // else prepare next ingredient
-                            if (isEnough == false)
-                            {
-                                Debug.Log("Not enough ingredient");
-                                // Put current kitchen object down and start making the lack kitchen object
-                                PutDownKitchenObject();
-                            }
-                            else
-                            {
-                                Debug.Log("Combine");
-                                // Begin combine
-                                Combine();
-                            }
-                        }
-                        break;
+
+                if(_currentKitchenObject.IsHaveEngoughIngredient()){
+                    if (_currentKitchenObject.IsHavingPlate)
+                    {
+                        DeliverDish();
+                    }
+                    else
+                    {
+                        GetPlate();
+                    }
                 }
+                else{
+                    if (CheckChopOrFry())
+                    {
+                        // Check if kitchen object is need chop or fry
+                        // If yes, move to the counter
+                        _stage = BotStage.Move;
+                    }
+                    else
+                    {
+                        // If not, check all ingredient
+                        // if have all ingredient, begin combine 
+                        // else prepare next ingredient
+                        if (isEnough == false)
+                        {
+                            Debug.Log("Not enough ingredient");
+                            // Put current kitchen object down and start making the lack kitchen object
+                            PutDownKitchenObject();
+                        }
+                        else
+                        {
+                            Debug.Log("Combine");
+                            // Begin combine
+                            Combine();
+                        }
+                    }
+                }
+                
             }
             else
             {
@@ -260,9 +259,9 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     #region Small Action
     private void DeliverDish()
     {
-        CompleteDishKitchenObject completeDishKitchenObject = _currentKitchenObject as CompleteDishKitchenObject;
         BaseCounter targetCounter = null;
-        if (completeDishKitchenObject.IsCorrectRecipe(_currentRecipeSO))
+       
+        if(_currentRecipeSO.IsSameIngredients(kitchenObject.ingredient))
         {
             targetCounter = AICounterManager.s.GetDeliveryCounter();
         }
@@ -297,7 +296,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     {
         combineCheckList.Clear();
         // Prepare check list
-        foreach (KitchenObjectSO ingredient in _currentRecipeSO.kitchenObjectSOList)
+        foreach (KitchenObjectSO ingredient in _currentRecipeSO.ingredients)
         {
             combineCheckList.Add(ingredient);
         }
@@ -305,21 +304,19 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
         // Remove ingredients is holding
         if (HasKitchenObject())
         {
-            switch (_currentKitchenObject)
-            {
-                case CompleteDishKitchenObject completeDishKitchenObject:
-                    Debug.Log("Complete dish");
-                    foreach (var kitchenObjectSO in completeDishKitchenObject.GetKitchenObjectSOList())
-                    {
-                        Debug.Log(kitchenObjectSO);
-                        combineCheckList.Remove(kitchenObjectSO);
-                    }
-                    break;
-                default:
-                    Debug.Log("Default");
-                    if (_currentKitchenObject != null)
-                        combineCheckList.Remove(_currentKitchenObject.GetKitchenObjectSO());
-                    break;
+            if(_currentKitchenObject.IsHaveEngoughIngredient()){
+                Debug.Log("Complete dish");
+                foreach (var kitchenObjectSO in _currentKitchenObject.ingredient)
+                {
+                    Debug.Log(kitchenObjectSO);
+                    combineCheckList.Remove(kitchenObjectSO);
+                }
+            }
+            else{
+                Debug.Log("Default");
+                if (_currentKitchenObject != null)
+                    combineCheckList.Remove(_currentKitchenObject.GetKitchenObjectSO());
+    
             }
         }
 
@@ -364,7 +361,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
         lackOfKitchenObject = null;
         List<KitchenObjectSO> checkList = new List<KitchenObjectSO>();
         // Prepare check list
-        foreach (KitchenObjectSO ingredient in _currentRecipeSO.kitchenObjectSOList)
+        foreach (KitchenObjectSO ingredient in _currentRecipeSO.ingredients)
         {
             checkList.Add(ingredient);
         }
@@ -372,16 +369,13 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
         // Remove current holding ingredient
         if (HasKitchenObject())
         {
-            switch (_currentKitchenObject)
-            {
-                case CompleteDishKitchenObject completeDishKitchenObject:
-                    foreach (var kitchenObjectSO in completeDishKitchenObject.GetKitchenObjectSOList())
-                        checkList.Remove(kitchenObjectSO);
-                    break;
-                default:
-                    if (_currentKitchenObject != null)
-                        checkList.Remove(_currentKitchenObject.GetKitchenObjectSO());
-                    break;
+            if(_currentKitchenObject.IsHaveEngoughIngredient()){
+                foreach (var kitchenObjectSO in _currentKitchenObject.ingredient)
+                    checkList.Remove(kitchenObjectSO);
+            }
+            else{
+                if (_currentKitchenObject != null)
+                    checkList.Remove(_currentKitchenObject.GetKitchenObjectSO());
             }
         }
 
@@ -455,7 +449,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
             return true;
         else return false;
     }
-    public void SetRecipeSO(Recipe recipeSO)
+    public void SetRecipeSO(RecipeSO recipeSO)
     {
         _currentRecipeSO = recipeSO;
     }

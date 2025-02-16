@@ -8,7 +8,6 @@ public class PlatesCounter : BaseCounter
     public event EventHandler OnPlateSpawn;
     public event EventHandler OnPlateRemove;
     public static event EventHandler OnAnyPlateRemove;
-    [SerializeReference] private KitchenObjectSO plateKitchenObjectSO;
     private float plateTimer = 0f;
     private float plateTimerMax = 8f;
 
@@ -39,36 +38,17 @@ public class PlatesCounter : BaseCounter
         if (!player.HasKitchenObject())
         {
             //Player is hold nothing
-            //PlateCounter has plates
             plateNumber--;
-            KitchenObject.SpawnKitchenObject(plateKitchenObjectSO, player);
+            KitchenObject.SpawnKitchenObject(ObjectEnum.Plate, player);
             OnPlateRemove?.Invoke(this, EventArgs.Empty);
         }
         else
         {
             KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
             //Player is holding something
-            if(player.GetKitchenObject() is CompleteDishKitchenObject)
+            if(player.GetKitchenObject())
             {
-                //Player is holding a set of kitchen object
-                CompleteDishKitchenObject playerCompleteDish = player.GetKitchenObject() as CompleteDishKitchenObject;
-                // Try add ingredient with the current kitchen object on counter
-                if(playerCompleteDish.TryAddIngredient(plateKitchenObjectSO))
-                {
-                    plateNumber--;
-                    OnPlateRemove?.Invoke(this, EventArgs.Empty);
-                    OnAnyPlateRemove?.Invoke(this, EventArgs.Empty);
-                }
-            }
-            else
-            {
-                //Try combine ingredient with player
-                if(CompleteDishManager.Instance.TryCombineDish(playerKitchenObjectSO, plateKitchenObjectSO, out KitchenObjectSO resultDishSO))
-                {
-                    player.GetKitchenObject().DestroySelf();
-
-                    KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] {playerKitchenObjectSO, plateKitchenObjectSO}, player);
-
+                if(player.GetKitchenObject().TryAddPlate()){
                     plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
                     OnAnyPlateRemove?.Invoke(this, EventArgs.Empty);

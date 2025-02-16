@@ -392,8 +392,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
 
+    public void CmdAddPlate(int photonId){
+       photonView.RPC(nameof(RpcAddPlate),RpcTarget.All, photonId);
+    }
 
-    public void CmdSpawnKitchenObject(string objectType, int photonId, List<int> ingredient)
+    [PunRPC]
+    public void RpcAddPlate(int photonId){
+        var kitchenObjet = PhotonNetwork.GetPhotonView(photonId).GetComponent<KitchenObject>();
+        var plate = Instantiate(GameData.s.GetObject(ObjectEnum.Plate), Vector3.zero, Quaternion.identity).transform;
+        plate.SetParent(kitchenObjet.visualTransform);
+        kitchenObjet.platePoint = plate;
+        plate.transform.localPosition = Vector3.zero;
+        
+    }
+
+    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
         photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient);

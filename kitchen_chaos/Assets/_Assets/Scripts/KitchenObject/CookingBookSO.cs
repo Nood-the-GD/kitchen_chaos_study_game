@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CombineResult{
     public List<KitchenObjectSO> currentIngredients;
-    public Recipe recipe;
+    public RecipeSO recipe;
 
     public List<int> getListOfIngredientsIndex(){
         var indexs = new List<int>();
@@ -22,7 +22,7 @@ public class CombineResult{
 public class CookingBookSO : ScriptableObject
 {
     [Searchable]
-    public List<Recipe> recipes = new List<Recipe>();
+    public List<RecipeSO> recipes = new List<RecipeSO>();
 
     private static CookingBookSO _s;
     public static CookingBookSO s
@@ -40,7 +40,7 @@ public class CookingBookSO : ScriptableObject
     }
 
 
-    public Recipe FindRecipeByOutput(KitchenObjectSO kitchenObjectSO){
+    public RecipeSO FindRecipeByOutput(KitchenObjectSO kitchenObjectSO){
         foreach(var i in recipes){
             if(i.output == kitchenObjectSO)
                 return i;
@@ -51,7 +51,7 @@ public class CookingBookSO : ScriptableObject
     public List<KitchenObjectSO> GetRecursiveIngredients(KitchenObjectSO kitchenObjectSO)
     {
         // Attempt to find a recipe that outputs this kitchen object.
-        Recipe recipe = FindRecipeByOutput(kitchenObjectSO);
+        RecipeSO recipe = FindRecipeByOutput(kitchenObjectSO);
 
         // If no recipe exists, it's a base ingredient.
         if (recipe == null)
@@ -112,7 +112,7 @@ public class CookingBookSO : ScriptableObject
     [Button]
     public void AddNewRecipe()
     {
-        var newRecipe = new Recipe();
+        var newRecipe = new RecipeSO();
         newRecipe.ingredients = new List<KitchenObjectSO>();
         newRecipe.output = new KitchenObjectSO();
         newRecipe.actionType = KitchenObjectType.None;
@@ -124,7 +124,7 @@ public class CookingBookSO : ScriptableObject
     {
         foreach (var recipe in recipes)
         {
-            recipe.name = recipe.output.name;
+            recipe.nameRec = recipe.output.name;
         }
     }
 
@@ -137,7 +137,7 @@ public class CookingBookSO : ScriptableObject
         var fileContent = "public enum " + fileName + "\n{\n";
         foreach (var recipe in recipes)
         {
-            fileContent += recipe.name + ",\n";
+            fileContent += recipe.nameRec + ",\n";
         }
         fileContent += "}\n";
         System.IO.File.WriteAllText(filePath, fileContent);
@@ -146,7 +146,7 @@ public class CookingBookSO : ScriptableObject
     {
         foreach (var recipe in recipes)
         {
-            if (string.IsNullOrEmpty(recipe.name))
+            if (string.IsNullOrEmpty(recipe.nameRec))
             {
                 return false;
             }
@@ -156,12 +156,12 @@ public class CookingBookSO : ScriptableObject
 #endif
 
 
-    public Recipe GetFryingRecipe(KitchenObjectSO input)
+    public RecipeSO GetFryingRecipe(KitchenObjectSO input)
     {
         return recipes.Find(x => x.ingredients.Contains(input) && x.actionType == KitchenObjectType.NeedFried);
     }
 
-    public Recipe GetCuttingRecipe(KitchenObjectSO input)
+    public RecipeSO GetCuttingRecipe(KitchenObjectSO input)
     {
         return recipes.Find(x => x.ingredients.Contains(input) && x.actionType == KitchenObjectType.NeedChop);
     }

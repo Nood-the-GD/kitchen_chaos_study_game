@@ -45,7 +45,7 @@ public class DeliveryManagerUI : MonoBehaviour
     #region Update visual
     private void UpdateVisual()
     {
-        List<Recipe> waitingRecipeSOList = DeliveryManager.Instance.GetWaitingRecipeSOList();
+        List<RecipeSO> waitingRecipeSOList = DeliveryManager.Instance.GetWaitingRecipeSOList();
         int numWaiting = waitingRecipeSOList.Count;
         for (int i = 0; i < numWaiting; i++)
         {
@@ -74,7 +74,7 @@ public class DeliveryManagerUI : MonoBehaviour
         Destroy(recipeTemplateList[index].gameObject);
         recipeTemplateList.RemoveAt(index);
     }
-    private void CreateRecipeTemplate(Recipe recipe)
+    private void CreateRecipeTemplate(RecipeSO recipe)
     {
         Transform template = Instantiate(recipeTemplate, container);
         template.gameObject.SetActive(true);

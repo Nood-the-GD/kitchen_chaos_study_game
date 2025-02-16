@@ -23,9 +23,9 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnRecipeFailed;
     public static DeliveryManager Instance { get; private set; }
     public List<KitchenObjectSO> KitchenObjectSOList => recipeListSO.Select(recipe => recipe.output).ToList();
-    [SerializeField] private List<Recipe> recipeListSO;
+    [SerializeField] private List<RecipeSO> recipeListSO;
     private float waitingTimeForEachRecipe;
-    private List<Recipe> waitingRecipeSOList = new List<Recipe>();
+    private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 6f;
@@ -96,7 +96,7 @@ public class DeliveryManager : MonoBehaviour
     {
         if (orders.Contains("None"))
         {
-            var index = recipeListSO.FindIndex(x => x.name == orders[0]);
+            var index = recipeListSO.FindIndex(x => x.nameRec == orders[0]);
             UpdateOrder(0, index, 1);
             return;
         }
@@ -105,7 +105,7 @@ public class DeliveryManager : MonoBehaviour
             string order = orders[i];
             if (order == "None")
                 continue;
-            var index = recipeListSO.FindIndex(x => x.name == order);
+            var index = recipeListSO.FindIndex(x => x.nameRec == order);
             UpdateOrder(i, index, orders.Length);
         }
     }
@@ -133,7 +133,7 @@ public class DeliveryManager : MonoBehaviour
             var listOfName = new List<string>();
             foreach (var recipe in waitingRecipeSOList)
             {
-                listOfName.Add(recipe.name);
+                listOfName.Add(recipe.nameRec);
             }
 
             if (listOfName.Count == 0)
@@ -177,7 +177,7 @@ public class DeliveryManager : MonoBehaviour
     public bool DeliverFood(KitchenObject kitchenObject)
     {
         // Go through all the waiting recipes
-        foreach (Recipe recipe in waitingRecipeSOList)
+        foreach (RecipeSO recipe in waitingRecipeSOList)
         {
             // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
             if (recipe.output == kitchenObject.GetKitchenObjectSO() && kitchenObject.IsHaveEngoughIngredient())
@@ -266,7 +266,7 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Get
-    public List<Recipe> GetWaitingRecipeSOList()
+    public List<RecipeSO> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;
     }

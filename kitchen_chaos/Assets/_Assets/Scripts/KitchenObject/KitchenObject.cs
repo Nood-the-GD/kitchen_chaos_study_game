@@ -3,6 +3,7 @@ using Photon.Pun;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Codice.CM.Common;
 
 public class KitchenObject : MonoBehaviour
 {
@@ -11,8 +12,24 @@ public class KitchenObject : MonoBehaviour
     private IKitchenContainable _containerParent;
     PhotonView photonView;
     public Transform stackPoint;
-    List<KitchenObjectSO> ingredient = new List<KitchenObjectSO>();
-    
+    public Transform visualTransform;
+    public Transform platePoint;
+
+    [HideInInspector] Transform plate;
+
+    [HideInInspector] public List<KitchenObjectSO> ingredient = new List<KitchenObjectSO>();
+    public bool IsHavingPlate => plate != null;
+    public bool IsPlate => kitchenObjectSO.name == "Plate";
+
+    public bool TryAddPlate(){
+        if(IsHavingPlate)
+            return false;
+        if(IsPlate)
+            return false;
+        PhotonManager.s.CmdAddPlate(photonView.ViewID);
+        return true;
+    }
+
     public void AddIngredient(KitchenObjectSO kitchenObjectSO){
         ingredient.Add(kitchenObjectSO);
         SetActiveIngredient(kitchenObjectSO);
@@ -25,8 +42,9 @@ public class KitchenObject : MonoBehaviour
         }
     }
 
-    
     public void SetActiveIngredient(KitchenObjectSO kitchenObjectSO){
+        if(stackPoint == null)
+            return;
         var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
         var index = recipe.ingredients.IndexOf(kitchenObjectSO);
         stackPoint.GetChild(index).gameObject.SetActive(true);
@@ -37,6 +55,17 @@ public class KitchenObject : MonoBehaviour
         return recipe.IsSameIngredients(ingredient);
     }
 
+
+    public static void SpawnKitchenObject(ObjectEnum objectEnum, IKitchenContainable kitchenObjectParent){
+        SpawnKitchenObject(
+            GameData.s.GetObject(objectEnum).GetComponent<KitchenObject>().GetKitchenObjectSO()
+            , kitchenObjectParent, new List<int>{0}
+        );
+    }
+
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent){
+        SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent, new List<int>{0});
+    }
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient)
     {
@@ -57,7 +86,7 @@ public class KitchenObject : MonoBehaviour
             var parentId = -1;
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient);
+            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient);
         }
     }
     void Awake()
@@ -69,6 +98,10 @@ public class KitchenObject : MonoBehaviour
     {
         if (!SectionData.s.isSinglePlay && PhotonNetwork.IsMasterClient)
             StartCoroutine(OnSync());
+
+        if(visualTransform == null){
+            visualTransform = transform.GetChild(0);
+        }
     }
 
     [PunRPC]
@@ -142,7 +175,7 @@ public class KitchenObject : MonoBehaviour
 
     public void CmdDestroy()
     {
-        photonView.RPC("RpcDestroy", RpcTarget.All);
+        photonView.RPC(nameof(RpcDestroy), RpcTarget.All);
     }
 
     [PunRPC]

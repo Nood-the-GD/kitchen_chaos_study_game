@@ -45,6 +45,19 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             else
             {
                 Debug.Log("player is holding");
+
+                //holding plate
+                if(otherContainer.GetKitchenObject().IsPlate){
+                    if(kitchenObject.TryAddPlate()){
+                        otherContainer.ClearKitchenObject();
+                    }
+                }
+                if(GetKitchenObject().IsPlate){
+                    if(otherContainer.GetKitchenObject().TryAddPlate()){
+                        ClearKitchenObject();
+                    }
+                }
+
                 var combineResult = CookingBookSO.s.TryCombine(otherContainer.GetKitchenObject(), GetKitchenObject());
                 if(combineResult != null){
                     otherContainer.ClearKitchenObject();

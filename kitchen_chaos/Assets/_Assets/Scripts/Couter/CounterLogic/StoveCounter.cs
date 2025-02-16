@@ -26,7 +26,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     #endregion
 
     #region Variables
-    private Recipe _curRecipe;
+    private RecipeSO _curRecipe;
     private State _currentState;
     private float _fryingTimer;
     private float _burningTimer;
@@ -71,7 +71,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             case State.Fried:
                 if (_curRecipe == null)
                 {
-
                     return;
                 }
                 _burningTimer += Time.deltaTime;
@@ -118,9 +117,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 ChangeState(State.Frying);
                 _fryingTimer = 0;
             }
-            //else
-            //Player carrying nothing or something can not be cut
-            //Do no thing
         }
 
     }

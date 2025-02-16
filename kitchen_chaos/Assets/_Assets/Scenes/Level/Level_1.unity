@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43968523, g: 0.4880923, b: 0.5686092, a: 1}
+  m_IndirectSpecularColor: {r: 0.43968523, g: 0.4880923, b: 0.56860834, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -454,6 +454,23 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.0039370796
       objectReference: {fileID: 0}
+    - target: {fileID: 4917925550941302047, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
+        type: 3}
+      propertyPath: recipeListSO.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917925550941302047, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
+        type: 3}
+      propertyPath: recipeListSO.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9,
+        type: 2}
+    - target: {fileID: 4917925550941302047, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
+        type: 3}
+      propertyPath: recipeListSO.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: fe8bffd9d3d3b430494ac6fb1e2c16df,
+        type: 2}
     - target: {fileID: 5369181156141908497, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
         type: 3}
       propertyPath: m_Name

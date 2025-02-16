@@ -22,9 +22,9 @@ public class RecipeTemplateUI : MonoBehaviour
     #endregion
 
     #region Public functions
-    public void SetRecipeSO(Recipe recipeSO)
+    public void SetRecipeSO(RecipeSO recipeSO)
     {
-        recipeNameText.text = recipeSO.name;
+        recipeNameText.text = recipeSO.nameRec;
         for(int i = 0; i < recipeSO.ingredients.Count; i++)
         {
             if(i == iconTemplateList.Count)
