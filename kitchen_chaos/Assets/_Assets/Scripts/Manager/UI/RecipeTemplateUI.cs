@@ -22,23 +22,23 @@ public class RecipeTemplateUI : MonoBehaviour
     #endregion
 
     #region Public functions
-    public void SetRecipeSO(RecipeSO recipeSO)
+    public void SetRecipeSO(Recipe recipeSO)
     {
-        recipeNameText.text = recipeSO.recipeName;
-        for(int i = 0; i < recipeSO.kitchenObjectSOList.Count; i++)
+        recipeNameText.text = recipeSO.name;
+        for(int i = 0; i < recipeSO.ingredients.Count; i++)
         {
             if(i == iconTemplateList.Count)
             {
                 // i over the final index
                 IconTemplate iconTemplateClone = Instantiate(iconTemplate, iconHolder);
                 iconTemplateClone.gameObject.SetActive(true);
-                iconTemplateClone.SetKitchenObjectSO(recipeSO.kitchenObjectSOList[i]);
+                iconTemplateClone.SetKitchenObjectSO(recipeSO.ingredients[i]);
                 iconTemplateList.Add(iconTemplateClone);
                 continue;
             }
             // Update new KitchenObjectSO
-            iconTemplateList[i].SetKitchenObjectSO(recipeSO.kitchenObjectSOList[i]);
-            if(i == recipeSO.kitchenObjectSOList.Count - 1 && i < iconTemplateList.Count - 1)
+            iconTemplateList[i].SetKitchenObjectSO(recipeSO.ingredients[i]);
+            if(i == recipeSO.ingredients.Count - 1 && i < iconTemplateList.Count - 1)
             {
                 // reach the final index of kitchenObjectSOList but not reach the final index of iconTemplates
                 for(int j = i; j < iconTemplateList.Count; j++)

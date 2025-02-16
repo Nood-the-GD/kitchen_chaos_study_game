@@ -7,7 +7,7 @@ public class TestAI : MonoBehaviour
 {
     [SerializeField] private AIController _agent;
     [SerializeField] private BaseCounter _baseCounter;
-    [SerializeField] private RecipeSO _recipeSO;
+    [SerializeField] private Recipe _recipeSO;
 
     private void Start()
     {

@@ -2,22 +2,54 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class KitchenObject : MonoBehaviour
 {
-    [SerializeField] private KitchenObjectSO kitchenObjectSO;
+    [SerializeField] public KitchenObjectSO kitchenObjectSO;
 
     private IKitchenContainable _containerParent;
     PhotonView photonView;
+    public Transform stackPoint;
+    List<KitchenObjectSO> ingredient = new List<KitchenObjectSO>();
+    
+    public void AddIngredient(KitchenObjectSO kitchenObjectSO){
+        ingredient.Add(kitchenObjectSO);
+        SetActiveIngredient(kitchenObjectSO);
+    }
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent)
+    public void AddIngredientIndexs(int[] ingredientIndex){
+        var rep = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
+        foreach(var i in ingredientIndex){
+            AddIngredient(rep.ingredients[i]);
+        }
+    }
+
+    
+    public void SetActiveIngredient(KitchenObjectSO kitchenObjectSO){
+        var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
+        var index = recipe.ingredients.IndexOf(kitchenObjectSO);
+        stackPoint.GetChild(index).gameObject.SetActive(true);
+    }
+
+    public bool IsHaveEngoughIngredient(){
+        var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
+        return recipe.IsSameIngredients(ingredient);
+    }
+
+
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient)
     {
         //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
-
-        if (SectionData.s.isSinglePlay == false)
+        if (SectionData.s.isSinglePlay)
         {
-            //--Player Clone are not allowed to spawn object
+            var obj = Instantiate(kitchenObjectSO.prefab, kitchenObjectParentGameObject.transform);
+            obj.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
+        }
+        else
+        {
+             //--Player Clone are not allowed to spawn object
             var player = kitchenObjectParent as Player;
             if (player != null && !player.photonView.IsMine)
                 return;
@@ -25,52 +57,9 @@ public class KitchenObject : MonoBehaviour
             var parentId = -1;
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-
-            PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId);
-        }
-        else
-        {
-            var obj = Instantiate(kitchenObjectSO.prefab, kitchenObjectParentGameObject.transform);
-            obj.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
+            PhotonManager.s.CmdSpawnKitchenObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient);
         }
     }
-    public static void SpawnCompleteDish(KitchenObjectSO completeDishSO, KitchenObjectSO[] ingredients, IKitchenContainable kitchenObjectParent)
-    {
-        //convert interface to gameObject
-        var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
-
-        //--Player Clone are not allowed to spawn object
-        var player = kitchenObjectParent as Player;
-        if (player != null && !player.photonView.IsMine)
-            return;
-
-        var parentId = -1;
-        if (kitchenObjectParentGameObject != null)
-            parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-
-        string[] ingredientString = new string[ingredients.Length];
-        for (int i = 0; i < ingredients.Length; i++)
-        {
-            ingredientString[i] = ingredients[i].objectName;
-        }
-
-        if (!SectionData.s.isSinglePlay)
-        {
-            PhotonManager.s.CmdSpawnCompleteDish(completeDishSO.prefab.GetComponent<ObjectTypeView>().objectType, ingredientString, parentId);
-        }
-        else
-        {
-            var obj = Instantiate(completeDishSO.prefab);
-            CompleteDishKitchenObject completeDish = obj.GetComponent<CompleteDishKitchenObject>();
-            completeDish.SetContainerParent(kitchenObjectParent);
-            for (int i = 0; i < ingredients.Length; i++)
-            {
-                KitchenObjectSO ingredient = ingredients[i];
-                completeDish.TryAddIngredient(ingredient);
-            }
-        }
-    }
-
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -98,8 +87,6 @@ public class KitchenObject : MonoBehaviour
             SetContainerParent(kitchenObjectParent);
     }
 
-
-
     IEnumerator OnSync()
     {
         while (true)
@@ -117,20 +104,6 @@ public class KitchenObject : MonoBehaviour
 
 
 
-    public bool TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDish)
-    {
-        if (this is CompleteDishKitchenObject)
-        {
-            completeDish = this as CompleteDishKitchenObject;
-            return true;
-        }
-        else
-        {
-            completeDish = null;
-            return false;
-        }
-    }
-
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
@@ -145,13 +118,7 @@ public class KitchenObject : MonoBehaviour
             this._containerParent = otherContainer;
             return;
         }
-
-        if (this._containerParent != null)
-        {
-            this._containerParent.ClearKitchenObject();
-        }
         this._containerParent = otherContainer;
-
         otherContainer.SetKitchenObject(this);
         otherContainer.kitchenObject = this;
         this.transform.parent = otherContainer.GetKitchenObjectFollowTransform();
@@ -169,8 +136,6 @@ public class KitchenObject : MonoBehaviour
             CmdDestroy();
         else
         {
-            if (_containerParent != null)
-                _containerParent.ClearKitchenObject();
             Destroy(this.gameObject);
         }
     }
@@ -183,8 +148,6 @@ public class KitchenObject : MonoBehaviour
     [PunRPC]
     public void RpcDestroy()
     {
-        if (_containerParent != null)
-            _containerParent.ClearKitchenObject();
         Destroy(this.gameObject);
     }
 }

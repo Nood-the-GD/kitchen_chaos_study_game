@@ -393,19 +393,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 
 
-    public void CmdSpawnKitchenObject(string objectType, int photonId)
+    public void CmdSpawnKitchenObject(string objectType, int photonId, List<int> ingredient)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
-        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID);
-    }
-    public void CmdSpawnCompleteDish(string objectType, string[] ingredient, int photonId)
-    {
-        int viewID = PhotonNetwork.AllocateViewID(false);
-        photonView.RPC(nameof(RpcSpawnCompleteDish), RpcTarget.All, objectType, ingredient, photonId, viewID);
+        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient);
     }
 
+
     [PunRPC]
-    public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId)
+    public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId, int[] ingredient)
     {
         IKitchenContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
@@ -413,28 +409,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
 
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
-        kitchenObjectTransform.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
+        var ko = kitchenObjectTransform.GetComponent<KitchenObject>();
+        ko.SetContainerParent(kitchenObjectParent);
+        ko.AddIngredientIndexs(ingredient);
     }
-    [PunRPC]
-    public void RpcSpawnCompleteDish(string objectType, string[] ingredientString, int parentPhotonId, int viewId)
-    {
-        IKitchenContainable kitchenObjectParent = null;
-        if (parentPhotonId != -1)
-            kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenContainable>();
-        Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
-
-        kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
-        kitchenObjectTransform.GetComponent<KitchenObject>().SetContainerParent(kitchenObjectParent);
-        CompleteDishKitchenObject completeDish = kitchenObjectTransform.GetComponent<CompleteDishKitchenObject>();
-
-        for (int i = 0; i < ingredientString.Length; i++)
-        {
-            KitchenObjectSO ingredient = GameData.s.GetKitchenObjectSO(ingredientString[i]);
-            completeDish.TryAddIngredient(ingredient);
-        }
-    }
-
-
 
     #region Callback
     public override void OnConnected()

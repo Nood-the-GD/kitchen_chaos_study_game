@@ -45,62 +45,33 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             else
             {
                 Debug.Log("player is holding");
-                //Player is carrying something
-                if (otherContainer.GetKitchenObject() is CompleteDishKitchenObject)
-                {
-                    //Player is holding a set of kitchen object
-                    CompleteDishKitchenObject playerCompleteDish = otherContainer.GetKitchenObject() as CompleteDishKitchenObject;
-                    // Try add ingredient with the current kitchen object on counter
-                    if (playerCompleteDish.TryAddIngredient(this.GetKitchenObject().GetKitchenObjectSO()))
-                    {
-                        // After adding ingredient, destroy it on counter
-                        GetKitchenObject().DestroySelf();
+                var combineResult = CookingBookSO.s.TryCombine(otherContainer.GetKitchenObject(), GetKitchenObject());
+                if(combineResult != null){
+                    otherContainer.ClearKitchenObject();
+                    
+                    var recipe = combineResult.recipe;
+                    if(kitchenObject.GetKitchenObjectSO() != recipe.output){
+                        ClearKitchenObject();
+                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex());
                     }
-                }
-                else
-                {
-                    //Player is holding an ingredient
-                    TryAddPlayerIngredient(otherContainer.GetKitchenObject());
+                    else{
+                        kitchenObject.AddIngredient(otherContainer.GetKitchenObject().GetKitchenObjectSO());
+                    }
                 }
             }
         }
-        else
+        else //Counter don't have kitchen object
         {
-            //Counter don't have kitchen object
             if (otherContainer.HasKitchenObject())
             {
                 //Player carrying something
-                //Move kitchen object to counter
                 otherContainer.GetKitchenObject().SetContainerParent(this);
             }
         }
 
     }
 
-    private void TryAddPlayerIngredient(KitchenObject playerKitchenObject)
-    {
-        var playerObjectSO = playerKitchenObject.GetKitchenObjectSO();
-        if (GetKitchenObject() is CompleteDishKitchenObject)
-        {
-            // Kitchen object on counter is a set of kitchen object
-            CompleteDishKitchenObject counterCompleteDish = GetKitchenObject() as CompleteDishKitchenObject;
-            if (counterCompleteDish.TryAddIngredient(playerObjectSO))
-            {
-                playerKitchenObject.DestroySelf();
-            }
-        }
-        else
-        {
-            if (CompleteDishManager.Instance.TryCombineDish(playerObjectSO, GetKitchenObject().GetKitchenObjectSO(), out KitchenObjectSO resultDishSO))
-            {
-                playerKitchenObject.DestroySelf();
-                KitchenObjectSO counterKitchenObjectSO = GetKitchenObject().GetKitchenObjectSO();
-                KitchenObject.SpawnCompleteDish(resultDishSO, new KitchenObjectSO[] { playerObjectSO, counterKitchenObjectSO }, this);
 
-                GetKitchenObject().DestroySelf();
-            }
-        }
-    }
 
 
     #region Multiplay
@@ -149,6 +120,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     public void ClearKitchenObject()
     {
+        if(kitchenObject != null)
+            kitchenObject.DestroySelf();
+        
         this.kitchenObject = null;
     }
 

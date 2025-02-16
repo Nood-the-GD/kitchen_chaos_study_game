@@ -311,7 +311,12 @@ public class Player : MonoBehaviour, IPlayer
     }
     public void ClearKitchenObject()
     {
+        if(kitchenObject != null){
+            kitchenObject.DestroySelf();
+        }
+        
         this.kitchenObject = null;
+        
     }
     public bool HasKitchenObject()
     {

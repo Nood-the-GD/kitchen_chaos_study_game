@@ -18,27 +18,10 @@ public class DeliveryCounter : BaseCounter
     {
         if(KOParent.HasKitchenObject())
         {
-            if(KOParent.GetKitchenObject().TryGetCompleteDishKitchenObject(out CompleteDishKitchenObject completeDishKitchenObject))
+            if(DeliveryManager.Instance.DeliverFood(KOParent.GetKitchenObject()))
             {
-                if(!completeDishKitchenObject.IsHasPlate())
-                {
-                    Debug.Log("Doesn't have plate");
-                    return;
-                }
-
-                if(DeliveryManager.Instance.DeliverRecipe(completeDishKitchenObject))
-                {
-                    KOParent.GetKitchenObject().DestroySelf();
-                    deliverFeedback.PlayFeedbacks();
-                }
-                else
-                {
-                    Debug.Log("Delivery failed");
-                }
-            }
-            else{
-                Debug.Log("Player is carrying something not Plate");
-            
+                KOParent.ClearKitchenObject();
+                deliverFeedback.PlayFeedbacks();
             }
         }
         else{

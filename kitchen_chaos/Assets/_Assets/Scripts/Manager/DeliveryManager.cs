@@ -21,14 +21,11 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnRecipeRemove;
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
-
     public static DeliveryManager Instance { get; private set; }
-    public KitchenObjectSO[] KitchenObjectSOList => recipeListSO.recipeSOList[0].kitchenObjectSOList.ToArray();
-
-    [SerializeField] private RecipeListSO recipeListSO;
-
+    public List<KitchenObjectSO> KitchenObjectSOList => recipeListSO.Select(recipe => recipe.output).ToList();
+    [SerializeField] private List<Recipe> recipeListSO;
     private float waitingTimeForEachRecipe;
-    private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
+    private List<Recipe> waitingRecipeSOList = new List<Recipe>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 6f;
@@ -43,7 +40,8 @@ public class DeliveryManager : MonoBehaviour
 
         if (Instance == null) Instance = this;
         recipeDeliveredPoint = 0;
-        waitingTimeForEachRecipe = recipeListSO.waitingTimeForEachRecipe;
+        waitingTimeForEachRecipe += 10;
+        
     }
     void Start()
     {
@@ -73,7 +71,7 @@ public class DeliveryManager : MonoBehaviour
 
             if (waitingRecipeSOList.Count < waitingRecipeMax)
             {
-                var index = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
+                var index = UnityEngine.Random.Range(0, recipeListSO.Count);
                 AddOrder(index);
             }
         }
@@ -98,7 +96,7 @@ public class DeliveryManager : MonoBehaviour
     {
         if (orders.Contains("None"))
         {
-            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == orders[0]);
+            var index = recipeListSO.FindIndex(x => x.name == orders[0]);
             UpdateOrder(0, index, 1);
             return;
         }
@@ -107,7 +105,7 @@ public class DeliveryManager : MonoBehaviour
             string order = orders[i];
             if (order == "None")
                 continue;
-            var index = recipeListSO.recipeSOList.FindIndex(x => x.name == order);
+            var index = recipeListSO.FindIndex(x => x.name == order);
             UpdateOrder(i, index, orders.Length);
         }
     }
@@ -174,43 +172,27 @@ public class DeliveryManager : MonoBehaviour
     /// <summary>
     /// Check if the given plate contains a valid recipe
     /// </summary>
-    /// <param name="completeDishKitchenObject">The plate that the player try to deliver</param>
+    /// <param name="kitchenObject">The plate that the player try to deliver</param>
     /// <returns>True if the plate contain a valid recipe, false otherwise</returns>
-    public bool DeliverRecipe(CompleteDishKitchenObject completeDishKitchenObject)
+    public bool DeliverFood(KitchenObject kitchenObject)
     {
         // Go through all the waiting recipes
-        foreach (RecipeSO recipe in waitingRecipeSOList)
+        foreach (Recipe recipe in waitingRecipeSOList)
         {
             // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
-            if (recipe.kitchenObjectSOList.Count == completeDishKitchenObject.GetKitchenObjectSOList().Count)
+            if (recipe.output == kitchenObject.GetKitchenObjectSO() && kitchenObject.IsHaveEngoughIngredient())
             {
-                // Set to true until we find a mismatch
-                bool isMatch = true;
-                // Go through all the ingredient in the plate
-                foreach (KitchenObjectSO ingredient in completeDishKitchenObject.GetKitchenObjectSOList())
-                {
-                    // Check if the recipe contains the ingredient
-                    if (!recipe.kitchenObjectSOList.Contains(ingredient))
-                    {
-                        // If not, set isMatch to false and break the loop
-                        isMatch = false;
-                        break;
-                    }
-                }
-                // If all the ingredient match
-                if (isMatch)
-                {
-                    // Remove the recipe from the waiting list
-                    RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
-                    // Invoke the OnRecipeSuccess event
-                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
-                    // Add the point of the recipe to the delivered point
-                    recipeDeliveredPoint += recipe.Point;
-                    // Update the UI
-                    PointUI.Instance.UpdateUI();
-                    // Return true
-                    return true;
-                }
+                // Remove the recipe from the waiting list
+                RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
+                // Invoke the OnRecipeSuccess event
+                OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+                // Add the point of the recipe to the delivered point
+                recipeDeliveredPoint += recipe.point;
+                // Update the UI
+                PointUI.Instance.UpdateUI();
+                // Return true
+                return true;
+            
             }
         }
         // None of the recipe match
@@ -226,14 +208,14 @@ public class DeliveryManager : MonoBehaviour
     private void AddOrder(int index)
     {
         // Check that index is valid
-        if (index < 0 || index >= recipeListSO.recipeSOList.Count)
+        if (index < 0 || index >= recipeListSO.Count)
         {
             Debug.LogError($"AddOrder: index {index} is out of range");
             return;
         }
 
         // Add the recipe to the waiting list
-        waitingRecipeSOList.Add(recipeListSO.recipeSOList[index]);
+        waitingRecipeSOList.Add(recipeListSO[index]);
         // Add a new timer to the list
         waitingTimerClassList.Add(new TimerClass
         {
@@ -257,7 +239,7 @@ public class DeliveryManager : MonoBehaviour
                 AddOrder(indexOfRecipe);
             }
         }
-        waitingRecipeSOList[indexOfOrder] = recipeListSO.recipeSOList[indexOfRecipe];
+        waitingRecipeSOList[indexOfOrder] = recipeListSO[indexOfRecipe];
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
     private void RemoveOrder(int recipeIndex)
@@ -284,7 +266,7 @@ public class DeliveryManager : MonoBehaviour
     #endregion
 
     #region Get
-    public List<RecipeSO> GetWaitingRecipeSOList()
+    public List<Recipe> GetWaitingRecipeSOList()
     {
         return waitingRecipeSOList;
     }

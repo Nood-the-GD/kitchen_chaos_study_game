@@ -26,7 +26,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     private NavMeshAgent _navMeshAgent;
     private BotStage _stage;
     private BaseCounter _selectedCounter;
-    private RecipeSO _currentRecipeSO;
+    private Recipe _currentRecipeSO;
     private KitchenObject _currentKitchenObject;
     private float _altInteractDelay = 0.5f;
     private float _altInteractDelayTimer = 0;
@@ -455,7 +455,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
             return true;
         else return false;
     }
-    public void SetRecipeSO(RecipeSO recipeSO)
+    public void SetRecipeSO(Recipe recipeSO)
     {
         _currentRecipeSO = recipeSO;
     }
