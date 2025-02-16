@@ -468,8 +468,11 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     {
         return _currentKitchenObject;
     }
-    public void ClearKitchenObject()
+    public void ClearKitchenObject(bool destroyKO = false)
     {
+        if(destroyKO){
+            _currentKitchenObject.DestroySelf();
+        }
         _currentKitchenObject = null;
     }
     public bool HasKitchenObject()

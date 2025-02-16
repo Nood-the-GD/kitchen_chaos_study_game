@@ -393,17 +393,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 
     public void CmdAddPlate(int photonId){
-       photonView.RPC(nameof(RpcAddPlate),RpcTarget.All, photonId);
+       int palteId = PhotonNetwork.AllocateViewID(false);
+       photonView.RPC(nameof(RpcAddPlate),RpcTarget.All, photonId, palteId);
     }
 
     [PunRPC]
-    public void RpcAddPlate(int photonId){
-        var kitchenObjet = PhotonNetwork.GetPhotonView(photonId).GetComponent<KitchenObject>();
-        var plate = Instantiate(GameData.s.GetObject(ObjectEnum.Plate), Vector3.zero, Quaternion.identity).transform;
-        plate.SetParent(kitchenObjet.visualTransform);
-        kitchenObjet.platePoint = plate;
-        plate.transform.localPosition = Vector3.zero;
-        
+    public void RpcAddPlate(int photonId, int plateId){
+        var find =  PhotonNetwork.GetPhotonView(photonId);
+        if(find == null){
+            Debug.LogError("cant find id: "+ photonId);
+        }
+        var kitchenObjet = find.GetComponent<KitchenObject>();
+        kitchenObjet.AddPlateLocal(plateId);
     }
 
     public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient)
@@ -420,11 +421,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (parentPhotonId != -1)
             kitchenObjectParent = PhotonNetwork.GetPhotonView(parentPhotonId).GetComponent<IKitchenContainable>();
         Transform kitchenObjectTransform = Instantiate(GameData.s.GetObject(objectType), Vector3.zero, Quaternion.identity).transform;
-
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
         var ko = kitchenObjectTransform.GetComponent<KitchenObject>();
+
         ko.SetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexs(ingredient);
+
     }
 
     #region Callback

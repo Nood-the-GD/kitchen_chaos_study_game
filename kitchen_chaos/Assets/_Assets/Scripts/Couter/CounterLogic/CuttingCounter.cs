@@ -29,7 +29,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     {
         base.Interact(otherContainer);
 
-        if (!HasKitchenObject() && otherContainer.HasKitchenObject())
+        if (!HasKitchenObject() && otherContainer.HasKitchenObject() && GetKitchenObject()!= null)
         {
             //Player carrying something
             //Move kitchen object to counter

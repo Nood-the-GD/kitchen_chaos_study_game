@@ -11,7 +11,7 @@ public interface IKitchenContainable
 
     public KitchenObject GetKitchenObject();
 
-    public void ClearKitchenObject();
+    public void ClearKitchenObject(bool destroyChild = true);
 
     public bool HasKitchenObject();
 

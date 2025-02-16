@@ -59,6 +59,12 @@ public class CookingBookSO : ScriptableObject
             return new List<KitchenObjectSO>() { kitchenObjectSO };
         }
 
+
+        //base ingredients
+        if(recipe.ingredients.Count == 1){
+            return new List<KitchenObjectSO>() { recipe.output };
+        }
+
         // Otherwise, create a list to hold all the base ingredients.
         List<KitchenObjectSO> baseIngredients = new List<KitchenObjectSO>();
 
@@ -90,6 +96,12 @@ public class CookingBookSO : ScriptableObject
                 recipe = find
             };
         }
+
+        Debug.Log("Combine failed. Ingredients:");
+        foreach(var i in i1){
+            Debug.Log(i.name);
+        }
+
         return null;
     }
 
@@ -158,11 +170,11 @@ public class CookingBookSO : ScriptableObject
 
     public RecipeSO GetFryingRecipe(KitchenObjectSO input)
     {
-        return recipes.Find(x => x.ingredients.Contains(input) && x.actionType == KitchenObjectType.NeedFried);
+        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedFried);
     }
 
     public RecipeSO GetCuttingRecipe(KitchenObjectSO input)
     {
-        return recipes.Find(x => x.ingredients.Contains(input) && x.actionType == KitchenObjectType.NeedChop);
+        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedChop);
     }
 }

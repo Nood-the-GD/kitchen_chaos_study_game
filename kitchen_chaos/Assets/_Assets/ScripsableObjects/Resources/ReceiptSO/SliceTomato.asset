@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameRec: SlideTomato
   ingredients:
-  - {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
+  - {fileID: 11400000, guid: f32ad0e34362e0844b73b01701b79205, type: 2}
   actionType: 1
   output: {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
   step: 5

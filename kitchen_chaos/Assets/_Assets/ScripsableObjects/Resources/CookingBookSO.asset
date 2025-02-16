@@ -15,5 +15,5 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9, type: 2}
   - {fileID: 11400000, guid: fe8bffd9d3d3b430494ac6fb1e2c16df, type: 2}
-  - {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9, type: 2}
+  - {fileID: 11400000, guid: b59eea6974eb5447a8d4ef161f8d0e4a, type: 2}
   - {fileID: 11400000, guid: f1f0b4e1849814f4894dbdc55e06f26b, type: 2}

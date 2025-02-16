@@ -50,11 +50,13 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 if(otherContainer.GetKitchenObject().IsPlate){
                     if(kitchenObject.TryAddPlate()){
                         otherContainer.ClearKitchenObject();
+                        return;
                     }
                 }
                 if(GetKitchenObject().IsPlate){
                     if(otherContainer.GetKitchenObject().TryAddPlate()){
                         ClearKitchenObject();
+                        return;
                     }
                 }
 
@@ -71,6 +73,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                         kitchenObject.AddIngredient(otherContainer.GetKitchenObject().GetKitchenObjectSO());
                     }
                 }
+                
             }
         }
         else //Counter don't have kitchen object
@@ -131,9 +134,10 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     }
 
 
-    public void ClearKitchenObject()
+    public void ClearKitchenObject(bool destroyKO = true)
     {
-        if(kitchenObject != null)
+
+        if(kitchenObject != null && destroyKO)
             kitchenObject.DestroySelf();
         
         this.kitchenObject = null;

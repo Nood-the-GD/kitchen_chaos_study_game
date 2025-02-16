@@ -39,7 +39,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         _s = (T)FindObjectOfType(typeof(T));
         if(_s == null) {
             
-            Debug.LogError("Singleton " + typeof(T).ToString() + " not found");
             // GameObject singleton = new GameObject();
             // _s = singleton.AddComponent<T>();
             // singleton.name = typeof(T).ToString();

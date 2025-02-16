@@ -237,7 +237,7 @@ public class LambdaAPI : MonoBehaviour
     /// </summary>
     public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters)
     {
-        if (string.IsNullOrEmpty(func))
+        if (string.IsNullOrEmpty(func)) 
         {
             string errorMsg = "Function name is required.";
             Notification(errorMsg);

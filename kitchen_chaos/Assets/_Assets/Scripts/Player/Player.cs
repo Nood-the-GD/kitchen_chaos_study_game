@@ -171,11 +171,11 @@ public class Player : MonoBehaviour, IPlayer
         if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
         // Get normalized direction of movement
         var direction = moveDir;
-        Debug.Log("direction: " + direction);
+        //Debug.Log("direction: " + direction);
 
         // Check if movement is possible
         var movementCheck = CanMove(direction, moveDistance);
-        Debug.Log("movementCheck: " + movementCheck);
+        //Debug.Log("movementCheck: " + movementCheck);
         // If movement is not possible
         if (!movementCheck)
         {
@@ -309,14 +309,14 @@ public class Player : MonoBehaviour, IPlayer
     {
         return this.kitchenObject;
     }
-    public void ClearKitchenObject()
+    public void ClearKitchenObject(bool destroyChild = true)
     {
-        if(kitchenObject != null){
-            kitchenObject.DestroySelf();
+        if(destroyChild){
+            if(kitchenObject != null){
+                kitchenObject.DestroySelf();
+            }
         }
-        
         this.kitchenObject = null;
-        
     }
     public bool HasKitchenObject()
     {

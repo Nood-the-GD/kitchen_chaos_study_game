@@ -27,7 +27,7 @@ public class MainMenuUI : MonoBehaviour
 
     void OnEnable()
     {
-        UserData.currentUser.OnUpdateUserName += OnUpdateUserName;
+       
         photonManager.onConnectToServer += PhotonManager_OnConnectToServerHandler;
     }
 
@@ -36,7 +36,9 @@ public class MainMenuUI : MonoBehaviour
     }
     void OnDisable()
     {
-        UserData.currentUser.OnUpdateUserName -= OnUpdateUserName;
+        if(UserData.currentUser!= null){
+            UserData.currentUser.OnUpdateUserName -= OnUpdateUserName;
+        }
         photonManager.onConnectToServer -= PhotonManager_OnConnectToServerHandler;
     }
     void Start(){
@@ -45,7 +47,7 @@ public class MainMenuUI : MonoBehaviour
             playBtn.gameObject.GetComponent<Image>().color = Color.gray;
             playBtn.interactable = false;
         }
-
+        UserData.currentUser.OnUpdateUserName += OnUpdateUserName;
         username.text = "Username: "+ UserData.currentUser.username;
         if(Application.isEditor){
             username.text += "\n userId: " + UserData.currentUser.uid;

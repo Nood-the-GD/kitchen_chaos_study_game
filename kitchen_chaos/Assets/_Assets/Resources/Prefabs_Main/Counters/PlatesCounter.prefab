@@ -113,6 +113,16 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1a0afd856a35421469b28b916116fd9c, type: 2}
+    - target: {fileID: 3651992996322952667, guid: e21b499d164095947b7559f0267f0e63,
+        type: 3}
+      propertyPath: platesCounter
+      value: 
+      objectReference: {fileID: 5445566683266360225}
+    - target: {fileID: 3651992996322952667, guid: e21b499d164095947b7559f0267f0e63,
+        type: 3}
+      propertyPath: counterTopPoint
+      value: 
+      objectReference: {fileID: 1494372879432475579}
     - target: {fileID: 4472461010448373620, guid: e21b499d164095947b7559f0267f0e63,
         type: 3}
       propertyPath: m_IsActive
@@ -360,8 +370,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   counterTopPoint: {fileID: 1494372879432475579}
-  plateKitchenObjectSO: {fileID: 11400000, guid: 0f15d95288a074b9a8d933dd6469c3c4,
-    type: 2}
 --- !u!4 &6950441364485919881 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 494034241297062202, guid: 598a201f2eb3f4546bc075921709d996,
