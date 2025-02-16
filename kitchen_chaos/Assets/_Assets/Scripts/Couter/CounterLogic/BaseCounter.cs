@@ -69,10 +69,12 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                         ClearKitchenObject();
                        
                         var isHavePlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (ottherKo!= null && ottherKo.IsHavingPlate);
+                        Debug.Log("Spawing new object have plate: "+ isHavePlate);
+                        
                         KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex(), isHavePlate);
                     }
                     else{
-                        kitchenObject.AddIngredient(otherContainer.GetKitchenObject().GetKitchenObjectSO());
+                        kitchenObject.AddIngredient(ottherKo.GetKitchenObjectSO());
                     }
                 }
                 

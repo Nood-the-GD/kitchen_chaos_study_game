@@ -65,7 +65,6 @@ public class KitchenObject : MonoBehaviour
             return;
         
         var index = ingredientIndeOrder.IndexOf(ingredient);
-        Debug.Log("ingredientIndex"+ index);
         visualTransform.GetChild(index).gameObject.SetActive(true);
     }
 
@@ -111,7 +110,7 @@ public class KitchenObject : MonoBehaviour
             var parentId = -1;
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient);
+            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient, isHavePlate);
         }
     }
     void Awake()

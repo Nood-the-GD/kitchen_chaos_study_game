@@ -95,21 +95,24 @@ public class Player : MonoBehaviour, IPlayer
             {
                 ((CuttingCounter)selectedCounter).CmdChop(viewId);
                 Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
-                this.transform.forward = direction;
+                if (direction != Vector3.zero)
+                {
+                    this.transform.forward = direction;
+                }
             }
         }
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        // if (!GameManager.Instance.IsGamePlaying()) return;
-
         if (selectedCounter != null)
         {
-            // selectedCounter.CmdInteract(viewId);
             selectedCounter.Interact(this);
             Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
-            this.transform.forward = direction;
+            if (direction != Vector3.zero)
+            {
+                this.transform.forward = direction;
+            }
         }
     }
     #endregion
@@ -171,21 +174,14 @@ public class Player : MonoBehaviour, IPlayer
         if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
         // Get normalized direction of movement
         var direction = moveDir;
-        //Debug.Log("direction: " + direction);
 
         // Check if movement is possible
         var movementCheck = CanMove(direction, moveDistance);
-        //Debug.Log("movementCheck: " + movementCheck);
-        // If movement is not possible
+        // If movement is not possible, try axis separated movement
         if (!movementCheck)
         {
-            // Check if movement on X axis is possible
             bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance);
-
-            // Check if movement on Z axis is possible
             bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance);
-
-            // Set direction that is possible
             direction = xCheck ? new Vector3(direction.x, 0, 0) : zCheck ? new Vector3(0, 0, direction.z) : Vector3.zero;
         }
 
@@ -196,8 +192,11 @@ public class Player : MonoBehaviour, IPlayer
         isWalking = direction != Vector3.zero;
         CmdSetWalking(isWalking);
 
-        // Rotate player to calculated direction
-        transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
+        // Rotate player smoothly if direction is valid
+        if (direction != Vector3.zero)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
+        }
     }
 
     private void HandleMobileMovement()
@@ -210,16 +209,11 @@ public class Player : MonoBehaviour, IPlayer
         // Check if movement is possible
         var movementCheck = CanMove(direction, moveDistance);
 
-        // If movement is not possible
+        // If movement is not possible, check axis separated movement with additional thresholds
         if (!movementCheck)
         {
             bool xCheck = CanMove(new Vector3(direction.x, 0, 0), moveDistance) && !direction.x.IsInRange(-0.5f, 0.5f);
-            // Check if movement on X axis is possible
-
-            // Check if movement on Z axis is possible
             bool zCheck = CanMove(new Vector3(0, 0, direction.z), moveDistance) && !direction.z.IsInRange(-0.5f, 0.5f);
-
-            // Set direction that is possible
             direction = xCheck ? new Vector3(direction.x, 0, 0) : zCheck ? new Vector3(0, 0, direction.z) : Vector3.zero;
         }
 
@@ -235,8 +229,11 @@ public class Player : MonoBehaviour, IPlayer
     {
         if (!_photonView.IsMine && SectionData.s.isSinglePlay == false) return;
 
-        // Rotate player to calculated direction
-        transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
+        // Smoothly rotate player only if direction is valid
+        if (direction != Vector3.zero)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
+        }
     }
 
     private bool CanMove(Vector3 direction, float distance)
@@ -269,8 +266,6 @@ public class Player : MonoBehaviour, IPlayer
         var skin = GameData.s.GetColorSkin(id);
         GetComponentInChildren<SkinnedMeshRenderer>().material = skin.material;
     }
-
-
     #endregion
 
     #region Supports
@@ -301,7 +296,6 @@ public class Player : MonoBehaviour, IPlayer
         {
             if (this.kitchenObject == null || kitchenObject.gameObject != this.kitchenObject.gameObject)
                 OnPickupSomething?.Invoke(this, EventArgs.Empty);
-            // Debug.Log("Sound: " + this.kitchenObject != null);
         }
         this.kitchenObject = kitchenObject;
     }

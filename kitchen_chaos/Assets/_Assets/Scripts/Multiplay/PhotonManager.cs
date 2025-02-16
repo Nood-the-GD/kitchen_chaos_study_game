@@ -407,15 +407,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjet.AddPlateLocal(plateId);
     }
 
-    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient)
+    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient, bool isHavingPlate)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
-        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient);
+        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient, isHavingPlate);
     }
 
 
     [PunRPC]
-    public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId, int[] ingredient)
+    public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId, int[] ingredient, bool isHavingPlate)
     {
         IKitchenContainable kitchenObjectParent = null;
         if (parentPhotonId != -1)
@@ -426,7 +426,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         ko.SetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexs(ingredient);
-
+        if(ko.IsHavingPlate){
+            ko.TryAddPlate();
+        }
     }
 
     #region Callback
