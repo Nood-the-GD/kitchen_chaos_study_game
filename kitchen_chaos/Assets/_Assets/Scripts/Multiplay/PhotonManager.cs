@@ -407,7 +407,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjet.AddPlateLocal(plateId);
     }
 
-    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient, bool isHavingPlate)
+    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient, bool isHavingPlate = false)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
         photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient, isHavingPlate);

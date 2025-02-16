@@ -28,6 +28,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public virtual void Interact(IKitchenContainable otherContainer)
     {
         Debug.Log("Interact");
+        
         if (otherContainer == null)
         {
             Debug.LogError("player is null");
@@ -44,8 +45,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             }
             else
             {
-                Debug.Log("player is holding");
                 var ottherKo = otherContainer.GetKitchenObject();
+              
                 //holding plate
                 if(ottherKo.IsPlate){
                     if(kitchenObject.TryAddPlate()){
@@ -65,17 +66,18 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                     otherContainer.ClearKitchenObject();
                     
                     var recipe = combineResult.recipe;
+                    var isHavingPlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (ottherKo!= null && ottherKo.IsHavingPlate);
                     if(kitchenObject.GetKitchenObjectSO() != recipe.output){
                         ClearKitchenObject();
                        
-                        var isHavePlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (ottherKo!= null && ottherKo.IsHavingPlate);
-                        Debug.Log("Spawing new object have plate: "+ isHavePlate);
                         
-                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex(), isHavePlate);
+                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex(), isHavingPlate);
                     }
                     else{
-                        kitchenObject.AddIngredient(ottherKo.GetKitchenObjectSO());
+                        kitchenObject.AddIngredient(ottherKo.GetKitchenObjectSO(), isHavingPlate);
+                        ClearKitchenObject();
                     }
+
                 }
                 
             }

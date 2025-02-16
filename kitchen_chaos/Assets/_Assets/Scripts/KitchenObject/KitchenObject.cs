@@ -13,14 +13,12 @@ public class KitchenObject : MonoBehaviour
     private IKitchenContainable _containerParent;
     PhotonView photonView;
     public Transform visualTransform;
-    [HideInInspector] public Transform platePoint;
-
-    [HideInInspector] Transform plate;
+    [ReadOnly] public Transform platePoint;
     public Action<List<KitchenObjectSO>> onAddIngredient;
     public List<KitchenObjectSO> ingredientIndeOrder;
     [ReadOnly] public List<KitchenObjectSO> ingredient = new List<KitchenObjectSO>();
     
-    public bool IsHavingPlate => plate != null;
+    public bool IsHavingPlate => platePoint != null;
     public bool IsPlate => kitchenObjectSO.name == "Plate";
 
     public bool TryAddPlate(){
@@ -45,9 +43,12 @@ public class KitchenObject : MonoBehaviour
         plate.transform.localPosition = Vector3.zero;
     }
 
-    public void AddIngredient(KitchenObjectSO ingredient){
+    public void AddIngredient(KitchenObjectSO ingredient, bool addPlate = false){
         this.ingredient.Add(ingredient);
         SetActiveIngredient(ingredient);
+        if(addPlate){
+            TryAddPlate();
+        }
     }
 
     public void AddIngredientIndexs(int[] ingredientIndex){
