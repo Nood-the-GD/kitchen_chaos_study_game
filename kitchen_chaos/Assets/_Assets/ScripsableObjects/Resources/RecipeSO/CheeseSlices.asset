@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3098f300e5d54484ea0fe3af8bea741c, type: 3}
-  m_Name: BurgerSalad
+  m_Name: CheeseSlices
   m_EditorClassIdentifier: 
-  nameRec: 
+  nameRec: CheeseSlices
   ingredients:
-  - {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
-  - {fileID: 11400000, guid: 77fa4fa7a1aab43aaa4daef679339c08, type: 2}
-  - {fileID: 11400000, guid: 7ffad2276f64d8b4d86f2f382128696f, type: 2}
-  actionType: 0
-  output: {fileID: 11400000, guid: f47bef0e6541946d4993428f4883438a, type: 2}
-  step: 0
+  - {fileID: 11400000, guid: 287512caa7c63054cbb09dc15d31dfc5, type: 2}
+  actionType: 1
+  output: {fileID: 11400000, guid: 357a2661862a04af7b173ea6f42f1d23, type: 2}
+  step: 3
   point: 5

@@ -99,7 +99,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         if (s == null)
         {
-            s = this; 
+            s = this;
         }
     }
 
@@ -392,16 +392,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
 
-    public void CmdAddPlate(int photonId){
-       int palteId = PhotonNetwork.AllocateViewID(false);
-       photonView.RPC(nameof(RpcAddPlate),RpcTarget.All, photonId, palteId);
+    public void CmdAddPlate(int photonId)
+    {
+        int palteId = PhotonNetwork.AllocateViewID(false);
+        photonView.RPC(nameof(RpcAddPlate), RpcTarget.All, photonId, palteId);
     }
 
     [PunRPC]
-    public void RpcAddPlate(int photonId, int plateId){
-        var find =  PhotonNetwork.GetPhotonView(photonId);
-        if(find == null){
-            Debug.LogError("cant find id: "+ photonId);
+    public void RpcAddPlate(int photonId, int plateId)
+    {
+        var find = PhotonNetwork.GetPhotonView(photonId);
+        if (find == null)
+        {
+            Debug.LogError("cant find id: " + photonId);
         }
         var kitchenObjet = find.GetComponent<KitchenObject>();
         kitchenObjet.AddPlateLocal(plateId);
@@ -425,8 +428,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         var ko = kitchenObjectTransform.GetComponent<KitchenObject>();
 
         ko.SetContainerParent(kitchenObjectParent);
-        ko.AddIngredientIndexs(ingredient);
-        if(ko.IsHavingPlate){
+        ko.AddIngredientIndexes(ingredient);
+        if (ko.IsHavingPlate)
+        {
             ko.TryAddPlate();
         }
     }

@@ -28,7 +28,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public virtual void Interact(IKitchenContainable otherContainer)
     {
         Debug.Log("Interact");
-        
+
         if (otherContainer == null)
         {
             Debug.LogError("player is null");
@@ -45,41 +45,49 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             }
             else
             {
-                var ottherKo = otherContainer.GetKitchenObject();
-              
+                var otherKO = otherContainer.GetKitchenObject();
+
                 //holding plate
-                if(ottherKo.IsPlate){
-                    if(kitchenObject.TryAddPlate()){
+                if (otherKO.IsPlate)
+                {
+                    if (kitchenObject.TryAddPlate())
+                    {
                         otherContainer.ClearKitchenObject();
                         return;
                     }
                 }
-                if(GetKitchenObject().IsPlate){
-                    if(otherContainer.GetKitchenObject().TryAddPlate()){
+                if (GetKitchenObject().IsPlate)
+                {
+                    if (otherContainer.GetKitchenObject().TryAddPlate())
+                    {
                         ClearKitchenObject();
                         return;
                     }
                 }
 
-                var combineResult = CookingBookSO.s.TryCombine(ottherKo, GetKitchenObject());
-                if(combineResult != null){
+                var combineResult = CookingBookSO.s.TryCombine(otherKO, GetKitchenObject());
+                if (combineResult != null)
+                {
                     otherContainer.ClearKitchenObject();
-                    
+
                     var recipe = combineResult.recipe;
-                    var isHavingPlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (ottherKo!= null && ottherKo.IsHavingPlate);
-                    if(kitchenObject.GetKitchenObjectSO() != recipe.output){
+                    var isHavingPlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (otherKO != null && otherKO.IsHavingPlate);
+                    if (kitchenObject.GetKitchenObjectSO() != recipe.output)
+                    {
                         ClearKitchenObject();
-                       
-                        
-                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.getListOfIngredientsIndex(), isHavingPlate);
+
+
+                        Debug.Log("Output: " + recipe.output.name);
+                        KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.GetListOfIngredientsIndex(), isHavingPlate);
                     }
-                    else{
-                        kitchenObject.AddIngredient(ottherKo.GetKitchenObjectSO(), isHavingPlate);
+                    else
+                    {
+                        kitchenObject.AddIngredient(otherKO.GetKitchenObjectSO(), isHavingPlate);
                         ClearKitchenObject();
                     }
 
                 }
-                
+
             }
         }
         else //Counter don't have kitchen object
@@ -90,11 +98,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 otherContainer.GetKitchenObject().SetContainerParent(this);
             }
         }
-
     }
-
-
-
 
     #region Multiplay
 
@@ -143,9 +147,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public void ClearKitchenObject(bool destroyKO = true)
     {
 
-        if(kitchenObject != null && destroyKO)
+        if (kitchenObject != null && destroyKO)
             kitchenObject.DestroySelf();
-        
+
         this.kitchenObject = null;
     }
 

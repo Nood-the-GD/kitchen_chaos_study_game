@@ -4,16 +4,19 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 
-public class CombineResult{
+public class CombineResult
+{
     public List<KitchenObjectSO> currentIngredients;
     public RecipeSO recipe;
 
-    public List<int> getListOfIngredientsIndex(){
-        var indexs = new List<int>();
-        foreach(var i in currentIngredients){
-            indexs.Add(recipe.ingredients.IndexOf(i));
+    public List<int> GetListOfIngredientsIndex()
+    {
+        var indexes = new List<int>();
+        foreach (var i in currentIngredients)
+        {
+            indexes.Add(recipe.ingredients.IndexOf(i));
         }
-        return indexs;
+        return indexes;
     }
 }
 
@@ -40,14 +43,16 @@ public class CookingBookSO : ScriptableObject
     }
 
 
-    public RecipeSO FindRecipeByOutput(KitchenObjectSO kitchenObjectSO){
-        foreach(var i in recipes){
-            if(i.output == kitchenObjectSO)
+    public RecipeSO FindRecipeByOutput(KitchenObjectSO kitchenObjectSO)
+    {
+        foreach (var i in recipes)
+        {
+            if (i.output == kitchenObjectSO)
                 return i;
-        }       
+        }
         return null;
     }
-    
+
     public List<KitchenObjectSO> GetRecursiveIngredients(KitchenObjectSO kitchenObjectSO)
     {
         // Attempt to find a recipe that outputs this kitchen object.
@@ -61,7 +66,8 @@ public class CookingBookSO : ScriptableObject
 
 
         //base ingredients
-        if(recipe.ingredients.Count == 1){
+        if (recipe.ingredients.Count == 1)
+        {
             return new List<KitchenObjectSO>() { recipe.output };
         }
 
@@ -88,17 +94,20 @@ public class CookingBookSO : ScriptableObject
     {
         var i1 = GetRecursiveIngredients(kitchenObjectSO);
         var i2 = GetRecursiveIngredients(kitchenObjectSO1);
-        i1.AddRange(i2);    
-        var find = recipes.Find(x=> x.IsSubsetIngredients(i1));
-        if(find!= null){
-            return new CombineResult(){
+        i1.AddRange(i2);
+        var find = recipes.Find(x => x.IsSubsetIngredients(i1));
+        if (find != null)
+        {
+            return new CombineResult()
+            {
                 currentIngredients = i1,
                 recipe = find
             };
         }
 
         Debug.Log("Combine failed. Ingredients:");
-        foreach(var i in i1){
+        foreach (var i in i1)
+        {
             Debug.Log(i.name);
         }
 
@@ -114,45 +123,13 @@ public class CookingBookSO : ScriptableObject
             return CheckEnoughName();
         }
     }
-
-    [Button]
-    public void SortRecipe()
-    {
-        recipes.Sort((a, b) => a.ingredients.Count.CompareTo(b.ingredients.Count));
-    }
-
-    [Button]
-    public void AddNewRecipe()
-    {
-        var newRecipe = new RecipeSO();
-        newRecipe.ingredients = new List<KitchenObjectSO>();
-        newRecipe.output = new KitchenObjectSO();
-        newRecipe.actionType = KitchenObjectType.None;
-        recipes.Add(newRecipe);
-    }
-
     [Button(ButtonSizes.Large)]
-    public void SetNameForAllRecipe()
+    private void FindAllRecipe()
     {
-        foreach (var recipe in recipes)
-        {
-            recipe.nameRec = recipe.output.name;
-        }
-    }
-
-    [Button(ButtonSizes.Large), GUIColor(0, 1, 0), ShowIf("@isEnoughName")]
-    public void MakeEnumFromRecipe()
-    {
-        var folderPath = "Assets/_Assets/Scripts/Enums";
-        var fileName = "RecipeEnum";
-        var filePath = folderPath + "/" + fileName + ".cs";
-        var fileContent = "public enum " + fileName + "\n{\n";
-        foreach (var recipe in recipes)
-        {
-            fileContent += recipe.nameRec + ",\n";
-        }
-        fileContent += "}\n";
-        System.IO.File.WriteAllText(filePath, fileContent);
+        this.recipes.Clear();
+        var folderPath = "RecipeSo";
+        var recipes = Resources.LoadAll<RecipeSO>(folderPath);
+        this.recipes = new List<RecipeSO>(recipes);
     }
     private bool CheckEnoughName()
     {

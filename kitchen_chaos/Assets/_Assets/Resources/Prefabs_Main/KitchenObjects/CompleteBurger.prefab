@@ -1141,10 +1141,16 @@ MonoBehaviour:
   kitchenObjectSO: {fileID: 11400000, guid: 990447f1a33874b7199704021dee7467, type: 2}
   visualTransform: {fileID: 4679562187532313471}
   platePoint: {fileID: 0}
-  ingredientIndeOrder:
-  - {fileID: 11400000, guid: 77fa4fa7a1aab43aaa4daef679339c08, type: 2}
-  - {fileID: 11400000, guid: 357a2661862a04af7b173ea6f42f1d23, type: 2}
-  - {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
-  - {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
-  - {fileID: 11400000, guid: 7ffad2276f64d8b4d86f2f382128696f, type: 2}
-  ingredient: []
+  _ingredientMapping:
+    _serializedList:
+    - Key: {fileID: 11400000, guid: 7ffad2276f64d8b4d86f2f382128696f, type: 2}
+      Value: {fileID: 8366326977169602888}
+    - Key: {fileID: 11400000, guid: 357a2661862a04af7b173ea6f42f1d23, type: 2}
+      Value: {fileID: 8366326978652736900}
+    - Key: {fileID: 11400000, guid: 77fa4fa7a1aab43aaa4daef679339c08, type: 2}
+      Value: {fileID: 8366326977436018634}
+    - Key: {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
+      Value: {fileID: 8366326978763803216}
+    - Key: {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
+      Value: {fileID: 8366326977448964486}
+  ingredients: []

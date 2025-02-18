@@ -163,7 +163,8 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
             if (HasKitchenObject())
             {
 
-                if(_currentKitchenObject.IsHaveEngoughIngredient()){
+                if (_currentKitchenObject.IsHaveEnoughIngredient())
+                {
                     if (_currentKitchenObject.IsHavingPlate)
                     {
                         DeliverDish();
@@ -173,7 +174,8 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
                         GetPlate();
                     }
                 }
-                else{
+                else
+                {
                     if (CheckChopOrFry())
                     {
                         // Check if kitchen object is need chop or fry
@@ -199,7 +201,7 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
                         }
                     }
                 }
-                
+
             }
             else
             {
@@ -260,8 +262,8 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     private void DeliverDish()
     {
         BaseCounter targetCounter = null;
-       
-        if(_currentRecipeSO.IsSameIngredients(kitchenObject.ingredient))
+
+        if (_currentRecipeSO.IsSameIngredients(kitchenObject.ingredients))
         {
             targetCounter = AICounterManager.s.GetDeliveryCounter();
         }
@@ -304,19 +306,21 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
         // Remove ingredients is holding
         if (HasKitchenObject())
         {
-            if(_currentKitchenObject.IsHaveEngoughIngredient()){
+            if (_currentKitchenObject.IsHaveEnoughIngredient())
+            {
                 Debug.Log("Complete dish");
-                foreach (var kitchenObjectSO in _currentKitchenObject.ingredient)
+                foreach (var kitchenObjectSO in _currentKitchenObject.ingredients)
                 {
                     Debug.Log(kitchenObjectSO);
                     combineCheckList.Remove(kitchenObjectSO);
                 }
             }
-            else{
+            else
+            {
                 Debug.Log("Default");
                 if (_currentKitchenObject != null)
                     combineCheckList.Remove(_currentKitchenObject.GetKitchenObjectSO());
-    
+
             }
         }
 
@@ -369,11 +373,13 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
         // Remove current holding ingredient
         if (HasKitchenObject())
         {
-            if(_currentKitchenObject.IsHaveEngoughIngredient()){
-                foreach (var kitchenObjectSO in _currentKitchenObject.ingredient)
+            if (_currentKitchenObject.IsHaveEnoughIngredient())
+            {
+                foreach (var kitchenObjectSO in _currentKitchenObject.ingredients)
                     checkList.Remove(kitchenObjectSO);
             }
-            else{
+            else
+            {
                 if (_currentKitchenObject != null)
                     checkList.Remove(_currentKitchenObject.GetKitchenObjectSO());
             }
@@ -470,7 +476,8 @@ public class AIController : MonoBehaviour, IPlayer, IKitchenContainable
     }
     public void ClearKitchenObject(bool destroyKO = false)
     {
-        if(destroyKO){
+        if (destroyKO)
+        {
             _currentKitchenObject.DestroySelf();
         }
         _currentKitchenObject = null;

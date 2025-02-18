@@ -3,8 +3,8 @@ using Photon.Pun;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Codice.CM.Common;
 using Sirenix.OdinInspector;
+using AYellowpaper.SerializedCollections;
 
 public class KitchenObject : MonoBehaviour
 {
@@ -15,75 +15,88 @@ public class KitchenObject : MonoBehaviour
     public Transform visualTransform;
     [ReadOnly] public Transform platePoint;
     public Action<List<KitchenObjectSO>> onAddIngredient;
-    public List<KitchenObjectSO> ingredientIndeOrder;
-    [ReadOnly] public List<KitchenObjectSO> ingredient = new List<KitchenObjectSO>();
-    
+    [SerializeField] private SerializedDictionary<KitchenObjectSO, GameObject> _ingredientMapping = new SerializedDictionary<KitchenObjectSO, GameObject>();
+    [ReadOnly] public List<KitchenObjectSO> ingredients = new List<KitchenObjectSO>();
+
     public bool IsHavingPlate => platePoint != null;
     public bool IsPlate => kitchenObjectSO.name == "Plate";
 
-    public bool TryAddPlate(){
-        if(IsHavingPlate)
+    public bool TryAddPlate()
+    {
+        if (IsHavingPlate)
             return false;
-        if(IsPlate)
+        if (IsPlate)
             return false;
-        if(SectionData.s.isSinglePlay){
+        if (SectionData.s.isSinglePlay)
+        {
             AddPlateLocal(-1);
-        }else{
+        }
+        else
+        {
             PhotonManager.s.CmdAddPlate(photonView.ViewID);
         }
         return true;
     }
 
-    public void AddPlateLocal(int viewId){
+    public void AddPlateLocal(int viewId)
+    {
         var plate = Instantiate(GameData.s.GetObject(ObjectEnum.Plate), Vector3.zero, Quaternion.identity).transform;
-        if(viewId != -1)
+        if (viewId != -1)
             plate.GetComponent<PhotonView>().ViewID = viewId;
         plate.SetParent(visualTransform);
         platePoint = plate;
         plate.transform.localPosition = Vector3.zero;
     }
 
-    public void AddIngredient(KitchenObjectSO ingredient, bool addPlate = false){
-        this.ingredient.Add(ingredient);
+    public void AddIngredient(KitchenObjectSO ingredient, bool addPlate = false)
+    {
+        this.ingredients.Add(ingredient);
         SetActiveIngredient(ingredient);
-        if(addPlate){
+        if (addPlate)
+        {
             TryAddPlate();
         }
     }
 
-    public void AddIngredientIndexs(int[] ingredientIndex){
+    public void AddIngredientIndexes(int[] ingredientIndex)
+    {
         var rep = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
-        if(rep== null){
+        if (rep == null)
+        {
             return;
         }
-        foreach(var i in ingredientIndex){
+        foreach (var i in ingredientIndex)
+        {
             AddIngredient(rep.ingredients[i]);
         }
     }
 
-    public void SetActiveIngredient(KitchenObjectSO ingredient){
-        if(visualTransform == null)
-            return;
-        
-        var index = ingredientIndeOrder.IndexOf(ingredient);
-        visualTransform.GetChild(index).gameObject.SetActive(true);
+    public void SetActiveIngredient(KitchenObjectSO ingredient)
+    {
+        if (_ingredientMapping.TryGetValue(ingredient, out var visual))
+        {
+            visual.SetActive(true);
+        }
     }
 
-    public bool IsHaveEngoughIngredient(){
+    public bool IsHaveEnoughIngredient()
+    {
         var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
-        return recipe.IsSameIngredients(ingredient);
+        return recipe.IsSameIngredients(ingredients);
     }
 
 
-    public static void SpawnKitchenObject(ObjectEnum objectEnum, IKitchenContainable kitchenObjectParent){
+    public static void SpawnKitchenObject(ObjectEnum objectEnum, IKitchenContainable kitchenObjectParent)
+    {
         SpawnKitchenObject(
             GameData.s.GetObject(objectEnum).GetComponent<KitchenObject>().GetKitchenObjectSO()
-            , kitchenObjectParent, new List<int>{0}
+            , kitchenObjectParent, new List<int> { 0 }
         );
     }
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent){
-        SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent, new List<int>{0});
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent)
+    {
+        SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent, new List<int> { 0 });
     }
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient, bool isHavePlate = false)
@@ -96,14 +109,15 @@ public class KitchenObject : MonoBehaviour
             var p = obj.GetComponent<KitchenObject>();
             p.kitchenObjectSO = kitchenObjectSO;
             p.SetContainerParent(kitchenObjectParent);
-            p.AddIngredientIndexs(ingredient.ToArray());
-            if(isHavePlate){
+            p.AddIngredientIndexes(ingredient.ToArray());
+            if (isHavePlate)
+            {
                 p.TryAddPlate();
             }
         }
         else
         {
-             //--Player Clone are not allowed to spawn object
+            //--Player Clone are not allowed to spawn object
             var player = kitchenObjectParent as Player;
             if (player != null && !player.photonView.IsMine)
                 return;
@@ -117,9 +131,11 @@ public class KitchenObject : MonoBehaviour
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
-        if(visualTransform!=null){
+        if (visualTransform != null)
+        {
             var count = visualTransform.childCount;
-            for(var i = 0; i < count; i++){
+            for (var i = 0; i < count; i++)
+            {
                 visualTransform.GetChild(i).gameObject.SetActive(false);
             }
         }
@@ -129,10 +145,6 @@ public class KitchenObject : MonoBehaviour
     {
         if (!SectionData.s.isSinglePlay && PhotonNetwork.IsMasterClient)
             StartCoroutine(OnSync());
-
-        if(visualTransform == null){
-            visualTransform = transform.GetChild(0);
-        }
     }
 
     [PunRPC]
@@ -182,7 +194,8 @@ public class KitchenObject : MonoBehaviour
             this._containerParent = otherContainer;
             return;
         }
-        if(_containerParent != null){
+        if (_containerParent != null)
+        {
             _containerParent.ClearKitchenObject(false);
         }
         this._containerParent = otherContainer;

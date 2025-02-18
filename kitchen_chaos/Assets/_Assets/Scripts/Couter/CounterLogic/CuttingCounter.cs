@@ -29,17 +29,23 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     {
         base.Interact(otherContainer);
 
-        if (!HasKitchenObject() && otherContainer.HasKitchenObject() && GetKitchenObject()!= null)
+        if (!HasKitchenObject() && otherContainer.HasKitchenObject() && GetKitchenObject() != null)
         {
-            //Player carrying something
-            //Move kitchen object to counter
-            // otherContainer.GetKitchenObject().SetContainerParent(this);
             if (GetKitchenObjectSO().CanCut())
             {
                 _cuttingProcess = 0;
                 _isComplete = false;
-
             }
+        }
+
+        if (!HasKitchenObject())
+        {
+            _cuttingProcess = 0;
+            _isComplete = false;
+            OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
+            {
+                processNormalize = 1
+            });
         }
     }
 

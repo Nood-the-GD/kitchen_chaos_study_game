@@ -116,7 +116,7 @@ public class Customer : MonoBehaviour
     {
         _animator.PreOrder();
         await UniTask.WaitForSeconds(_timeToOrder);
-        _kitchenObjectSo = DeliveryManager.Instance.KitchenObjectSOList[0];
+        _kitchenObjectSo = DeliveryManager.Instance.OrderList[0];
         _animator.Order(_kitchenObjectSo);
 
         TableModel tableModel = TableManager.s.GetTableModel(_tableIndex);

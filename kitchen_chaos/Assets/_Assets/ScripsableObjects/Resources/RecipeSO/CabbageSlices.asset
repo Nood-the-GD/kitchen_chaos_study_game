@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3098f300e5d54484ea0fe3af8bea741c, type: 3}
-  m_Name: CabbageSlice
+  m_Name: CabbageSlices
   m_EditorClassIdentifier: 
-  nameRec: 
+  nameRec: CabbageSlices
   ingredients:
   - {fileID: 11400000, guid: 550fe4e1301bbf54697a9181ddbd260b, type: 2}
   actionType: 1
