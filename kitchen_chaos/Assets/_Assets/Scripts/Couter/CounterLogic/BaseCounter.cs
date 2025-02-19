@@ -66,6 +66,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 }
 
                 var combineResult = CookingBookSO.s.TryCombine(otherKO, GetKitchenObject());
+                Debug.Log("Combine result: " + combineResult.recipe.name);
+
                 if (combineResult != null)
                 {
                     otherContainer.ClearKitchenObject();

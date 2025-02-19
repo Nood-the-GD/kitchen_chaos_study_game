@@ -21,7 +21,7 @@ public class SelectedCounterVisual : MonoBehaviour
     }
     void OnEnable()
     {
-        Player.OnPlayerSpawn += Player_OnPlayerSpawn;
+        Player.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
     private void Start()
     {
@@ -29,15 +29,11 @@ public class SelectedCounterVisual : MonoBehaviour
     }
     void OnDisable()
     {
-        Player.OnPlayerSpawn -= Player_OnPlayerSpawn;
+        Player.OnSelectedCounterChanged -= Player_OnSelectedCounterChanged;
     }
     #endregion
 
     #region Events functions
-    private void Player_OnPlayerSpawn(Player e)
-    {
-        e.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
-    }
     private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
     {
         if (baseCounter == e.selectedCounter)

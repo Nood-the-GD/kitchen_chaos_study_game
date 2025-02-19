@@ -178,6 +178,7 @@ public class DeliveryManager : MonoBehaviour
         foreach (RecipeSO recipe in waitingRecipeSOList)
         {
             // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
+            Debug.Log("Check recipe: " + recipe.output.name + " " + kitchenObject.GetKitchenObjectSO().name + " " + kitchenObject.IsHaveEnoughIngredient());
             if (recipe.output == kitchenObject.GetKitchenObjectSO() && kitchenObject.IsHaveEnoughIngredient())
             {
                 // Remove the recipe from the waiting list
@@ -193,6 +194,7 @@ public class DeliveryManager : MonoBehaviour
 
             }
         }
+        Debug.Log("Failed: " + kitchenObject.GetKitchenObjectSO().name);
         // None of the recipe match
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         // Return false

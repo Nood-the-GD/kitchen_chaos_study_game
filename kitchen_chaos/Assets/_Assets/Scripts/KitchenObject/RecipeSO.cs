@@ -44,7 +44,7 @@ public class RecipeSO : ScriptableObject
     {
         // Ensure both lists are not null and then use SequenceEqual for a one-line comparison
         return kitchenObjectSOs != null && ingredients != null &&
-            ingredients.SequenceEqual(kitchenObjectSOs);
+            ingredients.All(item => kitchenObjectSOs.Contains(item));
     }
 
     public bool IsSubsetIngredients(List<KitchenObjectSO> kitchenObjectSOs)
