@@ -12,7 +12,7 @@ public class KitchenObject : MonoBehaviour
 
     private IKitchenContainable _containerParent;
     PhotonView photonView;
-    public Transform visualTransform;
+    private Transform visualTransform;
     [ReadOnly] public Transform platePoint;
     public Action<List<KitchenObjectSO>> onAddIngredient;
     [SerializeField] private SerializedDictionary<KitchenObjectSO, GameObject> _ingredientMapping = new SerializedDictionary<KitchenObjectSO, GameObject>();
@@ -82,7 +82,20 @@ public class KitchenObject : MonoBehaviour
     public bool IsHaveEnoughIngredient()
     {
         var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
-        return recipe.IsSameIngredients(ingredients);
+        var isSame = recipe.IsSameIngredients(ingredients);
+        Debug.Log("IsHaveEnoughIngredient: " + isSame);
+        if (isSame == false)
+        {
+            foreach (var i in ingredients)
+            {
+                Debug.Log("Ingredient: " + i.name);
+            }
+            foreach (var i in recipe.ingredients)
+            {
+                Debug.Log("Recipe ingredient: " + i.name);
+            }
+        }
+        return isSame;
     }
 
 
@@ -131,12 +144,12 @@ public class KitchenObject : MonoBehaviour
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
-        if (visualTransform != null)
+        visualTransform = transform.GetChild(0);
+        if (_ingredientMapping != null && _ingredientMapping.Count > 0)
         {
-            var count = visualTransform.childCount;
-            for (var i = 0; i < count; i++)
+            foreach (var item in _ingredientMapping)
             {
-                visualTransform.GetChild(i).gameObject.SetActive(false);
+                item.Value.SetActive(false);
             }
         }
     }

@@ -11,7 +11,7 @@ public class Player : MonoBehaviour, IPlayer
     #region Events
     public static event Action<Player> OnPlayerSpawn;
     public static event EventHandler OnPickupSomething;
-    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public static event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
         public BaseCounter selectedCounter;
@@ -68,7 +68,7 @@ public class Player : MonoBehaviour, IPlayer
             }
         }
 
-        if (!IsControlling) return;
+        if (!IsControlling || (!SectionData.s.isSinglePlay && !_photonView.IsMine)) return;
         HandleMovement();
         HandleSelection();
     }
@@ -305,8 +305,10 @@ public class Player : MonoBehaviour, IPlayer
     }
     public void ClearKitchenObject(bool destroyChild = true)
     {
-        if(destroyChild){
-            if(kitchenObject != null){
+        if (destroyChild)
+        {
+            if (kitchenObject != null)
+            {
                 kitchenObject.DestroySelf();
             }
         }

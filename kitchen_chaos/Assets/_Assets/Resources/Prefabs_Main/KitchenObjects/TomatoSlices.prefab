@@ -48,6 +48,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: 44267900849f14c76b0fd20c4648ff7d, type: 2}
+  platePoint: {fileID: 0}
+  _ingredientMapping:
+    _serializedList: []
+  ingredients: []
 --- !u!114 &-7175529056743475181
 MonoBehaviour:
   m_ObjectHideFlags: 0
