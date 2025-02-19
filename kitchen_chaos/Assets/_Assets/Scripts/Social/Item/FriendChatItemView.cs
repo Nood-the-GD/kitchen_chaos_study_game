@@ -11,7 +11,7 @@ public class FriendChatItemView : MonoBehaviour
     public Image activeStatus;
     public ChatSummary chatSummary;
     public string uid;
-    Button button;
+    public Button button;
 
     void Start(){
        
@@ -19,7 +19,6 @@ public class FriendChatItemView : MonoBehaviour
     
     public void SetData(string uid,Action<FriendChatItemView> onClick)
     {  
-        button = GetComponent<Button>(); 
         button.onClick.AddListener(()=>{
             onClick(this);
         });

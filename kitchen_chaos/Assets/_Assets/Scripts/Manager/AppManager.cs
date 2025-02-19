@@ -7,6 +7,7 @@ public class AppManager : MonoBehaviour
 {
     public SocialData debugSocialData;
     async void Start(){
+        Debug.Log("AppManager Start");
         PhotonManager.s.Init();
         var p = await LambdaAPI.GetMySocial();
         SocialData.mySocialData = p.jToken.ToObject<SocialData>(); 

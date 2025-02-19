@@ -19,13 +19,18 @@ public class FriendPopup : BasePopup<FriendPopup>
     
     private FriendChatItemView currentChat;
     public InputField chatInputField;
-    public Button sendMessage;
+    public Button sendMessageButton;
+    public ChatItemView chatItemViewRef;
+    
 
     void Start()
     {
+
+        
+        sendMessageButton.onClick.AddListener(SendMessage);
         findFriendButton.onClick.AddListener(OnFindFriendClick);
         friendRequestButton.onClick.AddListener(OnFriendRequestClick);
-
+        
         // Ensure the friend panel is set to its default values.
         friendPanel.anchoredPosition = new Vector2(0, friendPanel.anchoredPosition.y);
         friendPanel.sizeDelta = new Vector2(1750f, friendPanel.sizeDelta.y);
@@ -33,8 +38,33 @@ public class FriendPopup : BasePopup<FriendPopup>
         // Set the chat (message) panel inactive on start.
         messagePanel.gameObject.SetActive(false);
         
+
+       
         Init();
+        
     }
+
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        ServerConnect.OnChatMessage += OnReciveChatMessage;
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if(FloatingBubble.s != null)
+            FloatingBubble.s.gameObject.SetActive(true);
+
+        ServerConnect.OnChatMessage -= OnReciveChatMessage;
+
+    }
+
+    void OnReciveChatMessage(MessageData messageData){
+        Debug.Log(messageData.content.ToString());
+        AddMessage(messageData);
+    }
+
 
     void Init()
     {
@@ -54,14 +84,38 @@ public class FriendPopup : BasePopup<FriendPopup>
 
     void SendMessage()
     {
-        
+        LambdaAPI.SendChatMessage(currentChat.uid, chatInputField.text);
     }
 
     void OnClick(FriendChatItemView friendChatItemView)
     {
         currentChat = friendChatItemView;
         SetActiveChatPanel(true);
+        ReloadChatUI();
     }
+
+    async void ReloadChatUI(){
+        // Load chat UI
+        chatItemViewRef.gameObject.SetActive(false);
+        var convo = await ConversationData.LoadConversationDataAsync(currentChat.uid);
+        var child = chatItemViewRef.transform.parent.childCount;
+        for(int i = 1; i < child; i++){
+            Destroy(chatItemViewRef.transform.parent.GetChild(i).gameObject);
+        }
+
+        foreach(var i in convo.messageData){
+            AddMessage(i);
+        }
+    }
+
+    void AddMessage(MessageData messageData){
+        ChatItemView chatItemView = Instantiate(chatItemViewRef, chatItemViewRef.transform.parent);
+        chatItemView.gameObject.SetActive(true);
+        chatItemView.SetData(messageData);
+    }
+
+
+
 
     /// <summary>
     /// Animates the friend and chat panels.
@@ -162,9 +216,6 @@ public class FriendPopup : BasePopup<FriendPopup>
         FriendRequestPopup.ShowPopup();
     }
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        FloatingBubble.s.gameObject.SetActive(true);
-    }
+    
+
 }

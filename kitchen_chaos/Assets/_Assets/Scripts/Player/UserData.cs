@@ -57,7 +57,7 @@ public class UserData
     public string uid;
     public string activeStatus = "online";
     public static UserData currentUser;
-
+    public static string mineUid => currentUser.uid.ToString();
     public Action OnUpdateUserName;
 
     public bool IsMine(){

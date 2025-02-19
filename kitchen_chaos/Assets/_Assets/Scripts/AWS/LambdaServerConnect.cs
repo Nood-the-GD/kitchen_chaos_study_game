@@ -6,6 +6,7 @@ using UnityEngine;
 using WebSocketSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public static class ServerConnect
 {
@@ -18,6 +19,7 @@ public static class ServerConnect
     public static event Action<byte[]> OnDrawingImageReceived;
     public static event Action OnMyUserDataUpdate;
     public static event Action OnSocialDataUpdate;
+    public static Action<MessageData> OnChatMessage;
     public static event Action<string> OnDrawingRaw;
     // (Add additional events as needed for chat messages, picture data, etc.)
 
@@ -291,21 +293,22 @@ public static class ServerConnect
     // ================================
     // Handle incoming server data
     // ================================
-    private static void ServerDataHandler(string message)
+    private static async void ServerDataHandler(string message)
     {
         try
         {
             // Deserialize the JSON message into a dictionary.
-            var body = JsonConvert.DeserializeObject<Dictionary<string, object>>(message);
-            if (body == null || !body.ContainsKey("messageType"))
+            var body = JToken.Parse(message);
+            
+            if (body == null || !body.Contains("messageType"))
             {
                 Debug.LogError("Invalid message format.");
                 return;
             }
 
             string messageType = body["messageType"].ToString();
-            object data = null;
-            if (body.ContainsKey("data"))
+            JToken data = null;
+            if (body.Contains("data"))
             {
                 data = body["data"];
             }
@@ -340,19 +343,52 @@ public static class ServerConnect
             }
             else if (messageType == "updateSocial")
             {
-                // TODO: Implement your logic to update social data (for example, call a helper method)
+                var p = await LambdaAPI.GetMySocial();
+                var socialData = p.jToken.ToObject<SocialData>();
+                SocialData.UpdateMySocial(socialData);
                 OnSocialDataUpdate?.Invoke();
             }
             else if (messageType == "updateChatMessage")
             {
+                
+                
+                var messageData = data["message"].ToObject<MessageData>();   
+                var conversationId = data["conversationId"].ToString();
+                
+                var messageChannel = new MessageDataChannel(conversationId, messageData);
+
+                SocialData.UpdateChatSummary(conversationId, messageData.content);
+                
                 // TODO: Parse your chat message and update your data structures.
+
                 Debug.Log("updateChatMessage received.");
+                OnChatMessage?.Invoke(messageData);
+
                 // (You might trigger an OnChatMessage event here.)
             }
             else if (messageType == "createChatMessage")
             {
                 Debug.Log("createChatMessage received.");
-                // TODO: Handle creation of a new chat message.
+                var messageData = data["message"].ToObject<MessageData>();   
+                var conversationId = data["conversationId"].ToString();
+                
+                var messageChannel = new MessageDataChannel(conversationId, messageData);
+
+                SocialData.UpdateChatSummary(conversationId, messageData.content);
+                var users = data["users"];
+                var otherUid = users[0];
+                if(otherUid.ToString() != UserData.mineUid){
+                    otherUid = users[1];
+                }
+
+                SocialData.AddChatSummary(conversationId, messageData.content, otherUid.ToString());
+                ConversationData.AddNewConvo(conversationId, messageData, otherUid.ToString());
+                if(messageData.userId != UserData.mineUid){
+                    //show noti here
+                }
+
+                OnChatMessage.Invoke(messageData);
+            
             }
             else if (messageType == "inAppNoti")
             {

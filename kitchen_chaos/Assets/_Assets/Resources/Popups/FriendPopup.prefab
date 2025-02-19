@@ -690,7 +690,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4757727823954342469}
-  - component: {fileID: 2417172363673290963}
   - component: {fileID: 1077262854028887500}
   m_Layer: 5
   m_Name: BannerFrame03_White (1)
@@ -722,26 +721,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -147.1202, y: 150.6526}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &2417172363673290963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911839434211927716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e981cab2edb824e7cb36e87b7550bbd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  userName: {fileID: 5499868608589710001}
-  message: {fileID: 8358091255689225794}
-  activeStatus: {fileID: 7613969621017025891}
-  chatSummary:
-    id: 
-    content: 
-    otherUid: 
-  uid: 
 --- !u!114 &1077262854028887500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,6 +1070,7 @@ GameObject:
   - component: {fileID: 1526089787053664264}
   - component: {fileID: 4052083186884095954}
   - component: {fileID: 8200313072917513299}
+  - component: {fileID: 5174673667146715448}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1156,6 +1136,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.63
+--- !u!114 &5174673667146715448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2868618024583672367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 8200313072917513299}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3094439952240791554
 GameObject:
   m_ObjectHideFlags: 0
@@ -2334,10 +2358,13 @@ MonoBehaviour:
   addOnEnable: 1
   findFriendButton: {fileID: 2046887381210755261}
   friendRequestButton: {fileID: 893545083928266893}
-  pref: {fileID: 2417172363673290963}
+  pref: {fileID: 1639632552525291623}
   friendPanel: {fileID: 4718444488040080960}
   messagePanel: {fileID: 1019098120138168359}
   animDur: 0.3
+  chatInputField: {fileID: 1573851534127774351}
+  sendMessageButton: {fileID: 5174673667146715448}
+  chatItemViewRef: {fileID: 6250188376372470396}
 --- !u!1 &4078333461668736855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3615,6 +3642,7 @@ GameObject:
   - component: {fileID: 2772805576800310366}
   - component: {fileID: 5163479183365846071}
   - component: {fileID: 3526787841321602559}
+  - component: {fileID: 6250188376372470396}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -3720,6 +3748,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &6250188376372470396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6771950954879492064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ce533d3bf7747fd8425962ea92616d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userName: {fileID: 10396758277790561}
+  message: {fileID: 5434492858306743637}
+  time: {fileID: 6075559544657987430}
 --- !u!1 &7049136625635529791
 GameObject:
   m_ObjectHideFlags: 0
@@ -4163,6 +4206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9055767963695265533}
   - component: {fileID: 3976190934254270482}
+  - component: {fileID: 1639632552525291623}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -4217,6 +4261,27 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1639632552525291623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021910093980693195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e981cab2edb824e7cb36e87b7550bbd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userName: {fileID: 5499868608589710001}
+  message: {fileID: 8358091255689225794}
+  activeStatus: {fileID: 7613969621017025891}
+  chatSummary:
+    id: 
+    content: 
+    otherUid: 
+  uid: 
+  button: {fileID: 1077262854028887500}
 --- !u!1 &8098595570825875565
 GameObject:
   m_ObjectHideFlags: 0

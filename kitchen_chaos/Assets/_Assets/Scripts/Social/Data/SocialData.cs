@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 #region Existing Message Classes
@@ -9,11 +10,11 @@ using UnityEngine;
 public class MessageData
 {
     public string content;
-    public int timestamp;
+    public long timestamp;
     public string userId;
 
     // Constructor
-    public MessageData(string content, int timestamp, string userId)
+    public MessageData(string content, long timestamp, string userId)
     {
         this.content = content;
         this.timestamp = timestamp;
@@ -350,9 +351,9 @@ public class SocialData
     /// <summary>
     /// Updates the static mySocialData instance using data from a dictionary.
     /// </summary>
-    public static void UpdateMySocial(Dictionary<string, object> data)
+    public static void UpdateMySocial(SocialData data)
     {
-        mySocialData = FromDictionary(data);
+        mySocialData = data;
     }
 
     /// <summary>
@@ -459,5 +460,171 @@ public class SocialData
         mySocialData.otherRequest.Remove(uid);
     }
 }
+
+
+[Serializable]
+public class ConversationData
+{
+    // Static list to hold all conversation data instances.
+    public static List<ConversationData> conversationDatas;
+
+    public string id;
+    public List<string> uids;
+    public List<MessageData> messageData;
+
+    // Constructor
+    public ConversationData(string id, List<string> uids, List<MessageData> messageData)
+    {
+        this.id = id;
+        this.uids = uids;
+        this.messageData = messageData;
+    }
+
+    /// <summary>
+    /// Creates an instance of ConversationData from a dictionary.
+    /// Expects keys: "id", "users" (as List or array of strings), and "messages" (a Dictionary with keys as string timestamps).
+    /// </summary>
+    public static ConversationData FromDictionary(Dictionary<string, object> json)
+    {
+        // Get the conversation id.
+        string id = json["id"].ToString();
+
+        // Parse the list of user ids.
+        List<string> uids = new List<string>();
+        if (json.ContainsKey("users") && json["users"] is IEnumerable<object> users)
+        {
+            foreach (var user in users)
+            {
+                uids.Add(user.ToString());
+            }
+        }
+
+        // Parse messages. Expected to be a Dictionary<string, object>.
+        List<MessageData> messagesList = new List<MessageData>();
+        if (json.ContainsKey("messages") && json["messages"] is Dictionary<string, object> messages)
+        {
+            foreach (var entry in messages)
+            {
+                // The key is expected to be a string representing an int (like "12345").
+                if (int.TryParse(entry.Key, out int timestamp))
+                {
+                    // Each value is a JSON string or a Dictionary that can be converted to JSON.
+                    // Here, we assume it's a Dictionary<string, object> that you then convert to a JSON string.
+                    // You might need to use your JSON library here; for simplicity, we'll assume a helper method:
+                    // e.g., JsonHelper.ToJson(entry.Value)
+                    string jsonStr = JsonUtility.ToJson(new SerializationWrapper(entry.Value));
+                    MessageData message = MessageData.FromJson2(timestamp, jsonStr);
+                    messagesList.Add(message);
+                }
+                else
+                {
+                    Debug.LogWarning("Could not parse message key as int: " + entry.Key);
+                }
+            }
+        }
+
+        return new ConversationData(id, uids, messagesList);
+    }
+
+    /// <summary>
+    /// Finds and returns a ConversationData instance by its id from the static list.
+    /// </summary>
+    public static ConversationData FindConversationData(string convoId)
+    {
+        if (conversationDatas == null)
+            return null;
+
+        foreach (var convo in conversationDatas)
+        {
+            if (convo.id == convoId)
+                return convo;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Loads conversation data asynchronously.
+    /// The onComplete callback will be invoked with the loaded ConversationData.
+    /// Assumes you have a LambdaHelper with a similar API.
+    /// </summary>
+    public static async UniTask<ConversationData> LoadConversationDataAsync(string convoId)
+    {
+        // Check if the conversation is already loaded.
+        ConversationData found = FindConversationData(convoId);
+        if (found != null)
+            return found;
+
+        // Await the LambdaAPI call.
+        ServerRespone response = await LambdaAPI.LoadConvoData(convoId);
+
+        if (!string.IsNullOrEmpty(response.error))
+        {
+            Debug.LogError("Error loading conversation: " + response.error);
+            return null;
+        }
+
+        // Convert the JToken to a Dictionary.
+        Dictionary<string, object> data = response.jToken.ToObject<Dictionary<string, object>>();
+        ConversationData convo = FromDictionary(data);
+
+        if (conversationDatas == null)
+            conversationDatas = new List<ConversationData>();
+        conversationDatas.Add(convo);
+
+        return convo;
+    }
+
+    /// <summary>
+    /// Adds a new conversation if it doesn't exist; otherwise, adds the message to the existing conversation.
+    /// </summary>
+    public static void AddNewConvo(string convoId, MessageData message, string otherUid)
+    {
+        if (conversationDatas == null)
+            conversationDatas = new List<ConversationData>();
+
+        ConversationData convo = FindConversationData(convoId);
+        if (convo == null)
+        {
+            // Assuming you have a method to get your own uid, e.g., UserData.GetMyUid().
+            List<string> uids = new List<string> { otherUid, UserData.currentUser.uid };
+            convo = new ConversationData(convoId, uids, new List<MessageData> { message });
+            conversationDatas.Add(convo);
+        }
+        else
+        {
+            convo.messageData.Add(message);
+        }
+    }
+
+    /// <summary>
+    /// Adds a new message to an existing conversation.
+    /// </summary>
+    public static void AddNewMessage(string convoId, MessageData message)
+    {
+        if (conversationDatas == null)
+            conversationDatas = new List<ConversationData>();
+
+        ConversationData convo = FindConversationData(convoId);
+        if (convo != null)
+        {
+            convo.messageData.Add(message);
+        }
+    }
+}
+
+/// <summary>
+/// A simple helper class used for JSON conversion when the value is not already a string.
+/// You may need to adjust this depending on your JSON parsing library.
+/// </summary>
+[Serializable]
+public class SerializationWrapper
+{
+    public object value;
+    public SerializationWrapper(object value)
+    {
+        this.value = value;
+    }
+}
+
 
 #endregion
