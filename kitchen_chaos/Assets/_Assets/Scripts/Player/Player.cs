@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using Photon.Pun;
+using DG.Tweening;
+using System.Collections;
 
 public class Player : MonoBehaviour, IPlayer
 {
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour, IPlayer
     private float playerRadius = 1f;
     private float moveDistance;
     private Vector3 moveDir = Vector3.zero;
+    private bool isChopping = false;
     #endregion
 
     #region Unity functions
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour, IPlayer
         _photonView = GetComponent<PhotonView>();
         if (_photonView.IsMine)
             if (Instance == null) Instance = this;
+        SinglePlayManager.s.OnPlayerChange += OnPlayerChangeHandler;
     }
     private void Start()
     {
@@ -72,6 +76,10 @@ public class Player : MonoBehaviour, IPlayer
         HandleMovement();
         HandleSelection();
     }
+    void OnDestroy()
+    {
+        SinglePlayManager.s.OnPlayerChange -= OnPlayerChangeHandler;
+    }
     #endregion
 
     #region Events functions
@@ -85,6 +93,7 @@ public class Player : MonoBehaviour, IPlayer
         gameInput.OnInteractAction -= GameInput_OnInteractAction;
         gameInput.OnUseAction -= GameInput_OnInteractAlternateAction;
     }
+
     private void GameInput_OnInteractAlternateAction(object sender, EventArgs e)
     {
         if (!GameManager.s.IsGamePlaying()) return;
@@ -93,6 +102,7 @@ public class Player : MonoBehaviour, IPlayer
         {
             if (selectedCounter is CuttingCounter)
             {
+                isChopping = true;
                 ((CuttingCounter)selectedCounter).CmdChop(viewId);
                 Vector3 direction = (selectedCounter.transform.position - this.transform.position).normalized;
                 if (direction != Vector3.zero)
@@ -102,7 +112,6 @@ public class Player : MonoBehaviour, IPlayer
             }
         }
     }
-
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
         if (selectedCounter != null)
@@ -112,6 +121,33 @@ public class Player : MonoBehaviour, IPlayer
             if (direction != Vector3.zero)
             {
                 this.transform.forward = direction;
+            }
+        }
+    }
+    private void OnPlayerChangeHandler(Player player)
+    {
+        if (player == this)
+        {
+            isChopping = false;
+        }
+        else
+        {
+            isWalking = false;
+            if (isChopping)
+            {
+                StopCoroutine(CR_AutoChop());
+                StartCoroutine(CR_AutoChop());
+            }
+        }
+    }
+    IEnumerator CR_AutoChop()
+    {
+        while (isChopping)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (selectedCounter is CuttingCounter)
+            {
+                GameInput_OnInteractAlternateAction(this, EventArgs.Empty);
             }
         }
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CuttingCounterVisual: MonoBehaviour
+public class CuttingCounterVisual : MonoBehaviour
 {
     private const string CUT_TRIGGER = "Cut";
 
@@ -14,15 +14,19 @@ public class CuttingCounterVisual: MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start() 
+    private void Start()
     {
-        cuttingCounter.OnCutAction += CuttingCounter_OnCutAction; 
+        cuttingCounter.OnCutAction += CuttingCounter_OnCutAction;
+    }
+
+    private void OnDestroy()
+    {
+        cuttingCounter.OnCutAction -= CuttingCounter_OnCutAction;
     }
 
 
     private void CuttingCounter_OnCutAction(object sender, System.EventArgs e)
     {
-        Debug.Log("CuttingCounterVisual: CuttingCounter_OnCutAction");
         animator.SetTrigger(CUT_TRIGGER);
     }
 }

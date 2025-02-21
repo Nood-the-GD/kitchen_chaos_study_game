@@ -51,7 +51,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
     public void CmdChop(int id)
     {
-        photonView.RPC("RPCChop", RpcTarget.All, id);
+        photonView.RPC(nameof(RPCChop), RpcTarget.All, id);
     }
 
     [PunRPC]
