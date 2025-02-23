@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IPlayer
     private float moveDistance;
     private Vector3 moveDir = Vector3.zero;
     private bool isChopping = false;
+    private bool isFrying = false;
     #endregion
 
     #region Unity functions
@@ -64,15 +65,26 @@ public class Player : MonoBehaviour, IPlayer
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && selectedCounter != null)
-        {
-            if (selectedCounter is IPlaceable placeable)
-            {
-                placeable.StartPlacing();
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.F) && selectedCounter != null)
+        // {
+        //     if (selectedCounter is IPlaceable placeable)
+        //     {
+        //         placeable.StartPlacing();
+        //     }
+        // }
 
-        if (!IsControlling || (!SectionData.s.isSinglePlay && !_photonView.IsMine)) return;
+        if (!SectionData.s.isSinglePlay && !_photonView.IsMine) return;
+        if (!IsControlling)
+        {
+            if (isFrying)
+            {
+                if (selectedCounter is StoveCounter)
+                {
+                    CheckFrying();
+                }
+            }
+            return;
+        }
         HandleMovement();
         HandleSelection();
     }
@@ -353,6 +365,17 @@ public class Player : MonoBehaviour, IPlayer
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+    #endregion
+
+    #region SinglePlay
+    private void CheckFrying()
+    {
+        if (selectedCounter is StoveCounter && (selectedCounter as StoveCounter).IsCookComplete())
+        {
+            isFrying = false;
+            selectedCounter.Interact(this);
+        }
     }
     #endregion
 }

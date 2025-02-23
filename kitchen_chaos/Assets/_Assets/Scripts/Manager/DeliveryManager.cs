@@ -22,9 +22,11 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
     public static DeliveryManager Instance { get; private set; }
-    public List<KitchenObjectSO> OrderList => orderList.Select(recipe => recipe.output).ToList();
-    [SerializeField] private List<RecipeSO> orderList;
-    private float waitingTimeForEachRecipe;
+    public List<KitchenObjectSO> OrderList => orderList.recipes.Select(recipe => recipe.output).ToList();
+    [SerializeField]
+    [InlineEditor]
+    private CookingBookSO orderList;
+    private float waitingTimeForEachRecipe = 20f;
     private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
@@ -40,7 +42,6 @@ public class DeliveryManager : MonoBehaviour
 
         if (Instance == null) Instance = this;
         recipeDeliveredPoint = 0;
-        waitingTimeForEachRecipe += 10;
     }
     void Start()
     {
@@ -69,7 +70,7 @@ public class DeliveryManager : MonoBehaviour
 
             if (waitingRecipeSOList.Count < waitingRecipeMax)
             {
-                var index = UnityEngine.Random.Range(0, orderList.Count);
+                var index = UnityEngine.Random.Range(0, orderList.recipes.Count);
                 AddOrder(index);
             }
         }
@@ -94,7 +95,7 @@ public class DeliveryManager : MonoBehaviour
     {
         if (orders.Contains("None"))
         {
-            var index = orderList.FindIndex(x => x.nameRec == orders[0]);
+            var index = orderList.recipes.FindIndex(x => x.nameRec == orders[0]);
             UpdateOrder(0, index, 1);
             return;
         }
@@ -103,7 +104,7 @@ public class DeliveryManager : MonoBehaviour
             string order = orders[i];
             if (order == "None")
                 continue;
-            var index = orderList.FindIndex(x => x.nameRec == order);
+            var index = orderList.recipes.FindIndex(x => x.nameRec == order);
             UpdateOrder(i, index, orders.Length);
         }
     }
@@ -208,15 +209,15 @@ public class DeliveryManager : MonoBehaviour
     private void AddOrder(int index)
     {
         // Check that index is valid
-        if (index < 0 || index >= orderList.Count)
+        if (index < 0 || index >= orderList.recipes.Count)
         {
             Debug.LogError($"AddOrder: index {index} is out of range");
             return;
         }
 
-        Debug.Log("AddOrder: " + orderList[index].nameRec);
+        Debug.Log("AddOrder: " + orderList.recipes[index].nameRec);
         // Add the recipe to the waiting list
-        waitingRecipeSOList.Add(orderList[index]);
+        waitingRecipeSOList.Add(orderList.recipes[index]);
         // Add a new timer to the list
         waitingTimerClassList.Add(new TimerClass
         {
@@ -240,7 +241,7 @@ public class DeliveryManager : MonoBehaviour
                 AddOrder(indexOfRecipe);
             }
         }
-        waitingRecipeSOList[indexOfOrder] = orderList[indexOfRecipe];
+        waitingRecipeSOList[indexOfOrder] = orderList.recipes[indexOfRecipe];
         OnRecipeAdded?.Invoke(this, EventArgs.Empty);
     }
     private void RemoveOrder(int recipeIndex)

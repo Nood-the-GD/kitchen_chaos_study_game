@@ -6,43 +6,51 @@ using TMPro;
 using System;
 
 [System.Serializable]
-public class StageData{
+public class StageData
+{
 
     public int score;
     public int levelId;
     public string sceneName;
-    public int star{
-        get{
+    public int star
+    {
+        get
+        {
             return PlayerPrefs.GetInt("level." + levelId, 0);
         }
-        set{
+        set
+        {
             PlayerPrefs.SetInt("level." + levelId, value);
         }
     }
 
     public int[] pointTarget = new int[3];
 
-    public bool isUnlocked{
-        get{
-            return PlayerPrefs.GetInt("level."+levelId+".unlocked", 0) == 1;
+    public bool isUnlocked
+    {
+        get
+        {
+            return PlayerPrefs.GetInt("level." + levelId + ".unlocked", 0) == 1;
         }
-        set{
-            PlayerPrefs.SetInt("level."+levelId+".unlocked", value?1:0);
+        set
+        {
+            PlayerPrefs.SetInt("level." + levelId + ".unlocked", value ? 1 : 0);
         }
     }
 
     public Sprite previewImage;
 
-    public void ApplyNewScore(int score){
+    public void ApplyNewScore(int score)
+    {
         this.score = score;
-        for(int i = 0; i < pointTarget.Length; i++){
-            if(score >= pointTarget[i]){
+        for (int i = 0; i < pointTarget.Length; i++)
+        {
+            if (score >= pointTarget[i])
+            {
                 star = i + 1;
             }
         }
     }
-
-    public List<Sprite> tutorialImages = new List<Sprite>();
 }
 
 public class StageUI : MonoBehaviour
@@ -58,24 +66,28 @@ public class StageUI : MonoBehaviour
     public StageData stageData;
     [SerializeField] private StarController levelStarController;
 
-    public void SetData(StageData data, Action<StageData> onSwitchStage){
+    public void SetData(StageData data, Action<StageData> onSwitchStage)
+    {
         stageData = data;
         switchStage = onSwitchStage;
         //Set data to UI
-        stageUI.sprite = data.isUnlocked?unSelectStageSprite:lockStageSprite;
+        stageUI.sprite = data.isUnlocked ? unSelectStageSprite : lockStageSprite;
         stageText.text = data.levelId.ToString();
         levelStarController.SetData(data);
     }
 
-    public void Unselect(){
+    public void Unselect()
+    {
         stageUI.sprite = unSelectStageSprite;
     }
 
-    public void SetSelect(){
+    public void SetSelect()
+    {
         stageUI.sprite = selectStageSprite;
     }
 
-    public void SelectStage(){
+    public void SelectStage()
+    {
         switchStage?.Invoke(stageData);
     }
 }

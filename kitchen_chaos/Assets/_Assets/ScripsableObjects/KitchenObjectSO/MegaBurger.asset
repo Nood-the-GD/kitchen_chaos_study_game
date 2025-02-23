@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf3a9efd6f5d6b0448ab70ababd5bf6c, type: 3}
-  m_Name: CompleteBurger
+  m_Name: MegaBurger
   m_EditorClassIdentifier: 
   prefab: {fileID: 2417010048206763156, guid: 1201ba8a1776047a9917ccf2f357d7e5, type: 3}
   sprite: {fileID: 21300000, guid: 0df08aaa4a2dd6e42852469fb4012216, type: 3}
-  point: 2
-  objectName: CompleteBurger
+  objectName: MegaBurger
+  kitchenObjectType: 0

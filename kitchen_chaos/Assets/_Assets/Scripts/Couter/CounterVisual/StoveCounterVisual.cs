@@ -17,7 +17,7 @@ public class StoveCounterVisual : MonoBehaviour
 
     private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArg e)
     {
-        if(e.state == StoveCounter.State.Idle || e.state == StoveCounter.State.Burned)
+        if (e.state == StoveCounter.State.Idle)
         {
             EndFrying();
         }

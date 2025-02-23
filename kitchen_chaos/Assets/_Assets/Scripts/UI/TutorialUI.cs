@@ -20,7 +20,6 @@ public class TutorialUI : MonoBehaviour
     private List<Sprite> _tutorialSprites = new List<Sprite>();
     private List<Image> _checkImageList = new List<Image>();
     private int _tutorialIndex = 0;
-    private StageData _selectedStage;
     #endregion
 
     #region Unity functions
@@ -32,11 +31,10 @@ public class TutorialUI : MonoBehaviour
             _confirmBtn.gameObject.SetActive(false);
             CmdConfirm();
         });
-        _selectedStage = GameManager.getStageData;
-        _tutorialSprites = _selectedStage.tutorialImages;
+        _tutorialSprites = GameData.s.GetTutorialImages(GameManager.levelId);
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
         _tutorialIndex = 0;
-        if(_selectedStage.tutorialImages.Count == 0 || TutorialData.Instance.GetSkipTutorialNumber() == 2)
+        if (_tutorialSprites.Count == 0 || TutorialData.Instance.GetSkipTutorialNumber() == 2)
         {
             _tutorialImage.gameObject.SetActive(false);
             _confirmBtn.gameObject.SetActive(false);
@@ -49,7 +47,7 @@ public class TutorialUI : MonoBehaviour
     }
     void OnDestroy()
     {
-        if(PhotonManager.s == null) return;
+        if (PhotonManager.s == null) return;
         PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
     }
     IEnumerator DelayEvent()
@@ -61,10 +59,12 @@ public class TutorialUI : MonoBehaviour
     #endregion
 
     #region Multiplayer functions
-    void OnCallAnyCmdFunction(CmdOrder order){
-        if(order.receiver != nameof(TutorialUI)) return;
+    void OnCallAnyCmdFunction(CmdOrder order)
+    {
+        if (order.receiver != nameof(TutorialUI)) return;
 
-        if(order.functionName == nameof(Confirm)){
+        if (order.functionName == nameof(Confirm))
+        {
             Confirm();
         }
     }
@@ -75,7 +75,7 @@ public class TutorialUI : MonoBehaviour
         checkImage.gameObject.SetActive(true);
         _checkImageList.Add(checkImage);
 
-        if(TutorialData.Instance.GetConfirmTutorialNumber() >= 2)
+        if (TutorialData.Instance.GetConfirmTutorialNumber() >= 2)
         {
             NextTutorial();
         }
@@ -100,7 +100,7 @@ public class TutorialUI : MonoBehaviour
         else
         {
             _tutorialImage.sprite = _tutorialSprites[_tutorialIndex];
-            foreach(Image img in _checkImageList)
+            foreach (Image img in _checkImageList)
             {
                 Destroy(img.gameObject);
             }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3098f300e5d54484ea0fe3af8bea741c, type: 3}
-  m_Name: CompleteBurger
+  m_Name: MegaBurger
   m_EditorClassIdentifier: 
-  nameRec: CompleteBurger
+  nameRec: MegaBurger
   ingredients:
   - {fileID: 11400000, guid: 7ffad2276f64d8b4d86f2f382128696f, type: 2}
   - {fileID: 11400000, guid: 77fa4fa7a1aab43aaa4daef679339c08, type: 2}

@@ -1065,7 +1065,7 @@ GameObject:
   - component: {fileID: -9040953278518842248}
   - component: {fileID: 5480051414248350487}
   m_Layer: 0
-  m_Name: CompleteBurger
+  m_Name: MegaBurger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

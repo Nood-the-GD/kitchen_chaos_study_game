@@ -17,5 +17,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f23b3c195baa04314aef615e7da5e7f5, type: 2}
   actionType: 2
   output: {fileID: 11400000, guid: 39672c3727d5b48ce8e27d13f02cca9e, type: 2}
-  step: 0
+  step: 5
   point: 5

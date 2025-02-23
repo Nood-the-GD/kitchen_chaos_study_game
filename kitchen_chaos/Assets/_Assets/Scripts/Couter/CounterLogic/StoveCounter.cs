@@ -20,8 +20,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     {
         Idle,
         Frying,
-        Fried,
-        Burned,
+        Complete
     }
     #endregion
 
@@ -29,7 +28,6 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     private RecipeSO _curRecipe;
     private State _currentState;
     private float _fryingTimer;
-    private float _burningTimer;
     #endregion
 
     #region Unity functions
@@ -60,42 +58,15 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     if (PhotonNetwork.IsMasterClient)
                     {
                         GetKitchenObject().DestroySelf();
-                        // KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
+                        KitchenObject.SpawnKitchenObject(_curRecipe.output, this);
+                        CheckCanFried();
                     }
-
-                    ChangeState(State.Fried);
-                    _burningTimer = 0;
-                    _curRecipe = CookingBookSO.s.GetFryingRecipe(GetKitchenObjectSO());
                 }
                 break;
-            case State.Fried:
-                if (_curRecipe == null)
-                {
-                    return;
-                }
-                _burningTimer += Time.deltaTime;
-
+            case State.Complete:
                 OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
                 {
-                    processNormalize = _burningTimer / _curRecipe.step
-                });
-
-                if (_burningTimer >= _curRecipe.step)
-                {
-
-                    if (SectionData.s.isSinglePlay || PhotonNetwork.IsMasterClient)
-                    {
-                        GetKitchenObject().DestroySelf();
-
-                        // KitchenObject.SpawnKitchenObject(_curRecipe.overCookOutput, this);
-                    }
-                    ChangeState(State.Burned);
-                }
-                break;
-            case State.Burned:
-                OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
-                {
-                    processNormalize = 1f
+                    processNormalize = 0f
                 });
                 break;
         }
@@ -105,26 +76,46 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     #region Interact
     public override void Interact(IKitchenContainable player)
     {
-        if (!HasKitchenObject())
+        base.Interact(player);
+        if (HasKitchenObject())
         {
-            //Counter don't have kitchen object
-            if (player.HasKitchenObject() && GetKitchenObject()!= null && GetKitchenObjectSO().CanFried() )
+            CheckCanFried();
+        }
+        else
+        {
+            OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
             {
-                //Player carrying something that can be fried
-                //Move kitchen object to counter
-                player.GetKitchenObject().SetContainerParent(this);
-                _curRecipe = CookingBookSO.s.GetFryingRecipe(GetKitchenObjectSO());
-                ChangeState(State.Frying);
-                _fryingTimer = 0;
-            }
+                processNormalize = 0f
+            });
+            _fryingTimer = 0;
+            ChangeState(State.Idle);
         }
 
     }
     #endregion
 
+    private void CheckCanFried()
+    {
+        var kitchenObjectSO = GetKitchenObjectSO();
+        if (kitchenObjectSO.CanFried())
+        {
+            _curRecipe = CookingBookSO.s.GetFryingRecipe(kitchenObjectSO);
+            ChangeState(State.Frying);
+            _fryingTimer = 0;
+        }
+        else if (_currentState == State.Frying)
+        {
+            ChangeState(State.Complete);
+        }
+        else
+        {
+            ChangeState(State.Idle);
+        }
+    }
+
     public bool IsCookComplete()
     {
-        return _currentState == State.Fried;
+        return _currentState == State.Complete;
     }
 
 
