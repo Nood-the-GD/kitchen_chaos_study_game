@@ -1,30 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
 public class DeliveryCounter : BaseCounter
 {
+    [SerializeField] private DeliveryCounterVisual deliveryCounterVisual;
     public static DeliveryCounter Instance;
     [SerializeField] MMF_Player deliverFeedback;
 
-    protected override void Awake() 
+    protected override void Awake()
     {
         base.Awake();
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
     }
 
     public override void Interact(IKitchenContainable KOParent)
     {
-        if(KOParent.HasKitchenObject())
+        if (KOParent.HasKitchenObject())
         {
-            if(DeliveryManager.Instance.DeliverFood(KOParent.GetKitchenObject()))
+            if (DeliveryManager.Instance.DeliverFood(KOParent.GetKitchenObject()))
             {
                 KOParent.ClearKitchenObject();
                 deliverFeedback.PlayFeedbacks();
             }
+            else
+            {
+                string message = "";
+                if (KOParent.GetKitchenObject().IsHaveEnoughIngredient() == false)
+                {
+                    message = "Not in order list";
+                }
+                else if (KOParent.GetKitchenObject().IsHavingPlate == false)
+                {
+                    message = "Need plate";
+                }
+                deliveryCounterVisual.ShowMessage(message);
+            }
         }
-        else{
+        else
+        {
             Debug.Log("Player is not carrying anything");
         }
     }

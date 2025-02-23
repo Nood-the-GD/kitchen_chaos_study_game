@@ -179,8 +179,7 @@ public class DeliveryManager : MonoBehaviour
         foreach (RecipeSO recipe in waitingRecipeSOList)
         {
             // Check if the number of ingredient in the recipe is equal to the number of ingredient in the plate
-            Debug.Log("Check recipe: " + recipe.output.name + " " + kitchenObject.GetKitchenObjectSO().name + " " + kitchenObject.IsHaveEnoughIngredient());
-            if (recipe.output == kitchenObject.GetKitchenObjectSO() && kitchenObject.IsHaveEnoughIngredient())
+            if (recipe.output == kitchenObject.GetKitchenObjectSO() && kitchenObject.IsHaveEnoughIngredient() && kitchenObject.IsHavingPlate)
             {
                 // Remove the recipe from the waiting list
                 RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
@@ -192,7 +191,6 @@ public class DeliveryManager : MonoBehaviour
                 PointUI.Instance.UpdateUI();
                 // Return true
                 return true;
-
             }
         }
         Debug.Log("Failed: " + kitchenObject.GetKitchenObjectSO().name);
@@ -201,6 +199,7 @@ public class DeliveryManager : MonoBehaviour
         // Return false
         return false;
     }
+
 
 
     #endregion
