@@ -11,7 +11,6 @@ using UnityEngine.Networking;
 using CandyCoded.env;
 using Newtonsoft.Json.Linq;
 using Cysharp.Threading.Tasks;
-using DG.DemiEditor;
 
 public class ServerRespone
 {
@@ -237,7 +236,7 @@ public class LambdaAPI : MonoBehaviour
     /// </summary>
     public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters)
     {
-        if (string.IsNullOrEmpty(func)) 
+        if (string.IsNullOrEmpty(func))
         {
             string errorMsg = "Function name is required.";
             Notification(errorMsg);
@@ -431,7 +430,7 @@ public class LambdaAPI : MonoBehaviour
     /// <summary>
     /// Retrieves data for a specific user.
     /// </summary>
-    public static async UniTask<ServerRespone> GetUser(string otherUid) 
+    public static async UniTask<ServerRespone> GetUser(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
@@ -580,7 +579,8 @@ public class LambdaAPI : MonoBehaviour
     {
         Debug.Log("Hello World1");
         // Example call for testing the HelloWorld function.
-        HelloWorld().ContinueWith(response => {
+        HelloWorld().ContinueWith(response =>
+        {
             if (response.IsError)
             {
                 Debug.LogError("HelloWorld error: " + response.error);

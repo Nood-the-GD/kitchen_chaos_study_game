@@ -6,7 +6,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using System;
 using System.Linq;
-using DG.DemiEditor;
+
 
 public class CmdOrder
 {

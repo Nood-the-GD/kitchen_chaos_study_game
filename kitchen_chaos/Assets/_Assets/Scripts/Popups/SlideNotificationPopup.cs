@@ -1,5 +1,4 @@
 using System;
-using DG.DemiEditor;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,14 +19,17 @@ public class SlideNotificationPopup : BasePopup<SlideNotificationPopup>
     /// <summary>
     /// Displays the message with a slide animation using DOTween.
     /// </summary>
-    public void ShowMessage(string message, bool isError, string title = "" )
+    public void ShowMessage(string message, bool isError, string title = "")
     {
 
-        if(title.IsNullOrEmpty()){
-            if(isError){
+        if (string.IsNullOrEmpty(title))
+        {
+            if (isError)
+            {
                 title = "Error";
             }
-            else{
+            else
+            {
                 title = "Notification";
             }
         }
@@ -36,7 +38,7 @@ public class SlideNotificationPopup : BasePopup<SlideNotificationPopup>
         this.message.text = message;
         notiImage.sprite = isError ? errorSprite : notiSprite;
 
-        
+
         // Get the RectTransform and set its initial width to 0.
         RectTransform rt = notiImage.GetComponent<RectTransform>();
         Vector2 initialSize = rt.sizeDelta;

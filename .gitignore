@@ -62,3 +62,5 @@ kitchen_chaos/Recordings/
 kitchen_chaos/.env
 kitchen_chaos/Assets/env-main
 *.DS_Store
+/buildAndroid
+/BuildIOS

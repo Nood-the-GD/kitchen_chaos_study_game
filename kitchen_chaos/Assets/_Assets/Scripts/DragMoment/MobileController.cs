@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class MobileController : MonoBehaviour
 {
     [SerializeField] private FloatingJoystick _floatingJoystick;
-    [SerializeField] private Button _interactBtn, _useBtn;
+    [SerializeField] private Button _interactBtn, _useBtn, _changeCharacterBtn;
     private Action _onInteract, _onUse, _onChangeCharacter;
 
     void Awake()
@@ -22,12 +22,11 @@ public class MobileController : MonoBehaviour
         {
             _onUse?.Invoke();
         });
-        //TODO: Add change character button
 
-        // _changeCharacterBtn.onClick.AddListener(() =>
-        // {
-        //     _onChangeCharacter?.Invoke();
-        // });
+        _changeCharacterBtn.onClick.AddListener(() =>
+        {
+            _onChangeCharacter?.Invoke();
+        });
     }
 
     void Update()
