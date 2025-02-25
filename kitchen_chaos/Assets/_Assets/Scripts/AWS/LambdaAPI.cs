@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 using CandyCoded.env;
 using Newtonsoft.Json.Linq;
 using Cysharp.Threading.Tasks;
+using DG.DemiEditor;
 
 public class ServerRespone
 {
@@ -146,7 +147,7 @@ public class LambdaAPI : MonoBehaviour
         {
             awsSecretKey = secret;
         }
-
+ 
         var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         var config = new AmazonLambdaConfig { RegionEndpoint = RegionEndpoint.APSoutheast1 };
         return new AmazonLambdaClient(credentials, config);
@@ -225,7 +226,7 @@ public class LambdaAPI : MonoBehaviour
 
     static void Notification(string error)
     {
-        Debug.LogError(error);
+
         var p = SlideNotificationPopup.ShowPopup();
         p.ShowMessage(error, true);
     }
@@ -234,11 +235,12 @@ public class LambdaAPI : MonoBehaviour
     /// Base method to call a Lambda function.
     /// Determines whether to use the HTTP method or the AWS SDK.
     /// </summary>
-    public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters)
+    public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters, bool showNoti= false)
     {
-        if (string.IsNullOrEmpty(func))
+        if (string.IsNullOrEmpty(func)) 
         {
             string errorMsg = "Function name is required.";
+            Debug.LogError(errorMsg);
             Notification(errorMsg);
             throw new Exception(errorMsg);
         }
@@ -272,7 +274,11 @@ public class LambdaAPI : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Notification(ex.Message);
+            Debug.LogError(ex.Message);
+            if(showNoti){
+               
+                Notification(ex.Message);
+            }
             throw;
         }
 
@@ -297,7 +303,11 @@ public class LambdaAPI : MonoBehaviour
             }
             else
             {
-                Notification(body);
+                Debug.LogError(body);
+                if(showNoti){
+                   
+                    Notification(body);
+                }
                 throw new Exception(body);
             }
         }
@@ -430,7 +440,7 @@ public class LambdaAPI : MonoBehaviour
     /// <summary>
     /// Retrieves data for a specific user.
     /// </summary>
-    public static async UniTask<ServerRespone> GetUser(string otherUid)
+    public static async UniTask<ServerRespone> GetUser(string otherUid) 
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
@@ -543,7 +553,7 @@ public class LambdaAPI : MonoBehaviour
         ServerRespone response = new ServerRespone();
         try
         {
-            JToken result = await CallLambdaBaseAsync("createChatMessage", payload);
+            JToken result = await CallLambdaBaseAsync("createChatMessage", payload, showNoti: true);
             response.jToken = result;
         }
         catch (Exception ex)
@@ -579,8 +589,7 @@ public class LambdaAPI : MonoBehaviour
     {
         Debug.Log("Hello World1");
         // Example call for testing the HelloWorld function.
-        HelloWorld().ContinueWith(response =>
-        {
+        HelloWorld().ContinueWith(response => {
             if (response.IsError)
             {
                 Debug.LogError("HelloWorld error: " + response.error);

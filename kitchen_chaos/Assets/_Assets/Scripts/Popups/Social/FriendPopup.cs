@@ -84,7 +84,12 @@ public class FriendPopup : BasePopup<FriendPopup>
 
     void SendMessage()
     {
-        LambdaAPI.SendChatMessage(currentChat.uid, chatInputField.text);
+        if(currentChat.chatSummary == null){
+            LambdaAPI.CreateChatMessage(currentChat.uid, chatInputField.text);
+        }else{
+            Debug.Log(currentChat.chatSummary.content);
+            LambdaAPI.SendChatMessage(currentChat.uid, chatInputField.text);
+        }
     }
 
     void OnClick(FriendChatItemView friendChatItemView)
@@ -101,6 +106,10 @@ public class FriendPopup : BasePopup<FriendPopup>
         var child = chatItemViewRef.transform.parent.childCount;
         for(int i = 1; i < child; i++){
             Destroy(chatItemViewRef.transform.parent.GetChild(i).gameObject);
+        }
+
+        if(convo == null){
+            return;
         }
 
         foreach(var i in convo.messageData){

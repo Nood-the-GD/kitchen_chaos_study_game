@@ -559,7 +559,6 @@ public class ConversationData
 
         if (!string.IsNullOrEmpty(response.error))
         {
-            Debug.LogError("Error loading conversation: " + response.error);
             return null;
         }
 
@@ -570,7 +569,6 @@ public class ConversationData
         if (conversationDatas == null)
             conversationDatas = new List<ConversationData>();
         conversationDatas.Add(convo);
-
         return convo;
     }
 
