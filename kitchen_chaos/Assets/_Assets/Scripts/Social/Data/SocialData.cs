@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sirenix.Serialization;
 using UnityEngine;
 
 #region Existing Message Classes
@@ -158,27 +159,17 @@ public class OtherRequest
 public class ChatSummary
 {
     public string id;
-    public string content;
+    public string message;
     public string otherUid;
 
     // Constructor
     public ChatSummary(string id, string content, string otherUid)
     {
         this.id = id;
-        this.content = content;
+        this.message = content;
         this.otherUid = otherUid;
     }
 
-    /// <summary>
-    /// Creates an instance from a dictionary.
-    /// Expects the dictionary to have keys "message" and "otherUid".
-    /// </summary>
-    public static ChatSummary FromDictionary(string id, Dictionary<string, object> json)
-    {
-        string content = json.ContainsKey("message") ? json["message"].ToString() : "";
-        string otherUid = json.ContainsKey("otherUid") ? json["otherUid"].ToString() : "";
-        return new ChatSummary(id, content, otherUid);
-    }
 
     /// <summary>
     /// Converts this instance to a JSON string.
@@ -281,7 +272,7 @@ public class SocialData
 
         if (mySocialData.chatSummary.TryGetValue(id, out ChatSummary cs))
         {
-            cs.content = TruncateString(content);
+            cs.message = TruncateString(content);
             // Optionally trigger an event to update UI, etc.
         }
     }
@@ -302,51 +293,6 @@ public class SocialData
         return list;
     }
 
-    /// <summary>
-    /// Creates a SocialData instance from a dictionary.
-    /// Expected keys: "friends", "otherRequest", "chatSummary", and "myRequest".
-    /// </summary>
-    public static SocialData FromDictionary(Dictionary<string, object> json)
-    {
-        // Parse friends.
-        List<string> friends = json.ContainsKey("friends") ? ParseToList(json["friends"]) : new List<string>();
-
-        // Parse otherRequest: expected as a dictionary where each key is a uid and value is a timestamp.
-        Dictionary<string, long> otherRequest = new Dictionary<string, long>();
-        if (json.ContainsKey("otherRequest") && json["otherRequest"] is Dictionary<string, object> otherReqDict)
-        {
-            foreach (var entry in otherReqDict)
-            {
-                int timestamp = 0;
-                if (entry.Value is int)
-                    timestamp = (int)entry.Value;
-                else if (entry.Value is long)
-                    timestamp = Convert.ToInt32(entry.Value);
-                else if (entry.Value is string)
-                    int.TryParse((string)entry.Value, out timestamp);
-
-                otherRequest[entry.Key] = timestamp;
-            }
-        }
-
-        // Parse chatSummary: expected as a dictionary where the key is an id and the value is another dictionary with details.
-        Dictionary<string, ChatSummary> chatSummary = new Dictionary<string, ChatSummary>();
-        if (json.ContainsKey("chatSummary") && json["chatSummary"] is Dictionary<string, object> chatSummaryDict)
-        {
-            foreach (var entry in chatSummaryDict)
-            {
-                if (entry.Value is Dictionary<string, object> csData)
-                {
-                    chatSummary[entry.Key] = ChatSummary.FromDictionary(entry.Key, csData);
-                }
-            }
-        }
-
-        // Parse myRequest.
-        List<string> myRequest = json.ContainsKey("myRequest") ? ParseToList(json["myRequest"]) : new List<string>();
-
-        return new SocialData(friends, otherRequest, myRequest, chatSummary);
-    }
 
     /// <summary>
     /// Updates the static mySocialData instance using data from a dictionary.
@@ -458,6 +404,81 @@ public class SocialData
             return;
 
         mySocialData.otherRequest.Remove(uid);
+    }
+
+    /// <summary>
+    /// Logs detailed information about the SocialData instance to the Unity console.
+    /// This includes friends, otherRequest, myRequest, and chatSummary data.
+    /// </summary>
+    public static void Log()
+    {
+        if (mySocialData == null)
+        {
+            Debug.LogWarning("SocialData.Log: mySocialData is null");
+            return;
+        }
+
+        Debug.Log("=== SocialData Log ===");
+        
+        // Log friends
+        Debug.Log("Friends (" + (mySocialData.friends?.Count ?? 0) + "):");
+        if (mySocialData.friends != null && mySocialData.friends.Count > 0)
+        {
+            foreach (var friend in mySocialData.friends)
+            {
+                Debug.Log("  - " + friend);
+            }
+        }
+        else
+        {
+            Debug.Log("  No friends found");
+        }
+        
+        // Log otherRequest (friend requests from others)
+        Debug.Log("Other Requests (" + (mySocialData.otherRequest?.Count ?? 0) + "):");
+        if (mySocialData.otherRequest != null && mySocialData.otherRequest.Count > 0)
+        {
+            foreach (var request in mySocialData.otherRequest)
+            {
+                // Convert timestamp to readable date
+                DateTime requestTime = DateTimeOffset.FromUnixTimeSeconds(request.Value).DateTime;
+                Debug.Log($"  - From: {request.Key}, Time: {requestTime}");
+            }
+        }
+        else
+        {
+            Debug.Log("  No other requests found");
+        }
+        
+        // Log myRequest (friend requests sent by me)
+        Debug.Log("My Requests (" + (mySocialData.myRequest?.Count ?? 0) + "):");
+        if (mySocialData.myRequest != null && mySocialData.myRequest.Count > 0)
+        {
+            foreach (var request in mySocialData.myRequest)
+            {
+                Debug.Log("  - To: " + request);
+            }
+        }
+        else
+        {
+            Debug.Log("  No outgoing requests found");
+        }
+        
+        // Log chatSummary
+        Debug.Log("Chat Summaries (" + (mySocialData.chatSummary?.Count ?? 0) + "):");
+        if (mySocialData.chatSummary != null && mySocialData.chatSummary.Count > 0)
+        {
+            foreach (var chat in mySocialData.chatSummary)
+            {
+                Debug.Log($"  - ID: {chat.Key}, With: {chat.Value.otherUid}, Last Message: {chat.Value.message}");
+            }
+        }
+        else
+        {
+            Debug.Log("  No chat summaries found");
+        }
+        
+        Debug.Log("=== End SocialData Log ===");
     }
 }
 

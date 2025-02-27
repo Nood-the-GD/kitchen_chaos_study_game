@@ -13,7 +13,7 @@ public class FriendChatItemView : MonoBehaviour
     private ChatSummary _chatSummary;
     public ChatSummary chatSummary => _chatSummary;
     
-    public string uid;
+    public string otherUid;
     public Button button;
 
     
@@ -22,30 +22,30 @@ public class FriendChatItemView : MonoBehaviour
        
     }
     
-    public void SetData(string uid,Action<FriendChatItemView> onClick)
+    public void SetData(string otherUid,Action<FriendChatItemView> onClick)
     {  
 
         button.onClick.AddListener(()=>{
             onClick(this);
         });
-        this.uid = uid;
-        var chatSummary = SocialData.GetChatSummaryFor(uid);
+        this.otherUid = otherUid;
+        var chatSummary = SocialData.GetChatSummaryFor(otherUid);
 
         if(chatSummary != null){
             this._chatSummary = chatSummary;
             userName.text = "";
-            message.text = chatSummary.content;
+            message.text = chatSummary.message;
             Debug.Log("message with "+chatSummary.otherUid+" is: "+ message.text);
         }
         else{
-            Debug.Log("message with "+uid+" is empty");
+            Debug.Log("message with "+otherUid+" is empty");
             message.text = "Say hi to your friend";
         }
         Init();
     }
 
     async void Init(){
-        UserData user = await UserManager.GetUser(uid);
+        UserData user = await UserManager.GetUser(otherUid);
         userName.text = user.username;
         if(user.activeStatus == "online"){
             activeStatus.color = Color.green;

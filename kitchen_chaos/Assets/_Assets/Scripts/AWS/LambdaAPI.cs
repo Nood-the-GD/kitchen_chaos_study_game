@@ -305,7 +305,7 @@ public class LambdaAPI : MonoBehaviour
             {
                 Debug.LogError(body);
                 if(showNoti){
-                   
+                    
                     Notification(body);
                 }
                 throw new Exception(body);

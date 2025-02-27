@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 public class FriendPopup : BasePopup<FriendPopup>
 {
@@ -22,6 +23,11 @@ public class FriendPopup : BasePopup<FriendPopup>
     public Button sendMessageButton;
     public ChatItemView chatItemViewRef;
     
+
+    [Button]
+    void LogSocialData(){
+        SocialData.Log();
+    }
 
     void Start()
     {
@@ -82,13 +88,15 @@ public class FriendPopup : BasePopup<FriendPopup>
     }
 
 
-    void SendMessage()
+    async void SendMessage() 
     {
         if(currentChat.chatSummary == null){
-            LambdaAPI.CreateChatMessage(currentChat.uid, chatInputField.text);
+            Debug.Log("Create chat with user: " + currentChat.otherUid);
+            await LambdaAPI.CreateChatMessage(currentChat.otherUid, chatInputField.text);
         }else{
-            Debug.Log(currentChat.chatSummary.content);
-            LambdaAPI.SendChatMessage(currentChat.uid, chatInputField.text);
+
+            Debug.Log("Send message to chat: " + currentChat.otherUid);
+            await LambdaAPI.SendChatMessage(currentChat.otherUid, chatInputField.text);
         }
     }
 
@@ -102,7 +110,7 @@ public class FriendPopup : BasePopup<FriendPopup>
     async void ReloadChatUI(){
         // Load chat UI
         chatItemViewRef.gameObject.SetActive(false);
-        var convo = await ConversationData.LoadConversationDataAsync(currentChat.uid);
+        var convo = await ConversationData.LoadConversationDataAsync(currentChat.chatSummary.id);
         var child = chatItemViewRef.transform.parent.childCount;
         for(int i = 1; i < child; i++){
             Destroy(chatItemViewRef.transform.parent.GetChild(i).gameObject);
