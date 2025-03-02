@@ -96,6 +96,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
                     _isComplete = true;
                 }
             }
+            OnAlternativeInteract?.Invoke(this, EventArgs.Empty);
         }
         //else
         //There is a kitchenObject on this counter but can not be cut

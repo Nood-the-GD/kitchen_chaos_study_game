@@ -9,6 +9,7 @@ using Photon.Realtime;
 public class BaseCounter : MonoBehaviour, IKitchenContainable
 {
     public static EventHandler OnInteract;
+    public static EventHandler OnAlternativeInteract;
 
     PhotonView _photonView;
     public PhotonView photonView => _photonView;

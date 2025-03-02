@@ -6,7 +6,7 @@ using Photon.Pun;
 using Sirenix.OdinInspector;
 using System.Linq;
 
-public class DeliveryManager : Singleton<DeliveryManager>
+public class DeliveryManager : MonoBehaviour
 {
     #region TimerClass
     public class TimerClass

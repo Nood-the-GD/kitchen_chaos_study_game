@@ -5,18 +5,19 @@ using UnityEngine;
 
 public class ContainerCounter : BaseCounter
 {
-    public event EventHandler OnPlayerGrabbedObject;   
+    public event EventHandler OnPlayerGrabbedObject;
 
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     public override void Interact(IKitchenContainable KOParent)
     {
-        if(!KOParent.HasKitchenObject())
+        if (!KOParent.HasKitchenObject())
         {
             //Player carrying nothing
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, KOParent);
             //Debug.Log("Player grabbed object");
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+            OnInteract?.Invoke(this, EventArgs.Empty);
         }
     }
 

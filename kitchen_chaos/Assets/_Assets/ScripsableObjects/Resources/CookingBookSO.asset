@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: CookingBookSO
   m_EditorClassIdentifier: 
   recipes:
-  - {fileID: 11400000, guid: 290c522ce6cba4988b075086dd009e6c, type: 2}
-  - {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9, type: 2}
-  - {fileID: 11400000, guid: 03a5d4118cf19442ba803fc4720767d1, type: 2}
-  - {fileID: 11400000, guid: fe8bffd9d3d3b430494ac6fb1e2c16df, type: 2}
   - {fileID: 11400000, guid: f1f0b4e1849814f4894dbdc55e06f26b, type: 2}
   - {fileID: 11400000, guid: ed16a43d455334185bb6191ce9610562, type: 2}
   - {fileID: 11400000, guid: 89fc7fc03431c4d10bcf87a13871affb, type: 2}
   - {fileID: 11400000, guid: 8593192af07714abb97ce7cb4eb6a407, type: 2}
   - {fileID: 11400000, guid: b59eea6974eb5447a8d4ef161f8d0e4a, type: 2}
+  - {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9, type: 2}
+  - {fileID: 11400000, guid: 03a5d4118cf19442ba803fc4720767d1, type: 2}
+  - {fileID: 11400000, guid: fe8bffd9d3d3b430494ac6fb1e2c16df, type: 2}
+  - {fileID: 11400000, guid: 290c522ce6cba4988b075086dd009e6c, type: 2}

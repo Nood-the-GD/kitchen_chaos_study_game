@@ -27,6 +27,7 @@ public class CookingBookSO : ScriptableObject
     [Searchable]
     public List<RecipeSO> recipes = new List<RecipeSO>();
 
+    public bool isSorted { get; private set; } = false;
     private static CookingBookSO _s;
     public static CookingBookSO s
     {
@@ -35,6 +36,10 @@ public class CookingBookSO : ScriptableObject
             if (_s == null)
             {
                 _s = Resources.Load<CookingBookSO>("CookingBookSO");
+                if (_s.isSorted == false)
+                {
+                    _s.Sort();
+                }
                 if (_s == null)
                     Debug.LogError("CookingBookSO not found");
             }
@@ -127,7 +132,8 @@ public class CookingBookSO : ScriptableObject
     [Button(ButtonSizes.Large)]
     private void Sort()
     {
-        recipes.Sort((a, b) => a.ingredients.Count < b.ingredients.Count ? 1 : -1);
+        recipes.Sort((a, b) => a.ingredients.Count.CompareTo(b.ingredients.Count));
+        isSorted = true;
     }
 #endif
 

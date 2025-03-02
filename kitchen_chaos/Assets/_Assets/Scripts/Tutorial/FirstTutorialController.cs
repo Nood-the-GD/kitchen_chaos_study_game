@@ -8,46 +8,68 @@ public class FirstTutorialController : MonoBehaviour
     [SerializeField] private List<BaseCounter> _navigationDestinationList = new List<BaseCounter>();
     private int _currentDestinationIndex = 0;
 
+    #region Unity Functions
     void Awake()
     {
         TutorialDialogue.s.OnDialogDone += OnDialogDone;
-        BaseCounter.OnInteract += OnInteractDone;
+        BaseCounter.OnInteract += OnInteract;
     }
-
     void Start()
     {
         TutorialDialogue.s.StartDialogue();
     }
+    void OnDestroy()
+    {
+        BaseCounter.OnInteract -= OnInteract;
+        BaseCounter.OnAlternativeInteract -= OnAlternativeInteract;
+    }
+    #endregion
 
+    #region Event Functions
     private void OnDialogDone(int index)
     {
         switch (index)
         {
             case 5:
                 // Start making salad
-                DeliveryManager.s.AddTutorialOrder();
+                DeliveryManager.Instance.AddTutorialOrder();
                 _currentDestinationIndex = -1;
                 NextDestination();
                 break;
         }
     }
-
-    private void NextDestination()
+    private void OnInteract(object sender, EventArgs e)
     {
-        _currentDestinationIndex++;
-        _currentDestinationIndex = Mathf.Clamp(_currentDestinationIndex, 0, _navigationDestinationList.Count - 1);
-        TutorialNavigate.s.ShowNavigationArrow(_navigationDestinationList[_currentDestinationIndex].transform);
+        var currentDestination = _navigationDestinationList[_currentDestinationIndex];
+        if ((sender as BaseCounter) != currentDestination) return;
+        if (sender is CuttingCounter)
+        {
+            BaseCounter.OnAlternativeInteract += OnAlternativeInteract;
+            return;
+        }
+        NextDestination();
     }
-
-    private void OnInteractDone(object sender, EventArgs e)
+    void OnAlternativeInteract(object sender, EventArgs e)
     {
+        var currentDestination = _navigationDestinationList[_currentDestinationIndex];
+        if ((sender as BaseCounter) != currentDestination) return;
         if (sender is CuttingCounter)
         {
             var cuttingCounter = sender as CuttingCounter;
             if (cuttingCounter.isComplete)
             {
                 NextDestination();
+                BaseCounter.OnAlternativeInteract -= OnAlternativeInteract;
+                return;
             }
         }
+    }
+    #endregion
+
+    private void NextDestination()
+    {
+        _currentDestinationIndex++;
+        _currentDestinationIndex = Mathf.Clamp(_currentDestinationIndex, 0, _navigationDestinationList.Count - 1);
+        TutorialNavigate.s.ShowNavigationArrow(_navigationDestinationList[_currentDestinationIndex].transform);
     }
 }

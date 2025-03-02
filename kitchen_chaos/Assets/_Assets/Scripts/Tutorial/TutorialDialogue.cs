@@ -10,11 +10,11 @@ public class TutorialDialogue : Singleton<TutorialDialogue>
     private string[] _dialogues = new string[]
     {
         "Welcome to the tutorial!",
-        "Lets make some food!",
-        "We will learn how to make a salad first",
+        "Lets make some <color=#FFC836>food</color>!",
+        "We will learn how to make a  <color=#BCFF79>salad</color> first!",
         "Let pickup <sprite name=hand> a tomato <sprite name=tomato> and chop <sprite name=knife> it into tomato slices <sprite name=tomatoSlides>, watch out for the sharp knife.",
-        "Then do the same with Cabbage <sprite name=cabbage>",
-        "Finally, combine two of them to make a salad!. Just put one into the other.", // index 5
+        "Then do the same with Cabbage <sprite name=cabbage>!",
+        "Finally, combine two of them to make a <color=#BCFF79>salad</color>!. Just put one into the other.", // index 5
     };
 
     [SerializeField] private TextMeshProUGUI _tutorialText;
