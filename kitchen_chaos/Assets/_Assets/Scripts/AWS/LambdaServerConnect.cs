@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 
 public static class ServerConnect
 {
@@ -92,15 +93,15 @@ public static class ServerConnect
                 _isConnected = true;
                 _reconnectAttempt = 0;
                 _isReconnecting = false;
-                OnConnected?.Invoke();
+                UniTask.Post(() => OnConnected?.Invoke());
                 StartPingTimer();
             };
 
             _websocket.OnMessage += (sender, e) =>
             {
                 string msg = e.Data;
-                OnMessageReceived?.Invoke(msg);
-                ServerDataHandler(msg);
+                UniTask.Post(() => OnMessageReceived?.Invoke(msg));
+                ServerDataHandler(msg).Forget();
             };
 
             _websocket.OnClose += async (sender, e) =>
@@ -108,7 +109,7 @@ public static class ServerConnect
                 Debug.Log("<color=green>WebSocket connection closed.</color>");
                 StopPingTimer();
                 _isConnected = false;
-                OnDisconnected?.Invoke();
+                UniTask.Post(() => OnDisconnected?.Invoke());
 
                 // if (!_isReconnecting)
                 // {
@@ -125,7 +126,7 @@ public static class ServerConnect
                 Debug.Log("<color=green>WebSocket error: " + e.Message + "</color>");
                 StopPingTimer();
                 _isConnected = false;
-                OnDisconnected?.Invoke();
+                UniTask.Post(() => OnDisconnected?.Invoke());
 
                 if (!_isReconnecting)
                 {
@@ -199,7 +200,7 @@ public static class ServerConnect
         StopPingTimer();
         Debug.Log("Disconnected from server.");
         _isConnected = false;
-        OnDisconnected?.Invoke();
+        UniTask.Post(() => OnDisconnected?.Invoke());
 
         // Optionally reset reconnection parameters.
         _isReconnecting = false;
@@ -294,7 +295,7 @@ public static class ServerConnect
     // ================================
     // Handle incoming server data
     // ================================
-    private static async void ServerDataHandler(string message)
+    private static async UniTaskVoid ServerDataHandler(string message)
     {
         try
         {
@@ -352,6 +353,8 @@ public static class ServerConnect
             {
                 var p = await LambdaAPI.GetMySocial();
                 var socialData = p.jToken.ToObject<SocialData>();
+                
+                await UniTask.SwitchToMainThread();
                 SocialData.UpdateMySocial(socialData);
                 OnSocialDataUpdate?.Invoke();
             }
@@ -366,20 +369,20 @@ public static class ServerConnect
                 var messageDataCopy = data["message"].ToObject<MessageData>();   
                 var conversationIdCopy = data["conversationId"].ToString();
                 
-                // Queue the processing on the main thread
-                MainThreadDispatcher.RunOnMainThread(() => {
-                    try {
-                        var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
-                        SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
-                        ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy);
-                        
-                        Debug.Log("updateChatMessage processed on main thread.");
-                        OnChatMessage?.Invoke(messageDataCopy);
-                    }
-                    catch (Exception ex) {
-                        Debug.LogError("Error processing chat message on main thread: " + ex.Message);
-                    }
-                });
+                // Switch to main thread for Unity operations
+                await UniTask.SwitchToMainThread();
+                
+                try {
+                    var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
+                    SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
+                    ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy);
+                    
+                    Debug.Log("updateChatMessage processed on main thread.");
+                    OnChatMessage?.Invoke(messageDataCopy);
+                }
+                catch (Exception ex) {
+                    Debug.LogError("Error processing chat message on main thread: " + ex.Message);
+                }
             }
             else if (messageTypeStr == "createChatMessage")
             {
@@ -388,29 +391,29 @@ public static class ServerConnect
                 var conversationIdCopy = data["conversationId"].ToString();
                 var usersCopy = data["users"];
                 
-                // Queue the processing on the main thread
-                MainThreadDispatcher.RunOnMainThread(() => {
-                    try {
-                        var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
+                // Switch to main thread for Unity operations
+                await UniTask.SwitchToMainThread();
+                
+                try {
+                    var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
 
-                        SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
-                        var otherUid = usersCopy[0];
-                        if(otherUid.ToString() != UserData.mineUid){
-                            otherUid = usersCopy[1];
-                        }
+                    SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
+                    var otherUid = usersCopy[0];
+                    if(otherUid.ToString() != UserData.mineUid){
+                        otherUid = usersCopy[1];
+                    }
 
-                        SocialData.AddChatSummary(conversationIdCopy, messageDataCopy.content, otherUid.ToString());
-                        ConversationData.AddNewConvo(conversationIdCopy, messageDataCopy, otherUid.ToString());
-                        if(messageDataCopy.userId != UserData.mineUid){
-                            //show noti here
-                        }
-     
-                        OnChatMessage.Invoke(messageDataCopy);
+                    SocialData.AddChatSummary(conversationIdCopy, messageDataCopy.content, otherUid.ToString());
+                    ConversationData.AddNewConvo(conversationIdCopy, messageDataCopy, otherUid.ToString());
+                    if(messageDataCopy.userId != UserData.mineUid){
+                        //show noti here
                     }
-                    catch (Exception ex) {
-                        Debug.LogError("Error processing chat message on main thread: " + ex.Message);
-                    }
-                });
+ 
+                    OnChatMessage.Invoke(messageDataCopy);
+                }
+                catch (Exception ex) {
+                    Debug.LogError("Error processing chat message on main thread: " + ex.Message);
+                }
             }
             else if (messageTypeStr == "inAppNoti")
             {
@@ -424,6 +427,8 @@ public static class ServerConnect
                         string fromUid = dataObj["otherUid"]?.ToString();
                         string notification = $"{fromUserName} đã gửi lời mời kết bạn";
                         Debug.Log(notification);
+                        
+                        await UniTask.SwitchToMainThread();
                         // TODO: Update your friend request data and notify the UI.
                         OnSocialDataUpdate?.Invoke();
                     }
@@ -433,6 +438,8 @@ public static class ServerConnect
                         string fromUid = dataObj["otherUid"]?.ToString();
                         string notification = $"Bạn và {fromUserName} đã trở thành bạn";
                         Debug.Log(notification);
+                        
+                        await UniTask.SwitchToMainThread();
                         // TODO: Update your friend list and notify the UI.
                         OnSocialDataUpdate?.Invoke();
                     }
@@ -448,11 +455,15 @@ public static class ServerConnect
                 // The data is assumed to be a base64-encoded string.
                 string base64String = data.ToString();
                 byte[] imageBytes = Convert.FromBase64String(base64String);
+                
+                await UniTask.SwitchToMainThread();
                 OnDrawingImageReceived?.Invoke(imageBytes);
             }
             else if (messageTypeStr == "updateDrawingRaw")
             {
                 string rawData = data.ToString();
+                
+                await UniTask.SwitchToMainThread();
                 OnDrawingRaw?.Invoke(rawData);
             }
             else if (messageTypeStr == "updateFindObjectImage")

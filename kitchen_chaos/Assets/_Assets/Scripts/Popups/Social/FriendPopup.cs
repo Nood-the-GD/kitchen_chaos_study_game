@@ -23,6 +23,11 @@ public class FriendPopup : BasePopup<FriendPopup>
     public Button sendMessageButton;
     public ChatItemView chatItemViewRef;
     
+    // Reference to the scroll rect containing chat messages
+    public ScrollRect chatScrollRect;
+    
+    // Maximum character limit for chat messages
+    private const int MAX_CHAR_LIMIT = 80;
 
     [Button]
     void LogSocialData(){
@@ -31,8 +36,6 @@ public class FriendPopup : BasePopup<FriendPopup>
 
     void Start()
     {
-
-        
         sendMessageButton.onClick.AddListener(SendMessage);
         findFriendButton.onClick.AddListener(OnFindFriendClick);
         friendRequestButton.onClick.AddListener(OnFriendRequestClick);
@@ -44,12 +47,11 @@ public class FriendPopup : BasePopup<FriendPopup>
         // Set the chat (message) panel inactive on start.
         messagePanel.gameObject.SetActive(false);
         
-
-       
-        Init();
+        // Set up character limit for the input field
+        chatInputField.characterLimit = MAX_CHAR_LIMIT;
         
+        Init();
     }
-
 
     protected override void OnEnable()
     {
@@ -63,7 +65,6 @@ public class FriendPopup : BasePopup<FriendPopup>
             FloatingBubble.s.gameObject.SetActive(true);
 
         ServerConnect.OnChatMessage -= OnReciveChatMessage;
-
     }
 
     void OnReciveChatMessage(MessageData messageData){
@@ -74,7 +75,6 @@ public class FriendPopup : BasePopup<FriendPopup>
         Debug.Log(messageData.content.ToString());
         AddMessage(messageData);
     }
-
 
     void Init()
     {
@@ -91,17 +91,25 @@ public class FriendPopup : BasePopup<FriendPopup>
         }
     }
 
-
     async void SendMessage() 
     {
+        // Check if the input field is empty
+        if (string.IsNullOrWhiteSpace(chatInputField.text))
+            return;
+            
         if(currentChat.chatSummary == null){
             Debug.Log("Create chat with user: " + currentChat.otherUid);
             await LambdaAPI.CreateChatMessage(currentChat.otherUid, chatInputField.text);
         }else{
-
             Debug.Log("Send message to chat: " + currentChat.otherUid);
             await LambdaAPI.SendChatMessage(currentChat.chatSummary.id, chatInputField.text);
         }
+        
+        // Clear the input field after sending the message
+        chatInputField.text = "";
+        
+        // Set focus back to the input field
+        chatInputField.ActivateInputField();
     }
 
     void OnClick(FriendChatItemView friendChatItemView)
@@ -133,18 +141,128 @@ public class FriendPopup : BasePopup<FriendPopup>
 
         foreach(var i in convo.messages){
             Debug.Log("Message: " + i.Value.content.ToString());
-            AddMessage(i.Value);
+            AddMessage(i.Value, false); // Don't scroll for each message during initialization
         }
+        
+        // Wait a frame to ensure all messages are properly laid out
+        await System.Threading.Tasks.Task.Delay(50);
+        
+        // Scroll to bottom after all messages are loaded
+        ScrollToBottomImmediate();
     }
 
-    void AddMessage(MessageData messageData){
+    void AddMessage(MessageData messageData, bool scrollToBottom = true){
         ChatItemView chatItemView = Instantiate(chatItemViewRef, chatItemViewRef.transform.parent);
         chatItemView.gameObject.SetActive(true);
         chatItemView.SetData(messageData);
+        
+        // Scroll to the bottom with animation after adding a new message, if requested
+        if (scrollToBottom)
+        {
+            // Ensure the chat panel is active before attempting to scroll
+            if (messagePanel.gameObject.activeInHierarchy)
+            {
+                StartCoroutine(ScrollToBottomAnimated());
+            }
+        }
     }
-
-
-
+    
+    /// <summary>
+    /// Coroutine to scroll to the bottom of the chat with animation
+    /// </summary>
+    private IEnumerator ScrollToBottomAnimated()
+    {
+        // Wait for the end of frame to ensure the UI has been updated
+        yield return new WaitForEndOfFrame();
+        
+        // Wait one more frame to ensure content size has been recalculated
+        yield return null;
+        
+        // Make sure we have a valid scroll rect
+        if (chatScrollRect != null && chatScrollRect.content != null)
+        {
+            // Force layout rebuild to ensure content size is correct
+            LayoutRebuilder.ForceRebuildLayoutImmediate(chatScrollRect.content);
+            Canvas.ForceUpdateCanvases();
+            
+            // Wait another frame after layout rebuild
+            yield return null;
+            
+            // Ensure content size fitter has updated if present
+            ContentSizeFitter sizeFitter = chatScrollRect.content.GetComponent<ContentSizeFitter>();
+            if (sizeFitter != null)
+            {
+                sizeFitter.enabled = false;
+                yield return null;
+                sizeFitter.enabled = true;
+                yield return null;
+            }
+            
+            // Force another canvas update
+            Canvas.ForceUpdateCanvases();
+            
+            // Animate scrolling to the bottom
+            float startPos = chatScrollRect.verticalNormalizedPosition;
+            float endPos = 0f; // 0 is bottom, 1 is top for vertical scroll
+            float elapsedTime = 0f;
+            float scrollDuration = 0.25f; // Duration of scroll animation
+            
+            while (elapsedTime < scrollDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / scrollDuration);
+                chatScrollRect.verticalNormalizedPosition = Mathf.Lerp(startPos, endPos, t);
+                yield return null;
+            }
+            
+            // Ensure we're exactly at the bottom
+            chatScrollRect.verticalNormalizedPosition = 0f;
+            Canvas.ForceUpdateCanvases();
+            
+            // Debug log to confirm scrolling completed
+            Debug.Log("Animated scroll to bottom completed");
+        }
+        else
+        {
+            Debug.LogWarning("Cannot scroll: chatScrollRect or its content is null");
+        }
+    }
+    
+    /// <summary>
+    /// Immediately scrolls to the bottom of the chat without animation
+    /// </summary>
+    private void ScrollToBottomImmediate()
+    {
+        if (chatScrollRect == null || chatScrollRect.content == null)
+        {
+            Debug.LogWarning("Cannot scroll: chatScrollRect or its content is null");
+            return;
+        }
+        
+        // Force layout rebuild to ensure content size is correct
+        LayoutRebuilder.ForceRebuildLayoutImmediate(chatScrollRect.content);
+        Canvas.ForceUpdateCanvases();
+        
+        // Check for ContentSizeFitter and refresh it if present
+        ContentSizeFitter sizeFitter = chatScrollRect.content.GetComponent<ContentSizeFitter>();
+        if (sizeFitter != null)
+        {
+            sizeFitter.enabled = false;
+            sizeFitter.enabled = true;
+        }
+        
+        // Force another canvas update
+        Canvas.ForceUpdateCanvases();
+        
+        // Set scroll position to bottom
+        chatScrollRect.verticalNormalizedPosition = 0f;
+        
+        // Force final canvas update
+        Canvas.ForceUpdateCanvases();
+        
+        // Debug log to confirm scrolling completed
+        Debug.Log("Immediate scroll to bottom completed");
+    }
 
     /// <summary>
     /// Animates the friend and chat panels.
@@ -244,7 +362,4 @@ public class FriendPopup : BasePopup<FriendPopup>
     {
         FriendRequestPopup.ShowPopup();
     }
-
-    
-
 }
