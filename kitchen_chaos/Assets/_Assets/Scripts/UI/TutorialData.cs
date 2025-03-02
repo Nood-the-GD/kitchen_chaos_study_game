@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TutorialData : MonoBehaviour
 {
@@ -11,13 +14,38 @@ public class TutorialData : MonoBehaviour
 
     void Start()
     {
-                skipTutorialNumber = 0;
+        skipTutorialNumber = 0;
         Instance = this;
-        if(PhotonManager.s == null){
+        if (PhotonManager.s == null)
+        {
             Debug.LogError("PhotonManager is null");
             return;
         }
         PhotonManager.s.onJoinRoom += OnJoinRoom;
+        PhotonManager.s.onConnectToServer += OnConnectToServer;
+    }
+
+    private void OnConnectToServer()
+    {
+        if (UserData.IsFirstTutorialDone == false)
+        {
+            SectionData.s.isSinglePlay = true;
+            PhotonManager.s.onCreatedRoom += OnCreatedRoom;
+            PhotonNetwork.CreateRoom("tutorial");
+        }
+        PhotonManager.s.onConnectToServer -= OnConnectToServer;
+    }
+
+    private void OnCreatedRoom()
+    {
+        LoadTutorialLevel();
+        PhotonManager.s.onCreatedRoom -= OnCreatedRoom;
+    }
+
+    private void LoadTutorialLevel()
+    {
+        GameManager.levelId = 0;
+        PhotonNetwork.LoadLevel(GameData.s.GetStage(0).sceneName);
     }
 
     private void OnJoinRoom()
@@ -27,7 +55,7 @@ public class TutorialData : MonoBehaviour
 
     public void SkipTutorial(bool value)
     {
-        if(value)
+        if (value)
         {
             skipTutorialNumber++;
         }
@@ -40,7 +68,7 @@ public class TutorialData : MonoBehaviour
     public void ConfirmTutorial()
     {
         confirmTutorialNumber++;
-        if(SectionData.s.isSinglePlay)
+        if (SectionData.s.isSinglePlay)
         {
             confirmTutorialNumber++;
         }

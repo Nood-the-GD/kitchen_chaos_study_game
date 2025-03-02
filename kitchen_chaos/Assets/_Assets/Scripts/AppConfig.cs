@@ -203,14 +203,16 @@ public class AppConfig : MonoBehaviour
             SaveData.userToken
         );
 
-        if(p.IsError){
+        if (p.IsError)
+        {
             tcs.TrySetResult(false);
         }
-        else{
+        else
+        {
             UserData.SetCurrentUser(p.jToken.ToObject<UserData>());
             tcs.TrySetResult(true);
         }
-        
+
 
         return await tcs.Task;
     }
@@ -243,7 +245,6 @@ public class AppConfig : MonoBehaviour
         // Replace "MainMenuScene" with the name of your target scene.
         Debug.Log("Going to MainMenuScene...");
         SceneManager.LoadScene(SceneType.MainMenuScene.ToString());
-
         // Option 2: If you intend to stay in the same scene, disable this script to avoid re-running.
         // this.enabled = false;
     }

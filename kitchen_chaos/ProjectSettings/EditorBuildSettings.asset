@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Assets/Scenes/Level/Level_5.unity
     guid: 84cec9d1735f74e8ea9523ae0a149c82
+  - enabled: 1
+    path: Assets/_Assets/Scenes/Level/Level_tutorial.unity
+    guid: 930dc396a456a4619981620583c5bb95
   - enabled: 0
     path: Assets/_Assets/Scenes/Level/AI_Test.unity
     guid: c5267873e774f45a19e2da62bc330b53

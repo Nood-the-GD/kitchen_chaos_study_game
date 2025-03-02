@@ -116,13 +116,6 @@ public class CookingBookSO : ScriptableObject
 
 
 #if UNITY_EDITOR
-    bool isEnoughName
-    {
-        get
-        {
-            return CheckEnoughName();
-        }
-    }
     [Button(ButtonSizes.Large)]
     private void FindAllRecipe()
     {
@@ -131,16 +124,10 @@ public class CookingBookSO : ScriptableObject
         var recipes = Resources.LoadAll<RecipeSO>(folderPath);
         this.recipes = new List<RecipeSO>(recipes);
     }
-    private bool CheckEnoughName()
+    [Button(ButtonSizes.Large)]
+    private void Sort()
     {
-        foreach (var recipe in recipes)
-        {
-            if (string.IsNullOrEmpty(recipe.nameRec))
-            {
-                return false;
-            }
-        }
-        return true;
+        recipes.Sort((a, b) => a.ingredients.Count < b.ingredients.Count ? 1 : -1);
     }
 #endif
 

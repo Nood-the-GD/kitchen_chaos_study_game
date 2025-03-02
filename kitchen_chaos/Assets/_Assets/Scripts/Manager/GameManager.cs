@@ -55,11 +55,6 @@ public class GameManager : Singleton<GameManager>
         if (isTesting) return;
         if (SectionData.s.isSinglePlay)
         {
-            // // Spawn AIManager
-            // AISystem aISystem = Instantiate(Resources.Load<AISystem>(FAKE_PLAYER_PATH)).GetComponent<AISystem>();
-            // Transform spawnPosition = spawnPoints[0];
-            // aISystem.Init(spawnPosition.position);
-            // spawnPoints.Remove(spawnPosition);
             SpawnSinglePlayerManager();
         }
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
@@ -71,6 +66,13 @@ public class GameManager : Singleton<GameManager>
         if (isGameOver) return;
 
         if (!PhotonManager.s.isJoinedRoom) return;
+
+        if (UserData.IsFirstTutorialDone == false)
+        {
+            gamePlayingTimer = gamePlayingTimerMax;
+            ChangeState(State.GamePlaying);
+            return;
+        }
 
         switch (state)
         {

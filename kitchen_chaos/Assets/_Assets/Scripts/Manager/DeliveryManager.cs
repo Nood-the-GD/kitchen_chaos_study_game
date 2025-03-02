@@ -6,7 +6,7 @@ using Photon.Pun;
 using Sirenix.OdinInspector;
 using System.Linq;
 
-public class DeliveryManager : MonoBehaviour
+public class DeliveryManager : Singleton<DeliveryManager>
 {
     #region TimerClass
     public class TimerClass
@@ -26,7 +26,7 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField]
     [InlineEditor]
     private CookingBookSO orderList;
-    private float waitingTimeForEachRecipe = 20f;
+    [SerializeField] private float waitingTimeForEachRecipe = 20f;
     private List<RecipeSO> waitingRecipeSOList = new List<RecipeSO>();
     private List<TimerClass> waitingTimerClassList = new List<TimerClass>();
     private float spawnRecipeTimer;
@@ -53,6 +53,11 @@ public class DeliveryManager : MonoBehaviour
     }
     private void Update()
     {
+        if (UserData.IsFirstTutorialDone == false)
+        {
+            return;
+        }
+
         for (int i = 0; i < waitingTimerClassList.Count; i++)
         {
             waitingTimerClassList[i].timer -= Time.deltaTime;
@@ -199,9 +204,6 @@ public class DeliveryManager : MonoBehaviour
         // Return false
         return false;
     }
-
-
-
     #endregion
 
     #region Private
@@ -264,6 +266,14 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeRemove?.Invoke(this, EventArgs.Empty);
     }
 
+    #endregion
+
+    #region Tutorial
+    public void AddTutorialOrder(string name = "Salad")
+    {
+        var index = orderList.recipes.FindIndex(x => x.nameRec == name);
+        AddOrder(index);
+    }
     #endregion
 
     #region Get

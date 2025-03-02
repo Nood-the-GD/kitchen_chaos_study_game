@@ -21,7 +21,8 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
 
     #region Variables 
     private int _cuttingProcess;
-    public bool _isComplete;
+    private bool _isComplete;
+    public bool isComplete => _isComplete;
     #endregion
 
     #region Interact
@@ -66,6 +67,7 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
         if (HasKitchenObject() == false || !GetKitchenObjectSO().CanCut())
         {
             Debug.Log("Can't cut");
+            return;
         }
         if (HasKitchenObject() && GetKitchenObjectSO().CanCut())
         {

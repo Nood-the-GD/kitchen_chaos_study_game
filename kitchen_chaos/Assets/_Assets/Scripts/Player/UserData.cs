@@ -27,24 +27,28 @@ public class UserSetting
     }
 }
 
-public class SaveData{
-    public static string userId 
+public class SaveData
+{
+    public static string userId
     {
         get => PlayerPrefs.GetString("userId", "null");
         set => PlayerPrefs.SetString("userId", value);
     }
 
-    public static string userToken{
+    public static string userToken
+    {
         get => PlayerPrefs.GetString("userToken", "null");
         set => PlayerPrefs.SetString("userToken", value);
     }
 
-    public static string userName{
+    public static string userName
+    {
         get => PlayerPrefs.GetString("userName", "null");
         set => PlayerPrefs.SetString("userName", value);
     }
 
-    public static bool isInited{
+    public static bool isInited
+    {
         get => PlayerPrefs.HasKey("userId");
     }
 }
@@ -52,6 +56,12 @@ public class SaveData{
 [System.Serializable]
 public class UserData
 {
+    public static bool IsFirstTutorialDone
+    {
+        get => PlayerPrefs.GetInt("isFirstTutorialDone", 0) == 1;
+        set => PlayerPrefs.SetInt("isFirstTutorialDone", value ? 1 : 0);
+    }
+
     public string username;
     public string userGender;
     public string uid;
@@ -63,15 +73,18 @@ public class UserData
         return currentUser.uid == uid;
     }
 
-    public bool IsMine(){
+    public bool IsMine()
+    {
         return currentUser.uid == uid;
     }
 
-    public static void SetCurrentUser(UserData user){
+    public static void SetCurrentUser(UserData user)
+    {
         currentUser = user;
     }
 
-    public bool IsOnline{
+    public bool IsOnline
+    {
         get => activeStatus == "online";
     }
 }

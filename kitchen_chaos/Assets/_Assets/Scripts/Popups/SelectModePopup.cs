@@ -1,13 +1,12 @@
 using UnityEngine;
 using Photon.Pun;
-using System;
-using Sirenix.OdinInspector;
 using UnityEngine.UI;
 public class SelectModePopup : BasePopup<SelectModePopup>
 {
     [SerializeField] private Button _singlePlayBtn, _randomMatchBtn, _findRoomBtn, _createRoomBtn;
-     
-    private void Start() {
+
+    private void Start()
+    {
         PhotonManager.s.onJoinRandomRoomFailed += OnJoinRandomRoomFailed;
         _singlePlayBtn.onClick.AddListener(SinglePlay);
         _randomMatchBtn.onClick.AddListener(RandomMatch);
@@ -26,36 +25,42 @@ public class SelectModePopup : BasePopup<SelectModePopup>
         PhotonNetwork.CreateRoom(RandomStringGenerator.GenerateRandomString(7));
     }
 
-    public void RandomMatch(){
-        
+    public void RandomMatch()
+    {
+
         PhotonNetwork.JoinRandomRoom();
     }
 
-    public void FindRoom(){
+    public void FindRoom()
+    {
         FindRoomPopup.ShowPopup();
     }
 
-    protected override void OnEnable(){
+    protected override void OnEnable()
+    {
         base.OnEnable();
         PhotonManager.s.onJoinRoom += EnterRoom;
     }
 
-    protected override void OnDisable(){
+    protected override void OnDisable()
+    {
         base.OnDisable();
         PhotonManager.s.onJoinRoom -= EnterRoom;
         PhotonManager.s.onJoinRandomRoomFailed -= OnJoinRandomRoomFailed;
     }
 
-    void EnterRoom(){
+    void EnterRoom()
+    {
         CreateRoomPopup.ShowPopup();
         HidePopup();
     }
 
-    public void CreateRoom(){
+    public void CreateRoom()
+    {
 
         PhotonNetwork.CreateRoom(RandomStringGenerator.GenerateRandomString(7));
 
-       
+
     }
 
 

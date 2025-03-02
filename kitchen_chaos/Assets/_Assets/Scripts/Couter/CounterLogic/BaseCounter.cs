@@ -8,6 +8,8 @@ using Photon.Realtime;
 
 public class BaseCounter : MonoBehaviour, IKitchenContainable
 {
+    public static EventHandler OnInteract;
+
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
 
@@ -100,6 +102,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 otherContainer.GetKitchenObject().SetContainerParent(this);
             }
         }
+        OnInteract?.Invoke(this, EventArgs.Empty);
     }
 
     #region Multiplay
