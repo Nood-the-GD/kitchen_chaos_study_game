@@ -60,8 +60,8 @@ MonoBehaviour:
   m_Spacing: 100
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -974,7 +974,6 @@ GameObject:
   - component: {fileID: 8077473069801886460}
   - component: {fileID: 2376307885443639363}
   - component: {fileID: 5434492858306743637}
-  - component: {fileID: 6014046184870794489}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -1000,7 +999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 238.172, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2376307885443639363
@@ -1044,21 +1043,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "H\u1ED3n l\u1EE1 sa v\xE0o \u0111\xF4i m\u1EAFt em\n"
---- !u!114 &6014046184870794489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2733318811964026620}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
+  m_Text: 'Hon lo sa vao doi mat em
+
+    hehe'
 --- !u!1 &2868618024583672367
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,7 +3520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1623063856232879737}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -3641,7 +3628,6 @@ GameObject:
   - component: {fileID: 4605662681378134860}
   - component: {fileID: 2772805576800310366}
   - component: {fileID: 5163479183365846071}
-  - component: {fileID: 3526787841321602559}
   - component: {fileID: 6250188376372470396}
   m_Layer: 5
   m_Name: Item
@@ -3667,7 +3653,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 238.172, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4605662681378134860
@@ -3728,26 +3714,12 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &3526787841321602559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6771950954879492064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
 --- !u!114 &6250188376372470396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3928,10 +3900,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2551366222943919347}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 794.8775, y: 96.126}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 378.5619, y: -48.063}
+  m_SizeDelta: {x: 774.3524, y: 96.126}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3739961814669722063
 CanvasRenderer:
@@ -4230,10 +4202,10 @@ RectTransform:
   - {fileID: 7485043056472692744}
   m_Father: {fileID: 8517566040208323353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 167.142}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 489.07043, y: -83.571}
+  m_SizeDelta: {x: 978.14087, y: 167.142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3976190934254270482
 MonoBehaviour:
@@ -4276,11 +4248,7 @@ MonoBehaviour:
   userName: {fileID: 5499868608589710001}
   message: {fileID: 8358091255689225794}
   activeStatus: {fileID: 7613969621017025891}
-  chatSummary:
-    id: 
-    content: 
-    otherUid: 
-  uid: 
+  otherUid: 
   button: {fileID: 1077262854028887500}
 --- !u!1 &8098595570825875565
 GameObject:
@@ -4292,14 +4260,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2551366222943919347}
   - component: {fileID: 964588932320027388}
-  - component: {fileID: 1732790654885260061}
   m_Layer: 5
   m_Name: TimeBreak
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2551366222943919347
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4315,10 +4282,10 @@ RectTransform:
   - {fileID: 5650531067181590338}
   m_Father: {fileID: 1623063856232879737}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 794.326, y: 100}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -210.62398}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &964588932320027388
 CanvasRenderer:
@@ -4328,32 +4295,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8098595570825875565}
   m_CullTransparentMesh: 1
---- !u!114 &1732790654885260061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8098595570825875565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 1
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!1 &8477680941047339341
 GameObject:
   m_ObjectHideFlags: 0

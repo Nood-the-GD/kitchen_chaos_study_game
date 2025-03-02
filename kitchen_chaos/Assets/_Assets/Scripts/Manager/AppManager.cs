@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -11,6 +12,7 @@ public class AppManager : MonoBehaviour
         PhotonManager.s.Init();
         var p = await LambdaAPI.GetMySocial();
         SocialData.mySocialData = p.jToken.ToObject<SocialData>(); 
+        SocialData.mySocialData.SetUp();
         debugSocialData = SocialData.mySocialData;
         await ServerConnect.ConnectServer();
     }
@@ -30,6 +32,26 @@ public class AppManager : MonoBehaviour
     [Button]
     void ClearAllKey(){
         PlayerPrefs.DeleteAll();
+    }
+
+    [Button]
+    void CreateUser(){
+        LambdaAPI.CreateUser("test", "male");
+    }
+
+    [Button]
+    void AcceptFriend(string fromUid, string otherUid){
+        LambdaAPI.AcceptFriendCustom(fromUid, otherUid);
+    }
+
+    [Button]
+    void ClearConversation(){
+        ConversationData.conversationDatas = new List<ConversationData>();
+    }
+
+    [Button]
+    void TestStream(){
+        LambdaAPI.TestStream();
     }
 #endregion
 }

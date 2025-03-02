@@ -7,6 +7,7 @@ using WebSocketSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Collections;
 
 public static class ServerConnect
 {
@@ -67,7 +68,7 @@ public static class ServerConnect
             return;
 
         _isConnecting = true;
-        Debug.Log("Connecting to server...");
+        Debug.Log("<color=green>Connecting to server...</color>");
 
         if (string.IsNullOrEmpty(UserData.currentUser.uid))
         {
@@ -77,7 +78,7 @@ public static class ServerConnect
         }
 
         string uid = UserData.currentUser.uid;
-        Debug.Log("Connect for uid: " + uid);
+        Debug.Log("<color=green>Connect for uid: " + uid + "</color>");
         string urlString = $"wss://4vup7tn95f.execute-api.ap-southeast-1.amazonaws.com/production/?uid={uid}";
 
         try
@@ -87,7 +88,7 @@ public static class ServerConnect
             // Subscribe to WebSocket events.
             _websocket.OnOpen += (sender, e) =>
             {
-                Debug.Log("Connected to server.");
+                Debug.Log("<color=green>Connected to server.</color>");
                 _isConnected = true;
                 _reconnectAttempt = 0;
                 _isReconnecting = false;
@@ -104,24 +105,24 @@ public static class ServerConnect
 
             _websocket.OnClose += async (sender, e) =>
             {
-                Debug.Log("WebSocket connection closed.");
+                Debug.Log("<color=green>WebSocket connection closed.</color>");
                 StopPingTimer();
                 _isConnected = false;
                 OnDisconnected?.Invoke();
 
-                if (!_isReconnecting)
-                {
-                    await AttemptReconnect();
-                }
-                else
-                {
-                    Debug.Log("Already reconnecting. Skipping additional reconnect attempt.");
-                }
+                // if (!_isReconnecting)
+                // {
+                //     await AttemptReconnect();
+                // }
+                // else
+                // {
+                //     Debug.Log("<color=green>Already reconnecting. Skipping additional reconnect attempt.</color>");
+                // }
             };
 
             _websocket.OnError += async (sender, e) =>
             {
-                Debug.Log("WebSocket error: " + e.Message);
+                Debug.Log("<color=green>WebSocket error: " + e.Message + "</color>");
                 StopPingTimer();
                 _isConnected = false;
                 OnDisconnected?.Invoke();
@@ -132,7 +133,7 @@ public static class ServerConnect
                 }
                 else
                 {
-                    Debug.Log("Already reconnecting. Skipping additional reconnect attempt.");
+                    Debug.Log("<color=green>Already reconnecting. Skipping additional reconnect attempt.</color>");
                 }
             };
 
@@ -299,21 +300,28 @@ public static class ServerConnect
         {
             // Deserialize the JSON message into a dictionary.
             var body = JToken.Parse(message);
+            Debug.Log("ServerDataHandler: " + body);
             
-            if (body == null || !body.Contains("messageType"))
+            // Try to get the messageType value, returns null if key doesn't exist
+            var messageType = body?["messageType"];
+            if (body == null || messageType == null)
             {
                 Debug.LogError("Invalid message format.");
                 return;
             }
 
-            string messageType = body["messageType"].ToString();
+            string messageTypeStr = messageType.ToString();
             JToken data = null;
-            if (body.Contains("data"))
+            if (body["data"] != null)
             {
                 data = body["data"];
             }
+            else{
+                Debug.Log("No data found in message.");
+                return;
+            }
 
-            if (messageType == "pong")
+            if (messageTypeStr == "pong")
             {
                 if (_lastPingTime.HasValue)
                 {
@@ -329,11 +337,10 @@ public static class ServerConnect
                 return;
             }
 
-            Debug.Log("Received streaming message: " + message);
 
-            if (messageType == "updateWaitingRoomMessage")
+            if (messageTypeStr == "updateWaitingRoomMessage")
             {
-                // Example: extract a “content” field from the data (assumes data is a JSON object).
+                // Example: extract a "content" field from the data (assumes data is a JSON object).
                 var dataObj = data as JObject;
                 if (dataObj != null)
                 {
@@ -341,56 +348,71 @@ public static class ServerConnect
                     // TODO: Update your waiting room messages and invoke related events.
                 }
             }
-            else if (messageType == "updateSocial")
+            else if (messageTypeStr == "updateSocial")
             {
                 var p = await LambdaAPI.GetMySocial();
                 var socialData = p.jToken.ToObject<SocialData>();
                 SocialData.UpdateMySocial(socialData);
                 OnSocialDataUpdate?.Invoke();
             }
-            else if (messageType == "updateChatMessage")
+            else if (messageTypeStr == "updateChatMessage")
             {
+                if(data["message"] == null){
+                    Debug.LogError("No message found in data.");
+                    return;
+                }
                 
+                // Create local copies of the data we need
+                var messageDataCopy = data["message"].ToObject<MessageData>();   
+                var conversationIdCopy = data["conversationId"].ToString();
                 
-                var messageData = data["message"].ToObject<MessageData>();   
-                var conversationId = data["conversationId"].ToString();
-                
-                var messageChannel = new MessageDataChannel(conversationId, messageData);
-
-                SocialData.UpdateChatSummary(conversationId, messageData.content);
-                
-                // TODO: Parse your chat message and update your data structures.
-
-                Debug.Log("updateChatMessage received.");
-                OnChatMessage?.Invoke(messageData);
-
-                // (You might trigger an OnChatMessage event here.)
+                // Queue the processing on the main thread
+                MainThreadDispatcher.RunOnMainThread(() => {
+                    try {
+                        var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
+                        SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
+                        ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy);
+                        
+                        Debug.Log("updateChatMessage processed on main thread.");
+                        OnChatMessage?.Invoke(messageDataCopy);
+                    }
+                    catch (Exception ex) {
+                        Debug.LogError("Error processing chat message on main thread: " + ex.Message);
+                    }
+                });
             }
-            else if (messageType == "createChatMessage")
+            else if (messageTypeStr == "createChatMessage")
             {
                 Debug.Log("createChatMessage received.");
-                var messageData = data["message"].ToObject<MessageData>();   
-                var conversationId = data["conversationId"].ToString();
+                var messageDataCopy = data["message"].ToObject<MessageData>();   
+                var conversationIdCopy = data["conversationId"].ToString();
+                var usersCopy = data["users"];
                 
-                var messageChannel = new MessageDataChannel(conversationId, messageData);
+                // Queue the processing on the main thread
+                MainThreadDispatcher.RunOnMainThread(() => {
+                    try {
+                        var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
 
-                SocialData.UpdateChatSummary(conversationId, messageData.content);
-                var users = data["users"];
-                var otherUid = users[0];
-                if(otherUid.ToString() != UserData.mineUid){
-                    otherUid = users[1];
-                }
+                        SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
+                        var otherUid = usersCopy[0];
+                        if(otherUid.ToString() != UserData.mineUid){
+                            otherUid = usersCopy[1];
+                        }
 
-                SocialData.AddChatSummary(conversationId, messageData.content, otherUid.ToString());
-                ConversationData.AddNewConvo(conversationId, messageData, otherUid.ToString());
-                if(messageData.userId != UserData.mineUid){
-                    //show noti here
-                }
-
-                OnChatMessage.Invoke(messageData);
-            
+                        SocialData.AddChatSummary(conversationIdCopy, messageDataCopy.content, otherUid.ToString());
+                        ConversationData.AddNewConvo(conversationIdCopy, messageDataCopy, otherUid.ToString());
+                        if(messageDataCopy.userId != UserData.mineUid){
+                            //show noti here
+                        }
+     
+                        OnChatMessage.Invoke(messageDataCopy);
+                    }
+                    catch (Exception ex) {
+                        Debug.LogError("Error processing chat message on main thread: " + ex.Message);
+                    }
+                });
             }
-            else if (messageType == "inAppNoti")
+            else if (messageTypeStr == "inAppNoti")
             {
                 var dataObj = data as JObject;
                 if (dataObj != null)
@@ -416,36 +438,37 @@ public static class ServerConnect
                     }
                 }
             }
-            else if (messageType == "updateWaitingRoom")
+            else if (messageTypeStr == "updateWaitingRoom")
             {
                 Debug.Log("updateWaitingRoom received.");
                 // TODO: Update your waiting room data.
             }
-            else if (messageType == "updateDrawingImage")
+            else if (messageTypeStr == "updateDrawingImage")
             {
                 // The data is assumed to be a base64-encoded string.
                 string base64String = data.ToString();
                 byte[] imageBytes = Convert.FromBase64String(base64String);
                 OnDrawingImageReceived?.Invoke(imageBytes);
             }
-            else if (messageType == "updateDrawingRaw")
+            else if (messageTypeStr == "updateDrawingRaw")
             {
                 string rawData = data.ToString();
                 OnDrawingRaw?.Invoke(rawData);
             }
-            else if (messageType == "updateFindObjectImage")
+            else if (messageTypeStr == "updateFindObjectImage")
             {
                 Debug.Log("updateFindObjectImage received.");
                 // TODO: Convert the data to your PictureData object and trigger an event.
             }
             else
             {
-                Debug.LogError("Undefined message type: " + messageType);
+                Debug.LogError("Undefined message type: " + messageTypeStr);
             }
         }
         catch (Exception ex)
         {
             Debug.LogError("Error handling server message: " + ex.Message);
+            Debug.LogError("Stack trace: " + ex.StackTrace);
         }
     }
 }

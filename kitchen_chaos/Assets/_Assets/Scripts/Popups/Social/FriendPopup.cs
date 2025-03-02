@@ -67,6 +67,10 @@ public class FriendPopup : BasePopup<FriendPopup>
     }
 
     void OnReciveChatMessage(MessageData messageData){
+        if(messageData == null){
+            Debug.LogError("MessageData is null");
+            return;
+        }
         Debug.Log(messageData.content.ToString());
         AddMessage(messageData);
     }
@@ -96,7 +100,7 @@ public class FriendPopup : BasePopup<FriendPopup>
         }else{
 
             Debug.Log("Send message to chat: " + currentChat.otherUid);
-            await LambdaAPI.SendChatMessage(currentChat.otherUid, chatInputField.text);
+            await LambdaAPI.SendChatMessage(currentChat.chatSummary.id, chatInputField.text);
         }
     }
 
@@ -110,18 +114,26 @@ public class FriendPopup : BasePopup<FriendPopup>
     async void ReloadChatUI(){
         // Load chat UI
         chatItemViewRef.gameObject.SetActive(false);
-        var convo = await ConversationData.LoadConversationDataAsync(currentChat.chatSummary.id);
+       
         var child = chatItemViewRef.transform.parent.childCount;
         for(int i = 1; i < child; i++){
             Destroy(chatItemViewRef.transform.parent.GetChild(i).gameObject);
         }
 
-        if(convo == null){
+        if(currentChat.chatSummary == null){
             return;
         }
 
-        foreach(var i in convo.messageData){
-            AddMessage(i);
+        var convo = await ConversationData.LoadConversationDataAsync(currentChat.chatSummary.id);
+
+        if(convo == null){
+            Debug.LogError("Conversation not found");
+            return;
+        }
+
+        foreach(var i in convo.messages){
+            Debug.Log("Message: " + i.Value.content.ToString());
+            AddMessage(i.Value);
         }
     }
 

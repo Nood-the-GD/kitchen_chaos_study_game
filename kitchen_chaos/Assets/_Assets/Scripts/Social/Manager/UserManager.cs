@@ -11,8 +11,8 @@ public static class UserManager
     private static List<UserData> users = new List<UserData>();
 
     // Dictionary to track ongoing fetch requests.
-    // Key: uid, Value: UniTask that will eventually return a UserData.
-    private static Dictionary<string, UniTask<UserData>> _pendingRequests = new Dictionary<string, UniTask<UserData>>();
+    // Key: uid, Value: UniTaskCompletionSource that will eventually complete with a UserData.
+    private static Dictionary<string, UniTaskCompletionSource<UserData>> _pendingRequests = new Dictionary<string, UniTaskCompletionSource<UserData>>();
 
     // Maximum number of concurrent pending requests.
     private const int _maxPendingRequests = 10;
@@ -34,9 +34,9 @@ public static class UserManager
         }
 
         // Check if there's an ongoing fetch for this uid.
-        if (_pendingRequests.TryGetValue(uid, out UniTask<UserData> pendingTask))
+        if (_pendingRequests.TryGetValue(uid, out UniTaskCompletionSource<UserData> pendingSource))
         {
-            return await pendingTask;
+            return await pendingSource.Task;
         }
 
         // Wait if too many pending requests are active.
@@ -45,14 +45,25 @@ public static class UserManager
             await UniTask.Delay(_pendingWaitDuration);
         }
 
-        // Start a new fetch request.
-        UniTask<UserData> fetchTask = FetchUserFromBackend(uid);
-        _pendingRequests[uid] = fetchTask;
+        // Create a new completion source for this request
+        var completionSource = new UniTaskCompletionSource<UserData>();
+        _pendingRequests[uid] = completionSource;
 
         try
         {
-            UserData user = await fetchTask;
+            // Start a new fetch request.
+            UserData user = await FetchUserFromBackend(uid);
+            
+            // Complete the task with the result
+            completionSource.TrySetResult(user);
+            
             return user;
+        }
+        catch (Exception ex)
+        {
+            // Set the exception on the completion source
+            completionSource.TrySetException(ex);
+            throw;
         }
         finally
         {

@@ -111,39 +111,6 @@ public class OtherRequest
     public string uid;
     public int timestamp;
 
-    // Constructor
-    public OtherRequest(string uid, int timestamp)
-    {
-        this.uid = uid;
-        this.timestamp = timestamp;
-    }
-
-    /// <summary>
-    /// Creates an instance from a dictionary.
-    /// (In Unity you might parse JSON into a Dictionary via another JSON library.)
-    /// </summary>
-    public static OtherRequest FromDictionary(Dictionary<string, object> json)
-    {
-        string uid = json.ContainsKey("uid") ? json["uid"].ToString() : "";
-        int timestamp = 0;
-        if (json.ContainsKey("timestamp"))
-        {
-            object rawTimestamp = json["timestamp"];
-            if (rawTimestamp is int)
-            {
-                timestamp = (int)rawTimestamp;
-            }
-            else if (rawTimestamp is long)
-            {
-                timestamp = Convert.ToInt32(rawTimestamp);
-            }
-            else if (rawTimestamp is string)
-            {
-                int.TryParse((string)rawTimestamp, out timestamp);
-            }
-        }
-        return new OtherRequest(uid, timestamp);
-    }
 
     /// <summary>
     /// Converts this instance to a JSON string.
@@ -208,6 +175,13 @@ public class SocialData
         this.otherRequest = otherRequest ?? new Dictionary<string, long>();
         this.myRequest = myRequest ?? new List<string>();
         this.chatSummary = chatSummary ?? new Dictionary<string, ChatSummary>();
+    }
+
+
+    public void SetUp(){
+        foreach(var chat in chatSummary){
+            chat.Value.id = chat.Key;
+        }
     }
 
     /// <summary>
@@ -491,61 +465,17 @@ public class ConversationData
 
     public string id;
     public List<string> uids;
-    public List<MessageData> messageData;
+    public Dictionary<string, MessageData> messages;
 
     // Constructor
-    public ConversationData(string id, List<string> uids, List<MessageData> messageData)
+    public ConversationData(string id, List<string> uids, Dictionary<string, MessageData> messages)
     {
         this.id = id;
         this.uids = uids;
-        this.messageData = messageData;
+        this.messages = messages;
     }
 
-    /// <summary>
-    /// Creates an instance of ConversationData from a dictionary.
-    /// Expects keys: "id", "users" (as List or array of strings), and "messages" (a Dictionary with keys as string timestamps).
-    /// </summary>
-    public static ConversationData FromDictionary(Dictionary<string, object> json)
-    {
-        // Get the conversation id.
-        string id = json["id"].ToString();
 
-        // Parse the list of user ids.
-        List<string> uids = new List<string>();
-        if (json.ContainsKey("users") && json["users"] is IEnumerable<object> users)
-        {
-            foreach (var user in users)
-            {
-                uids.Add(user.ToString());
-            }
-        }
-
-        // Parse messages. Expected to be a Dictionary<string, object>.
-        List<MessageData> messagesList = new List<MessageData>();
-        if (json.ContainsKey("messages") && json["messages"] is Dictionary<string, object> messages)
-        {
-            foreach (var entry in messages)
-            {
-                // The key is expected to be a string representing an int (like "12345").
-                if (int.TryParse(entry.Key, out int timestamp))
-                {
-                    // Each value is a JSON string or a Dictionary that can be converted to JSON.
-                    // Here, we assume it's a Dictionary<string, object> that you then convert to a JSON string.
-                    // You might need to use your JSON library here; for simplicity, we'll assume a helper method:
-                    // e.g., JsonHelper.ToJson(entry.Value)
-                    string jsonStr = JsonUtility.ToJson(new SerializationWrapper(entry.Value));
-                    MessageData message = MessageData.FromJson2(timestamp, jsonStr);
-                    messagesList.Add(message);
-                }
-                else
-                {
-                    Debug.LogWarning("Could not parse message key as int: " + entry.Key);
-                }
-            }
-        }
-
-        return new ConversationData(id, uids, messagesList);
-    }
 
     /// <summary>
     /// Finds and returns a ConversationData instance by its id from the static list.
@@ -584,8 +514,8 @@ public class ConversationData
         }
 
         // Convert the JToken to a Dictionary.
-        Dictionary<string, object> data = response.jToken.ToObject<Dictionary<string, object>>();
-        ConversationData convo = FromDictionary(data);
+        //Dictionary<string, object> data = response.jToken.ToObject<Dictionary<string, object>>();
+        ConversationData convo = response.jToken.ToObject<ConversationData>();
 
         if (conversationDatas == null)
             conversationDatas = new List<ConversationData>();
@@ -606,12 +536,14 @@ public class ConversationData
         {
             // Assuming you have a method to get your own uid, e.g., UserData.GetMyUid().
             List<string> uids = new List<string> { otherUid, UserData.currentUser.uid };
-            convo = new ConversationData(convoId, uids, new List<MessageData> { message });
+            Dictionary<string, MessageData> messages = new Dictionary<string, MessageData>();
+            messages[message.timestamp.ToString()] = message;
+            convo = new ConversationData(convoId, uids,  messages);
             conversationDatas.Add(convo);
         }
         else
         {
-            convo.messageData.Add(message);
+            convo.messages[message.timestamp.ToString()] = message;
         }
     }
 
@@ -626,7 +558,7 @@ public class ConversationData
         ConversationData convo = FindConversationData(convoId);
         if (convo != null)
         {
-            convo.messageData.Add(message);
+            convo.messages[message.timestamp.ToString()] = message;
         }
     }
 }

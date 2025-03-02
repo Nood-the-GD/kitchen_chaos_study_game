@@ -479,6 +479,24 @@ public class LambdaAPI : MonoBehaviour
         return response;
     }
 
+        public static async UniTask<ServerRespone> AcceptFriendCustom(string fromUid,string otherUid)
+    {
+        string payload = "{\"uid\":\"" + fromUid +
+                         "\",\"otherUid\":\"" + otherUid +
+                         "\",\"token\":\"" + SaveData.userToken + "\"}";
+        ServerRespone response = new ServerRespone();
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("acceptFriend", payload);
+            response.jToken = result;
+        }
+        catch (Exception ex)
+        {
+            response.error = ex.Message;
+        }
+        return response;
+    }
+
     /// <summary>
     /// Declines a friend request.
     /// </summary>
@@ -617,6 +635,22 @@ public class LambdaAPI : MonoBehaviour
         }
         return response;
     }
+
+    public static async UniTask<ServerRespone> TestStream(){
+       string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
+        ServerRespone response = new ServerRespone();
+        try
+        {
+            JToken result = await CallLambdaBaseAsync("testStream", payload);
+            response.jToken = result;
+        }
+        catch (Exception ex)
+        {
+            response.error = ex.Message;
+        }
+        return response;
+    }
+
 
     #endregion
 
