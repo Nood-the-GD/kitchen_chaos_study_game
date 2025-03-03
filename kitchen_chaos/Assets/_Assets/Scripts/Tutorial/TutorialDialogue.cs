@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialDialogue : Singleton<TutorialDialogue>
+public class TutorialDialogue : MonoBehaviour
 {
     public Action<int> OnDialogDone;
 
@@ -23,9 +23,8 @@ public class TutorialDialogue : Singleton<TutorialDialogue>
     [SerializeField] private Image _tutorialImage;
     private int _currentDialogueIndex = 0;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
         _nextButton.onClick.AddListener(NextDialogue);
         _backButton.onClick.AddListener(BackDialogue);
         _doneButton.onClick.AddListener(DoneDialogue);

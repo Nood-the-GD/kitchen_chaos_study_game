@@ -45,7 +45,7 @@ public class TutorialData : MonoBehaviour
     private void LoadTutorialLevel()
     {
         GameManager.levelId = 0;
-        PhotonNetwork.LoadLevel(GameData.s.GetStage(0).sceneName);
+        PhotonNetwork.LoadLevel("Level_tutorial");
     }
 
     private void OnJoinRoom()

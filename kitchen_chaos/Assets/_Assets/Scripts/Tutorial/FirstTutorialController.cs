@@ -6,17 +6,20 @@ using UnityEngine;
 public class FirstTutorialController : MonoBehaviour
 {
     [SerializeField] private List<BaseCounter> _navigationDestinationList = new List<BaseCounter>();
+    [SerializeField] private TutorialDialogue _tutorialDialogue;
+    [SerializeField] private TutorialDoneUI _tutorialDoneUI;
     private int _currentDestinationIndex = 0;
 
     #region Unity Functions
     void Awake()
     {
-        TutorialDialogue.s.OnDialogDone += OnDialogDone;
+        _tutorialDialogue.OnDialogDone += OnDialogDone;
         BaseCounter.OnInteract += OnInteract;
+        DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
     }
     void Start()
     {
-        TutorialDialogue.s.StartDialogue();
+        _tutorialDialogue.StartDialogue();
     }
     void OnDestroy()
     {
@@ -63,6 +66,11 @@ public class FirstTutorialController : MonoBehaviour
                 return;
             }
         }
+    }
+    private void OnRecipeSuccess(object sender, EventArgs e)
+    {
+        UserData.IsFirstTutorialDone = true;
+        _tutorialDoneUI.gameObject.SetActive(true);
     }
     #endregion
 
