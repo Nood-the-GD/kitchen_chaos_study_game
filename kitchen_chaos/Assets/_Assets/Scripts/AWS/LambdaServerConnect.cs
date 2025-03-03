@@ -441,7 +441,7 @@ public static class ServerConnect
                         
                         await UniTask.SwitchToMainThread();
                         SocialData.AddFriend(fromUid);
-                        
+
                         // TODO: Update your friend list and notify the UI.
                         OnSocialDataUpdate?.Invoke();
                     }
@@ -451,27 +451,6 @@ public static class ServerConnect
             {
                 Debug.Log("updateWaitingRoom received.");
                 // TODO: Update your waiting room data.
-            }
-            else if (messageTypeStr == "updateDrawingImage")
-            {
-                // The data is assumed to be a base64-encoded string.
-                string base64String = data.ToString();
-                byte[] imageBytes = Convert.FromBase64String(base64String);
-                
-                await UniTask.SwitchToMainThread();
-                OnDrawingImageReceived?.Invoke(imageBytes);
-            }
-            else if (messageTypeStr == "updateDrawingRaw")
-            {
-                string rawData = data.ToString();
-                
-                await UniTask.SwitchToMainThread();
-                OnDrawingRaw?.Invoke(rawData);
-            }
-            else if (messageTypeStr == "updateFindObjectImage")
-            {
-                Debug.Log("updateFindObjectImage received.");
-                // TODO: Convert the data to your PictureData object and trigger an event.
             }
             else
             {

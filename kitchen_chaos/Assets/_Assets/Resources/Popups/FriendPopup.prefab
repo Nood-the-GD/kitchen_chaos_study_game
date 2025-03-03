@@ -113,10 +113,10 @@ RectTransform:
   - {fileID: 4652816059022326896}
   m_Father: {fileID: 2408539868996501524}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235.61198, y: -55.31199}
+  m_SizeDelta: {x: 451.22397, y: 90.62398}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2257236622401408384
 CanvasRenderer:
@@ -683,10 +683,10 @@ RectTransform:
   - {fileID: 2408539868996501524}
   m_Father: {fileID: 1623063856232879737}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 32.6329, y: 0}
-  m_SizeDelta: {x: 754.43, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 32.6329, y: -105.31199}
+  m_SizeDelta: {x: 754.43, y: 110.62398}
   m_Pivot: {x: 0.03, y: 0.5}
 --- !u!114 &4652860742771974788
 MonoBehaviour:
@@ -1081,7 +1081,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6082627280435917036
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2483,6 +2483,7 @@ MonoBehaviour:
   sendMessageButton: {fileID: 5174673667146715448}
   chatItemViewRef: {fileID: 4652860742771974788}
   chatScrollRect: {fileID: 8847396104397189179}
+  requestNuber: {fileID: 7528363424007656517}
 --- !u!1 &4078333461668736855
 GameObject:
   m_ObjectHideFlags: 0
@@ -2910,10 +2911,10 @@ RectTransform:
   - {fileID: 206307702210996709}
   m_Father: {fileID: 8360471467482841677}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 245.61198, y: -55.31199}
+  m_SizeDelta: {x: 471.22397, y: 110.62398}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8057123224881570932
 CanvasRenderer:
@@ -4361,7 +4362,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 10
 --- !u!1 &8021910093980693195
 GameObject:
   m_ObjectHideFlags: 0

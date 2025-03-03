@@ -59,6 +59,7 @@ public class FriendPopup : BasePopup<FriendPopup>
         base.OnEnable();
         ServerConnect.OnChatMessage += OnReciveChatMessage;
         SocialData.OnFriendAdded += OnFriendAdded;
+        ServerConnect.OnSocialDataUpdate += OnSocialDataUpdate;
     }
     protected override void OnDisable()
     {
@@ -68,6 +69,7 @@ public class FriendPopup : BasePopup<FriendPopup>
 
         ServerConnect.OnChatMessage -= OnReciveChatMessage;
         SocialData.OnFriendAdded -= OnFriendAdded;
+        ServerConnect.OnSocialDataUpdate -= OnSocialDataUpdate;
     }
 
     void OnReciveChatMessage(MessageData messageData){
@@ -81,6 +83,7 @@ public class FriendPopup : BasePopup<FriendPopup>
 
     void Init()
     {
+        requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
         // Hide the prefab by default
         pref.gameObject.SetActive(false);
         
@@ -113,12 +116,6 @@ public class FriendPopup : BasePopup<FriendPopup>
         
         // Set focus back to the input field
         chatInputField.ActivateInputField();
-        if(SocialData.mySocialData.otherRequest != null){
-            requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
-        }
-        else{
-            requestNuber.text = "0";
-        }
 
     }
 
@@ -383,22 +380,40 @@ public class FriendPopup : BasePopup<FriendPopup>
     // Method to refresh the friend list
     public void RefreshFriendList()
     {
-        // Clear existing friend items (except the prefab)
+        // Clear existing friend items except the prefab
         Transform parent = pref.transform.parent;
-        List<Transform> childrenToRemove = new List<Transform>();
-        foreach (Transform child in parent)
+        for (int i = parent.childCount - 1; i >= 0; i--)
         {
-            if (child.gameObject != pref.gameObject)
+            Transform child = parent.GetChild(i);
+            if (child != pref.transform)
             {
-                childrenToRemove.Add(child);
+                Destroy(child.gameObject);
             }
         }
-        foreach (var child in childrenToRemove)
-        {
-            Destroy(child.gameObject);
-        }
-
+        
         // Reinstantiate friend items from the updated friend list
-        Init();
+        var friends = SocialData.mySocialData.friends;
+        foreach (var friend in friends)
+        {
+            FriendChatItemView friendItem = Instantiate(pref, parent);
+            friendItem.gameObject.SetActive(true);
+            friendItem.SetData(friend, OnClick);
+        }
+    }
+
+    // New method to handle social data updates
+    private void OnSocialDataUpdate()
+    {
+        // Update the friend request number
+        requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
+        
+        // Refresh the friend list UI
+        RefreshFriendList();
+        
+        // If we have an active chat, reload it to reflect any changes
+        if (currentChat != null && messagePanel.gameObject.activeInHierarchy)
+        {
+            ReloadChatUI();
+        }
     }
 }
