@@ -440,6 +440,8 @@ public static class ServerConnect
                         Debug.Log(notification);
                         
                         await UniTask.SwitchToMainThread();
+                        SocialData.AddFriend(fromUid);
+                        
                         // TODO: Update your friend list and notify the UI.
                         OnSocialDataUpdate?.Invoke();
                     }

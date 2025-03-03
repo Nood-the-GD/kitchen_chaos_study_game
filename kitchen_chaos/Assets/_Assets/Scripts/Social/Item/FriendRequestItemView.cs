@@ -32,6 +32,8 @@ public class FriendRequestItemView : MonoBehaviour
         var p =await LambdaAPI.AcceptFriend(userData.uid);
         if(p.IsSuccess){
             SocialData.AddFriend(userData.uid);
+            FriendRequestPopup.HidePopup();
+            FriendPopup.ShowPopup();
         }
         
         Destroy(gameObject);

@@ -28,6 +28,7 @@ public class FriendPopup : BasePopup<FriendPopup>
     
     // Maximum character limit for chat messages
     private const int MAX_CHAR_LIMIT = 80;
+    public Text requestNuber;
 
     [Button]
     void LogSocialData(){
@@ -57,6 +58,7 @@ public class FriendPopup : BasePopup<FriendPopup>
     {
         base.OnEnable();
         ServerConnect.OnChatMessage += OnReciveChatMessage;
+        SocialData.OnFriendAdded += OnFriendAdded;
     }
     protected override void OnDisable()
     {
@@ -65,6 +67,7 @@ public class FriendPopup : BasePopup<FriendPopup>
             FloatingBubble.s.gameObject.SetActive(true);
 
         ServerConnect.OnChatMessage -= OnReciveChatMessage;
+        SocialData.OnFriendAdded -= OnFriendAdded;
     }
 
     void OnReciveChatMessage(MessageData messageData){
@@ -110,6 +113,13 @@ public class FriendPopup : BasePopup<FriendPopup>
         
         // Set focus back to the input field
         chatInputField.ActivateInputField();
+        if(SocialData.mySocialData.otherRequest != null){
+            requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
+        }
+        else{
+            requestNuber.text = "0";
+        }
+
     }
 
     void OnClick(FriendChatItemView friendChatItemView)
@@ -361,5 +371,34 @@ public class FriendPopup : BasePopup<FriendPopup>
     void OnFriendRequestClick()
     {
         FriendRequestPopup.ShowPopup();
+    }
+
+    // Method called when a new friend is added
+    private void OnFriendAdded(string friendUid)
+    {
+        // Refresh the friend list
+        RefreshFriendList();
+    }
+
+    // Method to refresh the friend list
+    public void RefreshFriendList()
+    {
+        // Clear existing friend items (except the prefab)
+        Transform parent = pref.transform.parent;
+        List<Transform> childrenToRemove = new List<Transform>();
+        foreach (Transform child in parent)
+        {
+            if (child.gameObject != pref.gameObject)
+            {
+                childrenToRemove.Add(child);
+            }
+        }
+        foreach (var child in childrenToRemove)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Reinstantiate friend items from the updated friend list
+        Init();
     }
 }

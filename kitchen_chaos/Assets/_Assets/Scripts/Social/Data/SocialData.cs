@@ -163,6 +163,10 @@ public class SocialData
 
     // Static instance similar to Rxn<SocialData> in Dart.
     public static SocialData mySocialData;
+    
+    // Event that will be triggered when a friend is added
+    public delegate void FriendAddedEventHandler(string friendUid);
+    public static event FriendAddedEventHandler OnFriendAdded;
 
     // Constructor with default empty collections if none provided.
     public SocialData(
@@ -316,7 +320,8 @@ public class SocialData
             mySocialData.friends = new List<string>();
 
         mySocialData.friends.Add(uid);
-        // Optionally, trigger an event or update UI.
+        // Trigger the OnFriendAdded event
+        OnFriendAdded?.Invoke(uid);
     }
 
     /// <summary>

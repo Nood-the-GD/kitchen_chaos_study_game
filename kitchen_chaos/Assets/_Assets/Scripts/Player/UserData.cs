@@ -59,6 +59,9 @@ public class UserData
     public static UserData currentUser;
     public static string mineUid => currentUser.uid.ToString();
     public Action OnUpdateUserName;
+    public static bool IsMineId(string uid){
+        return currentUser.uid == uid;
+    }
 
     public bool IsMine(){
         return currentUser.uid == uid;

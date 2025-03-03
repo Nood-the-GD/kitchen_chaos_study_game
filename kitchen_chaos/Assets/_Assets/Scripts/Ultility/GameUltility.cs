@@ -19,21 +19,20 @@ public static class GameUtility
 
 public class RandomStringGenerator
 {
-    // Function to generate a 7-character random string based on current time
-    public static string GenerateRandomString(int maxChar)
+    // Function to generate a 7-digit random number
+    public static string GenerateRandomString(int length)
     {
         // Use current time to seed the random number generator
         var seed = (int)DateTime.Now.Ticks;
         var random = new System.Random(seed);
 
-        string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var charsArr = new char[maxChar];
-
-        for (int i = 0; i < charsArr.Length; i++)
+        // Generate a random number with 'length' digits
+        string result = "";
+        for (int i = 0; i < length; i++)
         {
-            charsArr[i] = characters[random.Next(characters.Length)];
+            result += random.Next(0, 10).ToString();
         }
 
-        return new string(charsArr);
+        return result;
     }
 }
