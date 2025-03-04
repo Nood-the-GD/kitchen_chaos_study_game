@@ -26,8 +26,10 @@ public class PlateIconUI : MonoBehaviour
     private void UpdateVisual(List<KitchenObjectSO> addedIngredientSOs)
     {   
         var itemCount = transform.childCount;
-        for(var i =1; i< itemCount+1; i ++){
+        for(var i =1; i< itemCount; i ++){
+        
             DestroyImmediate(transform.GetChild(1).gameObject);
+
         }
 
         foreach(var i in addedIngredientSOs){
