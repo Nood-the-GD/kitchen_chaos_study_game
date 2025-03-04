@@ -34,7 +34,7 @@ public class PlayerAnimator : MonoBehaviour
     }
     void Start()
     {
-        if (!player.IsControlling)
+        if (!player.IsControlling || !SectionData.s.isSinglePlay && !player.photonView.IsMine)
         {
             arrowGO.gameObject.SetActive(false);
         }

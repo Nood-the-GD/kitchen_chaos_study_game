@@ -52,6 +52,8 @@ public class Player : MonoBehaviour, IPlayer
 
         if (SectionData.s.isSinglePlay)
             SinglePlayManager.s.OnPlayerChange += OnPlayerChangeHandler;
+        else
+            IsControlling = true;
     }
     private void Start()
     {
@@ -67,14 +69,6 @@ public class Player : MonoBehaviour, IPlayer
     }
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.F) && selectedCounter != null)
-        // {
-        //     if (selectedCounter is IPlaceable placeable)
-        //     {
-        //         placeable.StartPlacing();
-        //     }
-        // }
-
         if (!SectionData.s.isSinglePlay && !_photonView.IsMine) return;
         if (!IsControlling)
         {
@@ -100,6 +94,7 @@ public class Player : MonoBehaviour, IPlayer
     #region Events functions
     public void RegisterGameInputEvent()
     {
+        Debug.Log("RegisterGameInputEvent");
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnUseAction += GameInput_OnInteractAlternateAction;
     }
@@ -192,6 +187,7 @@ public class Player : MonoBehaviour, IPlayer
     #region Movement
     private void HandleMovement()
     {
+        Debug.Log("HandleMovement");
         GetMovementInput();
         HandleRotation(moveDir);
 #if UNITY_EDITOR
