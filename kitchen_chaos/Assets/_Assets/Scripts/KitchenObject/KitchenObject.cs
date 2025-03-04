@@ -56,6 +56,9 @@ public class KitchenObject : MonoBehaviour
         {
             TryAddPlate();
         }
+        
+        // Invoke the onAddIngredient event to notify subscribers
+        onAddIngredient?.Invoke(ingredients);
     }
 
     public void AddIngredientIndexes(int[] ingredientIndex)
