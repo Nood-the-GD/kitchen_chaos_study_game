@@ -33,7 +33,7 @@ public class FriendRequestItemView : MonoBehaviour
         if(p.IsSuccess){
             SocialData.AddFriend(userData.uid);
             FriendRequestPopup.HidePopup();
-            FriendPopup.ShowPopup();
+            FriendPopup.s.RefeshCountRequest();
         }
         
         Destroy(gameObject);
