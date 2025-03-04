@@ -173,8 +173,14 @@ public class KitchenObject : MonoBehaviour
         if (kitchenObjectParent == null)
             Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
 
+        if (_containerParent == null)
+        {
+            SetContainerParentLocal(kitchenObjectParent);
+            return;
+        }
+
         MonoBehaviour monoBehaviour = this._containerParent as MonoBehaviour;
-        if (monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
+        if (monoBehaviour != null && monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
             SetContainerParentLocal(kitchenObjectParent);
     }
 
