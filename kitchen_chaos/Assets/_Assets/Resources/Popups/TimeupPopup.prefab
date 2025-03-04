@@ -350,10 +350,6 @@ MonoBehaviour:
   isOnlyOne: 1
   addOnEnable: 1
   starController: {fileID: 5394356287653233868}
-  scores:
-  - {fileID: 4167132258428810801}
-  - {fileID: 7438980260847700040}
-  - {fileID: 9033182943254384922}
   userScoreUI: {fileID: 1572919011579236447}
 --- !u!114 &5394356287653233868
 MonoBehaviour:
@@ -2124,19 +2120,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8246728931139370666}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CreateRoomPopup, Game
-        m_MethodName: OnStartButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &8431579456985085753
 GameObject:
   m_ObjectHideFlags: 0

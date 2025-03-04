@@ -27,6 +27,7 @@ public class CookingBookSO : ScriptableObject
     [Searchable]
     public List<RecipeSO> recipes = new List<RecipeSO>();
 
+    public bool isSorted { get; private set; } = false;
     private static CookingBookSO _s;
     public static CookingBookSO s
     {
@@ -35,6 +36,10 @@ public class CookingBookSO : ScriptableObject
             if (_s == null)
             {
                 _s = Resources.Load<CookingBookSO>("CookingBookSO");
+                if (_s.isSorted == false)
+                {
+                    _s.Sort();
+                }
                 if (_s == null)
                     Debug.LogError("CookingBookSO not found");
             }
@@ -116,13 +121,6 @@ public class CookingBookSO : ScriptableObject
 
 
 #if UNITY_EDITOR
-    bool isEnoughName
-    {
-        get
-        {
-            return CheckEnoughName();
-        }
-    }
     [Button(ButtonSizes.Large)]
     private void FindAllRecipe()
     {
@@ -131,16 +129,11 @@ public class CookingBookSO : ScriptableObject
         var recipes = Resources.LoadAll<RecipeSO>(folderPath);
         this.recipes = new List<RecipeSO>(recipes);
     }
-    private bool CheckEnoughName()
+    [Button(ButtonSizes.Large)]
+    private void Sort()
     {
-        foreach (var recipe in recipes)
-        {
-            if (string.IsNullOrEmpty(recipe.nameRec))
-            {
-                return false;
-            }
-        }
-        return true;
+        recipes.Sort((a, b) => a.ingredients.Count.CompareTo(b.ingredients.Count));
+        isSorted = true;
     }
 #endif
 

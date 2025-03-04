@@ -651,46 +651,36 @@ MonoBehaviour:
       Entry: 8
       Data: 
   stages:
+  - score: 0
+    levelId: 0
+    sceneName: Level_tutorial
+    pointTarget: 000000000000000000000000
+    previewImage: {fileID: 0}
   - score: 68
     levelId: 1
     sceneName: Level_1
     pointTarget: 1e0000002800000032000000
     previewImage: {fileID: 21300000, guid: 178cf650d898d4823a14cbb883c4cd5a, type: 3}
-    tutorialImages:
-    - {fileID: 21300000, guid: ad8cac566ba250a4ca977e37a04619f9, type: 3}
-    - {fileID: 21300000, guid: a76d37883f0609a46b3ee9d1bce0ebaa, type: 3}
   - score: 0
     levelId: 2
     sceneName: Level_2
     pointTarget: 1e0000002800000032000000
     previewImage: {fileID: 21300000, guid: 166f27f577c8a49beab4b847beac915b, type: 3}
-    tutorialImages:
-    - {fileID: 21300000, guid: ad8cac566ba250a4ca977e37a04619f9, type: 3}
-    - {fileID: 21300000, guid: a76d37883f0609a46b3ee9d1bce0ebaa, type: 3}
   - score: 0
     levelId: 3
     sceneName: Level_3
     pointTarget: 1e0000002800000032000000
     previewImage: {fileID: 21300000, guid: 699644cb3b9f74b119bd114da083b97c, type: 3}
-    tutorialImages:
-    - {fileID: 21300000, guid: a76d37883f0609a46b3ee9d1bce0ebaa, type: 3}
-    - {fileID: 21300000, guid: 6522d2bc9f6c421448776d0f02429bae, type: 3}
   - score: 75
     levelId: 4
     sceneName: Level_4
     pointTarget: 1e0000002800000032000000
     previewImage: {fileID: 21300000, guid: eb6b452159474443296dfa2e4956a657, type: 3}
-    tutorialImages:
-    - {fileID: 21300000, guid: ad8cac566ba250a4ca977e37a04619f9, type: 3}
-    - {fileID: 21300000, guid: a76d37883f0609a46b3ee9d1bce0ebaa, type: 3}
-    - {fileID: 21300000, guid: 6522d2bc9f6c421448776d0f02429bae, type: 3}
   - score: 0
     levelId: 5
     sceneName: Level_5
     pointTarget: 1e0000002800000032000000
     previewImage: {fileID: 21300000, guid: 5cf0d122a107d40ad81520d5f7a8e433, type: 3}
-    tutorialImages:
-    - {fileID: 21300000, guid: ade248bf5707ac94fb603ac246293fae, type: 3}
   colorElements:
   - color: {r: 0.40000004, g: 0.49411768, b: 0.59607846, a: 1}
     colorCode: blue

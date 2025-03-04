@@ -17,11 +17,11 @@ public class PlatesCounter : BaseCounter
     private void Update()
     {
         plateTimer += Time.deltaTime;
-        if(plateTimer >= plateTimerMax)
+        if (plateTimer >= plateTimerMax)
         {
             plateTimer = 0;
 
-            if(plateNumber < plateNumberMax)
+            if (plateNumber < plateNumberMax)
             {
                 //Spawn new Plate on visual only
                 OnPlateSpawn?.Invoke(this, EventArgs.Empty);
@@ -46,14 +46,16 @@ public class PlatesCounter : BaseCounter
         {
             KitchenObjectSO playerKitchenObjectSO = player.GetKitchenObject().GetKitchenObjectSO();
             //Player is holding something
-            if(player.GetKitchenObject())
+            if (player.GetKitchenObject())
             {
-                if(player.GetKitchenObject().TryAddPlate()){
+                if (player.GetKitchenObject().TryAddPlate())
+                {
                     plateNumber--;
                     OnPlateRemove?.Invoke(this, EventArgs.Empty);
                     OnAnyPlateRemove?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
+        OnInteract?.Invoke(this, EventArgs.Empty);
     }
 }

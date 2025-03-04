@@ -4200,9 +4200,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4763611299704837359}
-  - {fileID: 4358141156996841721}
   - {fileID: 6266514389614822352}
   - {fileID: 198814309141826495}
+  - {fileID: 4358141156996841721}
   - {fileID: 8611687332950633136}
   m_Father: {fileID: 8151134367908112197}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5204,9 +5204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda90156254c9c74aa3270ff5825d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderList:
-  - {fileID: 11400000, guid: 04b9038c3a4a44c7eb91ebc761a4a1c9, type: 2}
-  - {fileID: 11400000, guid: fe8bffd9d3d3b430494ac6fb1e2c16df, type: 2}
+  orderList: {fileID: 0}
+  waitingTimeForEachRecipe: 20
   photonView: {fileID: 5508198884652397355}
 --- !u!114 &5508198884652397355
 MonoBehaviour:

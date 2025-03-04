@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum SceneType{
+public enum SceneType
+{
     MainMenuScene,
     AppConfigScene,
-    GameScene
+    GameScene,
+    Level_tutorial
 }
 public class Constant
 {
