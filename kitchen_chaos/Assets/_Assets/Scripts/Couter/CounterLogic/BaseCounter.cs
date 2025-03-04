@@ -83,6 +83,18 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
 
                         Debug.Log("Output: " + recipe.output.name);
+                        //log all the ingredients
+                        //current ingredients
+                        foreach (var ingredient in combineResult.currentIngredients)
+                        {
+                            Debug.Log("Current Ingredient: " + ingredient.name);
+                        }
+
+                        foreach (var ingredient in combineResult.GetListOfIngredientsIndex())
+                        {
+                            
+                            Debug.Log("Ingredient: " + ingredient);
+                        }
                         KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.GetListOfIngredientsIndex(), isHavingPlate);
                     }
                     else
