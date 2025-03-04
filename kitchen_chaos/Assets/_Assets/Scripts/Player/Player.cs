@@ -49,7 +49,9 @@ public class Player : MonoBehaviour, IPlayer
         _photonView = GetComponent<PhotonView>();
         if (_photonView.IsMine)
             if (Instance == null) Instance = this;
-        SinglePlayManager.s.OnPlayerChange += OnPlayerChangeHandler;
+
+        if (SectionData.s.isSinglePlay)
+            SinglePlayManager.s.OnPlayerChange += OnPlayerChangeHandler;
     }
     private void Start()
     {
@@ -90,7 +92,8 @@ public class Player : MonoBehaviour, IPlayer
     }
     void OnDestroy()
     {
-        SinglePlayManager.s.OnPlayerChange -= OnPlayerChangeHandler;
+        if (SectionData.s.isSinglePlay)
+            SinglePlayManager.s.OnPlayerChange -= OnPlayerChangeHandler;
     }
     #endregion
 

@@ -24,11 +24,13 @@ public class PlayerAnimator : MonoBehaviour
     {
         player = GetComponentInParent<Player>();
         animator = GetComponent<Animator>();
-        SinglePlayManager.s.OnPlayerChange += SinglePlayManager_OnPlayerChange;
+        if (SectionData.s.isSinglePlay)
+            SinglePlayManager.s.OnPlayerChange += SinglePlayManager_OnPlayerChange;
     }
     private void OnDestroy()
     {
-        SinglePlayManager.s.OnPlayerChange -= SinglePlayManager_OnPlayerChange;
+        if (SectionData.s.isSinglePlay)
+            SinglePlayManager.s.OnPlayerChange -= SinglePlayManager_OnPlayerChange;
     }
     void Start()
     {
