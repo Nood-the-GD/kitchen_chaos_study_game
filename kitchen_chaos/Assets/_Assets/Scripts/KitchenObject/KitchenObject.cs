@@ -81,7 +81,9 @@ public class KitchenObject : MonoBehaviour
 
     public bool IsHaveEnoughIngredient()
     {
+        if (ingredients.Count == 0) return false;
         var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
+        if (recipe == null) return false;
         var isSame = recipe.IsSameIngredients(ingredients);
         Debug.Log("IsHaveEnoughIngredient: " + isSame);
         if (isSame == false)
