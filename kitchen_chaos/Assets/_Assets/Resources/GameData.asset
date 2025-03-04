@@ -651,11 +651,6 @@ MonoBehaviour:
       Entry: 8
       Data: 
   stages:
-  - score: 0
-    levelId: 0
-    sceneName: Level_tutorial
-    pointTarget: 000000000000000000000000
-    previewImage: {fileID: 0}
   - score: 68
     levelId: 1
     sceneName: Level_1
