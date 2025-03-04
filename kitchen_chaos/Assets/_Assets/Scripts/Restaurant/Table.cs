@@ -105,7 +105,7 @@ public class Table : BaseCounter, IPlaceable, IKitchenContainable
     {
         TableModel tableModel = TableManager.s.GetTableModel(this);
         KitchenObject kitchenObject = KOParent.GetKitchenObject();
-        kitchenObject.SetContainerParent(this);
+        kitchenObject.CmdSetContainerParent(this);
         tableModel.Serve(kitchenObject);
     }
     #endregion

@@ -44,7 +44,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             if (!otherContainer.HasKitchenObject())
             {
                 Debug.Log("player is not holding");
-                GetKitchenObject().SetContainerParent(otherContainer);
+                GetKitchenObject().CmdSetContainerParent(otherContainer);
             }
             else
             {
@@ -100,7 +100,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             if (otherContainer.HasKitchenObject())
             {
                 //Player carrying something
-                otherContainer.GetKitchenObject().SetContainerParent(this);
+                otherContainer.GetKitchenObject().CmdSetContainerParent(this);
             }
         }
         OnInteract?.Invoke(this, EventArgs.Empty);

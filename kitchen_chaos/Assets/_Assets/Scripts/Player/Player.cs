@@ -187,7 +187,6 @@ public class Player : MonoBehaviour, IPlayer
     #region Movement
     private void HandleMovement()
     {
-        Debug.Log("HandleMovement");
         GetMovementInput();
         HandleRotation(moveDir);
 #if UNITY_EDITOR

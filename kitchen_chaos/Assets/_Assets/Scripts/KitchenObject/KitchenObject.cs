@@ -123,7 +123,7 @@ public class KitchenObject : MonoBehaviour
             var obj = Instantiate(kitchenObjectSO.prefab, kitchenObjectParentGameObject.transform);
             var p = obj.GetComponent<KitchenObject>();
             p.kitchenObjectSO = kitchenObjectSO;
-            p.SetContainerParent(kitchenObjectParent);
+            p.CmdSetContainerParent(kitchenObjectParent);
             p.AddIngredientIndexes(ingredient.ToArray());
             if (isHavePlate)
             {
@@ -175,7 +175,7 @@ public class KitchenObject : MonoBehaviour
 
         MonoBehaviour monoBehaviour = this._containerParent as MonoBehaviour;
         if (monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
-            SetContainerParent(kitchenObjectParent);
+            SetContainerParentLocal(kitchenObjectParent);
     }
 
     IEnumerator OnSync()
@@ -200,7 +200,7 @@ public class KitchenObject : MonoBehaviour
         return kitchenObjectSO;
     }
 
-    public void SetContainerParent(IKitchenContainable otherContainer)
+    private void SetContainerParentLocal(IKitchenContainable otherContainer)
     {
         if (otherContainer == null)
         {
@@ -218,6 +218,19 @@ public class KitchenObject : MonoBehaviour
         otherContainer.kitchenObject = this;
         this.transform.parent = otherContainer.GetKitchenObjectFollowTransform();
         this.transform.localPosition = Vector3.zero;
+    }
+
+    public void CmdSetContainerParent(IKitchenContainable otherContainer)
+    {
+        if (SectionData.s.isSinglePlay)
+        {
+            SetContainerParentLocal(otherContainer);
+        }
+        else
+        {
+            var parentId = otherContainer.photonView.ViewID;
+            photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
+        }
     }
 
     public IKitchenContainable GetKitchenObjectParent()

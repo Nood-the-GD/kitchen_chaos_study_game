@@ -429,7 +429,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
         var ko = kitchenObjectTransform.GetComponent<KitchenObject>();
 
-        ko.SetContainerParent(kitchenObjectParent);
+        ko.CmdSetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexes(ingredient);
         if (ko.IsHavingPlate)
         {
