@@ -422,7 +422,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId, int[] ingredient, bool isHavingPlate)
     {
-        Debug.Log("Ingredient: " + ingredient.Length);
+        Debug.Log("Ingredient count: " + ingredient.Length);
         foreach (var i in ingredient)
         {
             Debug.Log("Ingredient: " + i);

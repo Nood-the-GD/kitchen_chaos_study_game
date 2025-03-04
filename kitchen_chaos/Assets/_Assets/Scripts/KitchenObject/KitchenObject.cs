@@ -63,7 +63,13 @@ public class KitchenObject : MonoBehaviour
 
     public void AddIngredientIndexes(int[] ingredientIndex)
     {
+        Debug.Log("AddIngredientIndexes: " + ingredientIndex.Length);
+        foreach (var i in ingredientIndex)
+        {
+            Debug.Log("Ingredient: " + i);
+        }
         var rep = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
+        Debug.Log("rep: " + rep.name);
         if (rep == null)
         {
             return;
