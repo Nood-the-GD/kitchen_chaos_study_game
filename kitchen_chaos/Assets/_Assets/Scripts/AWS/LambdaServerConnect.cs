@@ -379,6 +379,7 @@ public static class ServerConnect
                     
                     Debug.Log("updateChatMessage processed on main thread.");
                     OnChatMessage?.Invoke(messageDataCopy);
+                    
                 }
                 catch (Exception ex) {
                     Debug.LogError("Error processing chat message on main thread: " + ex.Message);
@@ -427,7 +428,8 @@ public static class ServerConnect
                         string fromUid = dataObj["otherUid"]?.ToString();
                         string notification = $"{fromUserName} đã gửi lời mời kết bạn";
                         Debug.Log(notification);
-                        
+                        int timestamp = (int)((DateTime.Now.ToLocalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds);
+                        SocialData.AddOtherRequest(fromUid, timestamp);
                         await UniTask.SwitchToMainThread();
                         // TODO: Update your friend request data and notify the UI.
                         OnSocialDataUpdate?.Invoke();

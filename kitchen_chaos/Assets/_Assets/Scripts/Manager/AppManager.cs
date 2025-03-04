@@ -35,8 +35,8 @@ public class AppManager : MonoBehaviour
     }
 
     [Button]
-    void CreateUser(){
-        LambdaAPI.CreateUser("test", "male");
+    void CreateUser(string name){
+        LambdaAPI.CreateUser(name, "male");
     }
 
     [Button]

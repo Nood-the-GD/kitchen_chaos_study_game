@@ -30,6 +30,8 @@ public class FriendPopup : BasePopup<FriendPopup>
     private const int MAX_CHAR_LIMIT = 80;
     public Text requestNuber;
 
+    public static FriendPopup s => PopupController.s.GetActivePopup<FriendPopup>();
+
     [Button]
     void LogSocialData(){
         SocialData.Log();
@@ -83,7 +85,7 @@ public class FriendPopup : BasePopup<FriendPopup>
 
     void Init()
     {
-        requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
+        RefeshCountRequest();
         // Hide the prefab by default
         pref.gameObject.SetActive(false);
         
@@ -95,6 +97,10 @@ public class FriendPopup : BasePopup<FriendPopup>
             friendItem.gameObject.SetActive(true);
             friendItem.SetData(friend, OnClick);
         }
+    }
+
+    public void RefeshCountRequest(){
+        requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
     }
 
     async void SendMessage() 
@@ -126,7 +132,7 @@ public class FriendPopup : BasePopup<FriendPopup>
         ReloadChatUI();
     }
 
-    async void ReloadChatUI(){
+    public async void ReloadChatUI(){
         // Load chat UI
         chatItemViewRef.gameObject.SetActive(false);
        

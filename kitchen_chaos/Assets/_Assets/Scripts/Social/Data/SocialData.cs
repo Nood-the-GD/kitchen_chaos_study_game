@@ -459,6 +459,24 @@ public class SocialData
         
         Debug.Log("=== End SocialData Log ===");
     }
+
+    /// <summary>
+    /// Adds a friend request from another user
+    /// </summary>
+    public static void AddFriendRequest(string uid)
+    {
+        if (mySocialData == null)
+            return;
+
+        if (mySocialData.otherRequest == null)
+            mySocialData.otherRequest = new Dictionary<string, long>();
+
+        // Add the friend request with current timestamp if it doesn't exist
+        if (!mySocialData.otherRequest.ContainsKey(uid))
+        {
+            mySocialData.otherRequest[uid] = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+    }
 }
 
 
@@ -564,6 +582,9 @@ public class ConversationData
         if (convo != null)
         {
             convo.messages[message.timestamp.ToString()] = message;
+        }
+        else{
+            Debug.LogError("ConversationData not found for id: " + convoId);
         }
     }
 }
