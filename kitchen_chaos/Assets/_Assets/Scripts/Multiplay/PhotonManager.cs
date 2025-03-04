@@ -413,7 +413,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient, bool isHavingPlate = false)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
-        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredient, isHavingPlate);
+        // Convert List<int> to int[] array for Photon serialization
+        int[] ingredientArray = ingredient.ToArray();
+        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredientArray, isHavingPlate);
     }
 
 
