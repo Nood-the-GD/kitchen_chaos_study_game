@@ -56,7 +56,7 @@ public class KitchenObject : MonoBehaviour
         {
             TryAddPlate();
         }
-        
+
         // Invoke the onAddIngredient event to notify subscribers
         onAddIngredient?.Invoke(ingredients);
     }
@@ -149,7 +149,8 @@ public class KitchenObject : MonoBehaviour
             var parentId = -1;
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, ingredient, isHavePlate);
+            var koId = CookingBookSO.s.GetKitchenObjectSoId(kitchenObjectSO);
+            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, koId, ingredient, isHavePlate);
         }
     }
     void Awake()

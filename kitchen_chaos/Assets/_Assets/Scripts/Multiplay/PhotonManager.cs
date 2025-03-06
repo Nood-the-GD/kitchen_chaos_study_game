@@ -410,17 +410,17 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjet.AddPlateLocal(plateId);
     }
 
-    public void CmdSpawnFoodObject(string objectType, int photonId, List<int> ingredient, bool isHavingPlate = false)
+    public void CmdSpawnFoodObject(string objectType, int kitchenObjectSOId, int photonId, List<int> ingredient, bool isHavingPlate = false)
     {
         int viewID = PhotonNetwork.AllocateViewID(false);
         // Convert List<int> to int[] array for Photon serialization
         int[] ingredientArray = ingredient.ToArray();
-        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, photonId, viewID, ingredientArray, isHavingPlate);
+        photonView.RPC(nameof(RpcSpawnKitchenObject), RpcTarget.All, objectType, kitchenObjectSOId, photonId, viewID, ingredientArray, isHavingPlate);
     }
 
 
     [PunRPC]
-    public void RpcSpawnKitchenObject(string objectType, int parentPhotonId, int viewId, int[] ingredient, bool isHavingPlate)
+    public void RpcSpawnKitchenObject(string objectType, int kitchenObjectSOId, int parentPhotonId, int viewId, int[] ingredient, bool isHavingPlate)
     {
         Debug.Log("Ingredient count: " + ingredient.Length);
         foreach (var i in ingredient)
@@ -434,6 +434,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         kitchenObjectTransform.GetComponent<PhotonView>().ViewID = viewId;
         var ko = kitchenObjectTransform.GetComponent<KitchenObject>();
 
+        ko.kitchenObjectSO = CookingBookSO.s.kitchenObjectSOs[kitchenObjectSOId];
         ko.CmdSetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexes(ingredient);
         if (ko.IsHavingPlate)

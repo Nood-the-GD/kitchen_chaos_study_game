@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
+[RequireComponent(typeof(Dropdown))]
 public class ServerPingDropdown : MonoBehaviourPunCallbacks
 {
     public Dropdown serverDropdown;
@@ -63,7 +64,7 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
             case "yellow":
                 return $"<color=yellow>{text}</color>";
             case "green":
-                return $"<color=green>{text}</color>";
+                return $"<color=#00FF00>{text}</color>";
             case "red":
                 return $"<color=red>{text}</color>";
             default:

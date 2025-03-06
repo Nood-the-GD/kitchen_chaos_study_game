@@ -165,8 +165,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 315312969473832114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.8522532}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000076293945, y: -0.00018310547}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -483,7 +483,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4798675917745247383}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.1477468
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -657,7 +657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7498612912047837943
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1242,9 +1242,9 @@ RectTransform:
   m_Father: {fileID: 317024922307111378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6026034680832424961
 CanvasRenderer:
@@ -2132,7 +2132,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &8990908916032650449
@@ -2440,7 +2440,7 @@ PrefabInstance:
     - target: {fileID: 983857008992915231, guid: 9722779aa391c4ff2830fd0832a723b1,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -221
+      value: -135
       objectReference: {fileID: 0}
     - target: {fileID: 983857008992915231, guid: 9722779aa391c4ff2830fd0832a723b1,
         type: 3}
@@ -2593,7 +2593,7 @@ PrefabInstance:
     - target: {fileID: 2597247015651883526, guid: 3dfb927023f6a4900b4149a96a3a9324,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -57.400867
+      value: 28.599094
       objectReference: {fileID: 0}
     - target: {fileID: 2597247015651883526, guid: 3dfb927023f6a4900b4149a96a3a9324,
         type: 3}

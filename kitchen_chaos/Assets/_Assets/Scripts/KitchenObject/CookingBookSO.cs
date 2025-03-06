@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 
 public class CombineResult
@@ -26,6 +30,8 @@ public class CookingBookSO : ScriptableObject
 {
     [Searchable]
     public List<RecipeSO> recipes = new List<RecipeSO>();
+    [Searchable]
+    public List<KitchenObjectSO> kitchenObjectSOs = new List<KitchenObjectSO>();
 
     public bool isSorted { get; private set; } = false;
     private static CookingBookSO _s;
@@ -119,6 +125,11 @@ public class CookingBookSO : ScriptableObject
         return null;
     }
 
+    public int GetKitchenObjectSoId(KitchenObjectSO kitchenObjectSO)
+    {
+        return kitchenObjectSOs.IndexOf(kitchenObjectSO);
+    }
+
 
 #if UNITY_EDITOR
     [Button(ButtonSizes.Large)]
@@ -126,10 +137,21 @@ public class CookingBookSO : ScriptableObject
     {
         this.recipes.Clear();
         var folderPath = "RecipeSo";
-        var recipes = Resources.LoadAll<RecipeSO>(folderPath);
-        this.recipes = new List<RecipeSO>(recipes);
+        this.recipes = Resources.LoadAll<RecipeSO>(folderPath).ToList();
+        Sort();
     }
     [Button(ButtonSizes.Large)]
+    private void FindAllKitchenObjectSO()
+    {
+        this.kitchenObjectSOs.Clear();
+        var guids = AssetDatabase.FindAssets("t:KitchenObjectSO");
+        foreach (var guid in guids)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            var kitchenObjectSO = AssetDatabase.LoadAssetAtPath<KitchenObjectSO>(path);
+            this.kitchenObjectSOs.Add(kitchenObjectSO);
+        }
+    }
     private void Sort()
     {
         recipes.Sort((a, b) => a.ingredients.Count.CompareTo(b.ingredients.Count));
