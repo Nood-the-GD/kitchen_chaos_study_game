@@ -11,7 +11,6 @@ using UnityEngine.Networking;
 using CandyCoded.env;
 using Newtonsoft.Json.Linq;
 using Cysharp.Threading.Tasks;
-using DG.DemiEditor;
 
 public class ServerRespone
 {
@@ -147,7 +146,7 @@ public class LambdaAPI : MonoBehaviour
         {
             awsSecretKey = secret;
         }
- 
+
         var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         var config = new AmazonLambdaConfig { RegionEndpoint = RegionEndpoint.APSoutheast1 };
         return new AmazonLambdaClient(credentials, config);
@@ -235,9 +234,9 @@ public class LambdaAPI : MonoBehaviour
     /// Base method to call a Lambda function.
     /// Determines whether to use the HTTP method or the AWS SDK.
     /// </summary>
-    public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters, bool showNoti= false)
+    public static async UniTask<JToken> CallLambdaBaseAsync(string func, string parameters, bool showNoti = false)
     {
-        if (string.IsNullOrEmpty(func)) 
+        if (string.IsNullOrEmpty(func))
         {
             string errorMsg = "Function name is required.";
             Debug.LogError(errorMsg);
@@ -275,8 +274,9 @@ public class LambdaAPI : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError(ex.Message);
-            if(showNoti){
-               
+            if (showNoti)
+            {
+
                 Notification(ex.Message);
             }
             throw;
@@ -304,8 +304,9 @@ public class LambdaAPI : MonoBehaviour
             else
             {
                 Debug.LogError(body);
-                if(showNoti){
-                    
+                if (showNoti)
+                {
+
                     Notification(body);
                 }
                 throw new Exception(body);
@@ -440,7 +441,7 @@ public class LambdaAPI : MonoBehaviour
     /// <summary>
     /// Retrieves data for a specific user.
     /// </summary>
-    public static async UniTask<ServerRespone> GetUser(string otherUid) 
+    public static async UniTask<ServerRespone> GetUser(string otherUid)
     {
         string payload = "{\"uid\":\"" + UserData.currentUser.uid +
                          "\",\"otherUid\":\"" + otherUid +
@@ -479,7 +480,7 @@ public class LambdaAPI : MonoBehaviour
         return response;
     }
 
-        public static async UniTask<ServerRespone> AcceptFriendCustom(string fromUid,string otherUid)
+    public static async UniTask<ServerRespone> AcceptFriendCustom(string fromUid, string otherUid)
     {
         string payload = "{\"uid\":\"" + fromUid +
                          "\",\"otherUid\":\"" + otherUid +
@@ -607,7 +608,8 @@ public class LambdaAPI : MonoBehaviour
     {
         Debug.Log("Hello World1");
         // Example call for testing the HelloWorld function.
-        HelloWorld().ContinueWith(response => {
+        HelloWorld().ContinueWith(response =>
+        {
             if (response.IsError)
             {
                 Debug.LogError("HelloWorld error: " + response.error);
@@ -636,8 +638,9 @@ public class LambdaAPI : MonoBehaviour
         return response;
     }
 
-    public static async UniTask<ServerRespone> TestStream(){
-       string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
+    public static async UniTask<ServerRespone> TestStream()
+    {
+        string payload = "{\"uid\":\"" + UserData.currentUser.uid + "\"}";
         ServerRespone response = new ServerRespone();
         try
         {
