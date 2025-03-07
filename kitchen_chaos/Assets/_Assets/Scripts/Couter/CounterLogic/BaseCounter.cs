@@ -11,6 +11,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public static EventHandler OnInteract;
     public static EventHandler OnAlternativeInteract;
 
+    private long _lastInteractionTimestamp;
+    private IKitchenContainable _previousContainer;
+    
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
 
@@ -21,6 +24,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public static void ResetStaticData()
     {
         OnSomethingPlacedHere = null;
+        OnInteract = null;
+        OnAlternativeInteract = null;
     }
 
     protected virtual void Awake()
@@ -44,6 +49,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
             if (!otherContainer.HasKitchenObject())
             {
                 Debug.Log("player is not holding");
+                // Store previous container before transferring
+                _previousContainer = this;
                 GetKitchenObject().CmdSetContainerParent(otherContainer);
             }
             else
@@ -122,13 +129,31 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     public void CmdInteract(int id)
     {
-        _photonView.RPC(nameof(RPCInteract), RpcTarget.All, id);
+        long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        _photonView.RPC(nameof(RPCInteract), RpcTarget.All, id, timestamp);
     }
 
     [PunRPC]
-    public void RPCInteract(int id)
+    public void RPCInteract(int id, long timestamp)
     {
         var player = PhotonManager.s.GetPlayerView(id);
+        
+        // Check for timestamp conflict - if another interaction happened very recently
+        if (HasKitchenObject() && _lastInteractionTimestamp > 0 && 
+            timestamp - _lastInteractionTimestamp < 100 && _previousContainer != null)
+        {
+            // We have a conflict - return the most recent object to its previous container
+            if (timestamp > _lastInteractionTimestamp)
+            {
+                // Current interaction is newer, return this kitchen object to previous container
+                GetKitchenObject().CmdSetContainerParent(_previousContainer);
+                _previousContainer = null;
+                _lastInteractionTimestamp = 0;
+                return;
+            }
+        }
+        
+        _lastInteractionTimestamp = timestamp;
         Interact(player);
     }
 
@@ -142,6 +167,35 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
+        // If we already have a kitchen object and are getting a new one
+        if (this.kitchenObject != null && kitchenObject != null)
+        {
+            // Check for timestamp conflict
+            long existingTimestamp = this.kitchenObject.interactionTimestamp;
+            long newTimestamp = kitchenObject.interactionTimestamp;
+
+            // If timestamps are close (within 100ms) we have a conflict
+            if (Math.Abs(newTimestamp - existingTimestamp) < 100)
+            {
+                // Return the newer object to its previous container
+                if (newTimestamp > existingTimestamp)
+                {
+                    // New object is more recent, return it to its previous parent
+                    if (_previousContainer != null)
+                    {
+                        kitchenObject.CmdSetContainerParent(_previousContainer);
+                        _previousContainer = null;
+                        return;
+                    }
+                }
+                else
+                {
+                    // Existing object is more recent, let the new one replace it
+                    // (The existing one will be returned to previous in the normal flow)
+                }
+            }
+        }
+
         if (kitchenObject != null)
         {
             Debug.Log(kitchenObject.gameObject.name);
@@ -174,6 +228,12 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public void ResetConflictData()
+    {
+        _lastInteractionTimestamp = 0;
+        _previousContainer = null;
     }
     #endregion
 }
