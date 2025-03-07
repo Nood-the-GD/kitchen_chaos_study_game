@@ -1,41 +1,54 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using AYellowpaper.SerializedCollections;
 
-public class KitchenObject : MonoBehaviour
+public class KitchenObject : MonoBehaviourPunCallbacks
 {
     [SerializeField] public KitchenObjectSO kitchenObjectSO;
 
     private IKitchenContainable _containerParent;
-    PhotonView photonView;
+    private PhotonView photonView;
     private Transform visualTransform;
     [ReadOnly] public Transform platePoint;
     public Action<List<KitchenObjectSO>> onAddIngredient;
     [SerializeField] private SerializedDictionary<KitchenObjectSO, GameObject> _ingredientMapping = new SerializedDictionary<KitchenObjectSO, GameObject>();
     [ReadOnly] public List<KitchenObjectSO> ingredients = new List<KitchenObjectSO>();
 
+    // Track last synced parent's PhotonView ID to avoid redundant updates.
+    private int lastSyncedParentId = -1;
+
     public bool IsHavingPlate => platePoint != null;
     public bool IsPlate => kitchenObjectSO.name == "Plate";
 
     public bool TryAddPlate()
     {
-        if (IsHavingPlate)
+        if (IsHavingPlate || IsPlate)
             return false;
-        if (IsPlate)
-            return false;
+
         if (SectionData.s.isSinglePlay)
         {
             AddPlateLocal(-1);
         }
         else
         {
-            PhotonManager.s.CmdAddPlate(photonView.ViewID);
+            // For network, the RPC call will happen in CmdSetContainerParent when the parent changes.
+            photonView.RPC(nameof(RpcTryAddPlate), RpcTarget.MasterClient);
         }
         return true;
+    }
+
+    [PunRPC]
+    private void RpcTryAddPlate()
+    {
+        // Called on the master client.
+        if (TryAddPlate())
+        {
+            // Optionally notify others about the plate addition if needed.
+        }
     }
 
     public void AddPlateLocal(int viewId)
@@ -50,29 +63,21 @@ public class KitchenObject : MonoBehaviour
 
     public void AddIngredient(KitchenObjectSO ingredient, bool addPlate = false)
     {
-        this.ingredients.Add(ingredient);
+        ingredients.Add(ingredient);
         SetActiveIngredient(ingredient);
         if (addPlate)
         {
             TryAddPlate();
         }
-
-        // Invoke the onAddIngredient event to notify subscribers
         onAddIngredient?.Invoke(ingredients);
     }
 
     public void AddIngredientIndexes(int[] ingredientIndex)
     {
         Debug.Log("AddIngredientIndexes: " + ingredientIndex.Length);
-        foreach (var i in ingredientIndex)
-        {
-            Debug.Log("Ingredient: " + i);
-        }
         var rep = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
         if (rep == null)
-        {
             return;
-        }
         foreach (var i in ingredientIndex)
         {
             AddIngredient(rep.ingredients[i]);
@@ -89,31 +94,30 @@ public class KitchenObject : MonoBehaviour
 
     public bool IsHaveEnoughIngredient()
     {
-        if (ingredients.Count == 0) return false;
+        if (ingredients.Count == 0)
+            return false;
+
         var recipe = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
-        if (recipe == null) return false;
+        if (recipe == null)
+            return false;
+
         var isSame = recipe.IsSameIngredients(ingredients);
         Debug.Log("IsHaveEnoughIngredient: " + isSame);
-        if (isSame == false)
+        if (!isSame)
         {
             foreach (var i in ingredients)
-            {
                 Debug.Log("Ingredient: " + i.name);
-            }
             foreach (var i in recipe.ingredients)
-            {
                 Debug.Log("Recipe ingredient: " + i.name);
-            }
         }
         return isSame;
     }
 
-
     public static void SpawnKitchenObject(ObjectEnum objectEnum, IKitchenContainable kitchenObjectParent)
     {
         SpawnKitchenObject(
-            GameData.s.GetObject(objectEnum).GetComponent<KitchenObject>().GetKitchenObjectSO()
-            , kitchenObjectParent, new List<int> { 0 }
+            GameData.s.GetObject(objectEnum).GetComponent<KitchenObject>().GetKitchenObjectSO(),
+            kitchenObjectParent, new List<int> { 0 }
         );
     }
 
@@ -124,7 +128,6 @@ public class KitchenObject : MonoBehaviour
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenContainable kitchenObjectParent, List<int> ingredient, bool isHavePlate = false)
     {
-        //convert interface to gameObject
         var kitchenObjectParentGameObject = kitchenObjectParent as MonoBehaviour;
         if (SectionData.s.isSinglePlay)
         {
@@ -134,29 +137,27 @@ public class KitchenObject : MonoBehaviour
             p.CmdSetContainerParent(kitchenObjectParent);
             p.AddIngredientIndexes(ingredient.ToArray());
             if (isHavePlate)
-            {
                 p.TryAddPlate();
-            }
         }
         else
         {
-            //--Player Clone are not allowed to spawn object
             var player = kitchenObjectParent as Player;
             if (player != null && !player.photonView.IsMine)
                 return;
 
-            var parentId = -1;
+            int parentId = -1;
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            var koId = CookingBookSO.s.GetKitchenObjectSoId(kitchenObjectSO);
+            int koId = CookingBookSO.s.GetKitchenObjectSoId(kitchenObjectSO);
             PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, koId, parentId, ingredient, isHavePlate);
         }
     }
+
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
         visualTransform = transform.GetChild(0);
-        if (_ingredientMapping != null && _ingredientMapping.Count > 0)
+        if (_ingredientMapping != null)
         {
             foreach (var item in _ingredientMapping)
             {
@@ -165,87 +166,86 @@ public class KitchenObject : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        if (!SectionData.s.isSinglePlay && PhotonNetwork.IsMasterClient)
-            StartCoroutine(OnSync());
-    }
+    // Removed the OnSync coroutine
+    // Instead, rely on immediate RPC calls when a change happens
 
     [PunRPC]
     public void RpcSetParentWithPhotonId(int photonId)
     {
-        var findId = PhotonNetwork.GetPhotonView(photonId);
-        if (findId == null)
-            Debug.LogError("cant find id: " + photonId);
-        var kitchenObjectParent = findId.GetComponent<IKitchenContainable>();
-
-        if (kitchenObjectParent == null)
-            Debug.LogError("kitchenObjectParent is null cant find id: " + photonId);
-
-        if (_containerParent == null)
+        PhotonView parentPhotonView = PhotonNetwork.GetPhotonView(photonId);
+        if (parentPhotonView == null)
         {
-            SetContainerParentLocal(kitchenObjectParent);
+            Debug.LogError("Can't find PhotonView with ID: " + photonId);
             return;
         }
 
-        MonoBehaviour monoBehaviour = this._containerParent as MonoBehaviour;
-        if (monoBehaviour != null && monoBehaviour.GetComponent<PhotonView>().ViewID != photonId)
-            SetContainerParentLocal(kitchenObjectParent);
-    }
-
-    IEnumerator OnSync()
-    {
-        while (true)
+        IKitchenContainable kitchenObjectParent = parentPhotonView.GetComponent<IKitchenContainable>();
+        if (kitchenObjectParent == null)
         {
-            yield return new WaitForSeconds(1f);
-
-            if (_containerParent == null)
-                continue;
-            var kitchenObjectParentGameObject = _containerParent as MonoBehaviour;
-            var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
-            // Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
-
-            photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
+            Debug.LogError("KitchenObjectParent is null for PhotonView ID: " + photonId);
+            return;
         }
+
+        // If the current parent is already set to this, no need to update.
+        if (_containerParent != null)
+        {
+            MonoBehaviour currentParentMB = _containerParent as MonoBehaviour;
+            if (currentParentMB != null && currentParentMB.GetComponent<PhotonView>().ViewID == photonId)
+                return;
+        }
+
+        SetContainerParentLocal(kitchenObjectParent);
     }
-
-
 
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
 
-    private void SetContainerParentLocal(IKitchenContainable otherContainer)
+    private void SetContainerParentLocal(IKitchenContainable newContainer)
     {
-        if (otherContainer == null)
-        {
-            this.transform.position = Vector3.zero;
-            this.transform.parent = null;
-            this._containerParent = otherContainer;
-            return;
-        }
+        // Clear the object's current parent if it exists.
         if (_containerParent != null)
         {
             _containerParent.ClearKitchenObject(false);
         }
-        this._containerParent = otherContainer;
-        otherContainer.SetKitchenObject(this);
-        otherContainer.kitchenObject = this;
-        this.transform.parent = otherContainer.GetKitchenObjectFollowTransform();
-        this.transform.localPosition = Vector3.zero;
-    }
 
-    public void CmdSetContainerParent(IKitchenContainable otherContainer)
-    {
-        if (SectionData.s.isSinglePlay)
+        _containerParent = newContainer;
+        if (newContainer != null)
         {
-            SetContainerParentLocal(otherContainer);
+            newContainer.SetKitchenObject(this);
+            newContainer.kitchenObject = this;
+            this.transform.parent = newContainer.GetKitchenObjectFollowTransform();
+            this.transform.localPosition = Vector3.zero;
+            lastSyncedParentId = (newContainer as MonoBehaviour).GetComponent<PhotonView>().ViewID;
         }
         else
         {
-            var parentId = otherContainer.photonView.ViewID;
-            photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, parentId);
+            transform.position = Vector3.zero;
+            transform.parent = null;
+            lastSyncedParentId = -1;
+        }
+    }
+
+    /// <summary>
+    /// Command the update of the container parent.
+    /// In single play, update locally.
+    /// In multiplayer, only send an update if the parent has really changed.
+    /// </summary>
+    public void CmdSetContainerParent(IKitchenContainable newContainer)
+    {
+        if (SectionData.s.isSinglePlay)
+        {
+            SetContainerParentLocal(newContainer);
+        }
+        else
+        {
+            int newParentId = (newContainer as MonoBehaviour).GetComponent<PhotonView>().ViewID;
+            if (newParentId != lastSyncedParentId)
+            {
+                photonView.RPC(nameof(RpcSetParentWithPhotonId), RpcTarget.All, newParentId);
+                lastSyncedParentId = newParentId;
+            }
         }
     }
 
@@ -256,11 +256,13 @@ public class KitchenObject : MonoBehaviour
 
     public void DestroySelf()
     {
-        if (!SectionData.s.isSinglePlay)
-            CmdDestroy();
-        else
+        if (SectionData.s.isSinglePlay)
         {
             Destroy(this.gameObject);
+        }
+        else
+        {
+            CmdDestroy();
         }
     }
 
