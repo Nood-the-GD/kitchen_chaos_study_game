@@ -526,7 +526,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 1.409}
   m_SizeDelta: {x: 0.9, y: 0.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6452187960517893070
@@ -1139,7 +1139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: 990447f1a33874b7199704021dee7467, type: 2}
-  visualTransform: {fileID: 4679562187532313471}
   platePoint: {fileID: 0}
   _ingredientMapping:
     _serializedList:

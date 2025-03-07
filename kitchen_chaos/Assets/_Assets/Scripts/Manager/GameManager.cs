@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -118,7 +119,8 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("OnJoinRoom");
         var id = PhotonManager.s.myPlayerPhoton.ActorNumber;
-        Transform spawnPosition = spawnPoints[0];
+        int index = PhotonNetwork.IsMasterClient ? 0 : 1;
+        Transform spawnPosition = spawnPoints[index];
         var ob = ObjectEnum.MainPlayer.SpawnMultiplay(spawnPosition.position, Quaternion.identity);
         ob.name = "MainPlayer_" + id;
         spawnPoints.Remove(spawnPosition);

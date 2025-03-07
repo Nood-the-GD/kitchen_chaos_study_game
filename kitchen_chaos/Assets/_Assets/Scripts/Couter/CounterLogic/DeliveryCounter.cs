@@ -1,4 +1,5 @@
 using MoreMountains.Feedbacks;
+using Photon.Pun;
 using UnityEngine;
 
 public class DeliveryCounter : BaseCounter
@@ -20,7 +21,7 @@ public class DeliveryCounter : BaseCounter
             if (DeliveryManager.Instance.DeliverFood(KOParent.GetKitchenObject()))
             {
                 KOParent.ClearKitchenObject();
-                deliverFeedback.PlayFeedbacks();
+                CmdFeedback();
             }
             else
             {
@@ -44,5 +45,16 @@ public class DeliveryCounter : BaseCounter
         {
             Debug.Log("Player is not carrying anything");
         }
+    }
+
+    private void CmdFeedback()
+    {
+        photonView.RPC(nameof(RpcFeedback), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void RpcFeedback()
+    {
+        deliverFeedback.PlayFeedbacks();
     }
 }

@@ -199,7 +199,8 @@ public class KitchenObject : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-
+            if (_containerParent == null)
+                continue;
             var kitchenObjectParentGameObject = _containerParent as MonoBehaviour;
             var parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
             // Debug.Log("sync object: "+name + " parent: " + kitchenObjectParentGameObject.name + " "+ parentId);
