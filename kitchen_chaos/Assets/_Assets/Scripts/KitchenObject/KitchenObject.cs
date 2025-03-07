@@ -69,7 +69,6 @@ public class KitchenObject : MonoBehaviour
             Debug.Log("Ingredient: " + i);
         }
         var rep = CookingBookSO.s.FindRecipeByOutput(kitchenObjectSO);
-        Debug.Log("rep: " + rep.name);
         if (rep == null)
         {
             return;
@@ -150,7 +149,7 @@ public class KitchenObject : MonoBehaviour
             if (kitchenObjectParentGameObject != null)
                 parentId = kitchenObjectParentGameObject.GetComponent<PhotonView>().ViewID;
             var koId = CookingBookSO.s.GetKitchenObjectSoId(kitchenObjectSO);
-            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, parentId, koId, ingredient, isHavePlate);
+            PhotonManager.s.CmdSpawnFoodObject(kitchenObjectSO.prefab.GetComponent<ObjectTypeView>().objectType, koId, parentId, ingredient, isHavePlate);
         }
     }
     void Awake()

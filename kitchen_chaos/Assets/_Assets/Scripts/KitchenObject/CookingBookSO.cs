@@ -96,7 +96,6 @@ public class CookingBookSO : ScriptableObject
         return baseIngredients;
     }
 
-
     public CombineResult TryCombine(KitchenObject kitchenObject, KitchenObject kitchenObject1)
     {
         return TryCombine(kitchenObject.GetKitchenObjectSO(), kitchenObject1.GetKitchenObjectSO());
@@ -130,6 +129,15 @@ public class CookingBookSO : ScriptableObject
         return kitchenObjectSOs.IndexOf(kitchenObjectSO);
     }
 
+    public RecipeSO GetFryingRecipe(KitchenObjectSO input)
+    {
+        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedFried);
+    }
+
+    public RecipeSO GetCuttingRecipe(KitchenObjectSO input)
+    {
+        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedChop);
+    }
 
 #if UNITY_EDITOR
     [Button(ButtonSizes.Large)]
@@ -152,21 +160,12 @@ public class CookingBookSO : ScriptableObject
             this.kitchenObjectSOs.Add(kitchenObjectSO);
         }
     }
+#endif
+
     private void Sort()
     {
         recipes.Sort((a, b) => a.ingredients.Count.CompareTo(b.ingredients.Count));
         isSorted = true;
     }
-#endif
 
-
-    public RecipeSO GetFryingRecipe(KitchenObjectSO input)
-    {
-        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedFried);
-    }
-
-    public RecipeSO GetCuttingRecipe(KitchenObjectSO input)
-    {
-        return recipes.Find(x => x.ingredients.Contains(input) && x.ingredients.Count == 1 && x.actionType == KitchenObjectType.NeedChop);
-    }
 }
