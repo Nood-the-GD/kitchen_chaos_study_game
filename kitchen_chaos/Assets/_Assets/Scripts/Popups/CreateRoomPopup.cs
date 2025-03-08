@@ -8,15 +8,17 @@ using UnityEngine.UI;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System;
 
-public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
+public class CreateRoomPopup : BasePopup<CreateRoomPopup>
+{
     #region Constants
-    const string CMD_SWITCH_STAGE = "CmdSwitchStage"; 
+    const string CMD_SWITCH_STAGE = "CmdSwitchStage";
     const string CMD_NEXT_SCENE = "CmdNextScene";
     const string CMD_AI_SCENE = "CmdAiScene";
     #endregion
 
-    #region Variables
+    #region Variables and Components
     public TextMeshProUGUI roomName;
     public List<PlayerUIElement> playerUIElements;
     public GameObject startButton;
@@ -28,7 +30,8 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     public GameObject previewImageParent;
     public GameObject text;
     [SerializeField] private StarController currentLevelStarController;
-    [HideInInspector]public StageData selectStage = null;
+    [SerializeField] private Button copyIdButton;
+    [HideInInspector] public StageData selectStage = null;
 
     public GameObject stageParent;
     int currentSceneId = 0;
@@ -38,14 +41,16 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
 
     #region Editors
     [Button("Move to GameScene")]
-    public void OnStartButtonClick(){
+    public void OnStartButtonClick()
+    {
         //PhotonNetwork.AutomaticallySyncScene = true;
         var order = new CmdOrder(nameof(CreateRoomPopup), CMD_NEXT_SCENE);
         PhotonManager.s.CmdCallFunction(order);
     }
 
     [Button("Move to AI Test")]
-    public void MoveToAiTest(){
+    public void MoveToAiTest()
+    {
         //PhotonNetwork.AutomaticallySyncScene = true;
         var order = new CmdOrder(nameof(CreateRoomPopup), CMD_AI_SCENE);
         PhotonManager.s.CmdCallFunction(order);
@@ -53,14 +58,16 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
     #endregion
 
     #region Unity functions
-    public void OnExitButtonClick(){
+    public void OnExitButtonClick()
+    {
         PhotonNetwork.LeaveRoom();
     }
-    void Start(){
+    void Start()
+    {
         currentSceneId = 0;
         SetupStages();
         stageParent.SetActive(PhotonNetwork.IsMasterClient);
-        if(SectionData.s.isSinglePlay)
+        if (SectionData.s.isSinglePlay)
         {
             _roomPlayer = 1;
         }
@@ -69,8 +76,10 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
             _roomPlayer = 2;
         }
         RefreshUI();
+        copyIdButton.onClick.AddListener(CopyId);
     }
-    protected override void OnEnable(){
+    protected override void OnEnable()
+    {
         base.OnEnable();
         PhotonManager.s.onJoinRoom += RefreshUI;
         PhotonManager.s.onLeaveRoom += OnLeaveRoom;
@@ -78,7 +87,8 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         PhotonManager.s.onPlayerLeftRoom += OnPlayerLeaveRoom;
         PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
     }
-    protected override void OnDisable(){
+    protected override void OnDisable()
+    {
         base.OnDisable();
 
         PhotonManager.s.onJoinRoom -= RefreshUI;
@@ -86,99 +96,120 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         PhotonManager.s.onPlayerEnteredRoom -= OnPlayerEnterRoom;
         PhotonManager.s.onPlayerLeftRoom -= OnPlayerLeaveRoom;
         PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
-       
+
     }
     #endregion
 
 
-    void OnCallAnyCmdFunction(CmdOrder order){
-        if(order.receiver != nameof(CreateRoomPopup)) return;
+    void OnCallAnyCmdFunction(CmdOrder order)
+    {
+        if (order.receiver != nameof(CreateRoomPopup)) return;
 
-        if(order.functionName == CMD_SWITCH_STAGE){
+        if (order.functionName == CMD_SWITCH_STAGE)
+        {
             RpcSwitchStage((int)order.data[0], (int)order.data[1]);
         }
-        if(order.functionName == CMD_NEXT_SCENE){
+        if (order.functionName == CMD_NEXT_SCENE)
+        {
             GameManager.levelId = currentSceneId;
             PhotonNetwork.LoadLevel(GameData.s.GetStage(currentSceneId).sceneName);
         }
-        if(order.functionName == CMD_AI_SCENE){
+        if (order.functionName == CMD_AI_SCENE)
+        {
             GameManager.levelId = currentSceneId;
             PhotonNetwork.LoadLevel("AI_Test");
         }
     }
 
-    void OnPlayerEnterRoom(Photon.Realtime.Player player){
+    private void CopyId()
+    {
+        GUIUtility.systemCopyBuffer = PhotonNetwork.CurrentRoom.Name;
+    }
+
+
+    void OnPlayerEnterRoom(Photon.Realtime.Player player)
+    {
         RefreshUI();
 
-        
-        if(PhotonNetwork.IsMasterClient){
+
+        if (PhotonNetwork.IsMasterClient)
+        {
             CmdSwitchStage(selectStage.levelId, selectStage.star);
         }
 
     }
 
-    void OnPlayerLeaveRoom(Photon.Realtime.Player player){
+    void OnPlayerLeaveRoom(Photon.Realtime.Player player)
+    {
         RefreshUI();
     }
 
 
-    void OnLeaveRoom(){
+    void OnLeaveRoom()
+    {
         HidePopup();
     }
 
-    
-    async void SetupStages(){
+
+    async void SetupStages()
+    {
         var stages = GameData.s.stages;
 
         stageUIs.Add(stageUIPref);
-        while(stageUIs.Count != stages.Count)
+        while (stageUIs.Count != stages.Count)
         {
-            if(stageUIs.Count < stages.Count)
+            if (stageUIs.Count < stages.Count)
             {
                 var stageUI = Instantiate(stageUIPref, stageContentParent.transform);
                 stageUIs.Add(stageUI);
             }
             else
             {
-                var stageUI = stageUIs[stageUIs.Count-1];
+                var stageUI = stageUIs[stageUIs.Count - 1];
                 stageUIs.Remove(stageUI);
                 Destroy(stageUI.gameObject);
             }
         }
 
-        for(int i = 0; i< stages.Count; i++){
+        for (int i = 0; i < stages.Count; i++)
+        {
             var stageData = stages[i];
-            Debug.Log("Setup stage "+stageData.levelId);
+            Debug.Log("Setup stage " + stageData.levelId);
             stageUIs[i].SetData(stageData, OnSwitchStage);
         }
 
-        foreach(var i in stageUIs){
-            
+        foreach (var i in stageUIs)
+        {
+
             i.gameObject.SetActive(true);
             i.transform.DOScale(Vector3.zero, 0.25f).From().SetEase(Ease.OutBack);
             await Task.Delay(100);
-            
+
         }
 
         CmdSwitchStage(stages[0].levelId, stages[0].star);
     }
 
-    void OnSwitchStage(StageData stageData){
+    void OnSwitchStage(StageData stageData)
+    {
         CmdSwitchStage(stageData.levelId, stageData.star);
     }
 
-    void CmdSwitchStage(int id, int star){
+    void CmdSwitchStage(int id, int star)
+    {
         Debug.Log("CmdSwitchStage " + id);
-        var order = new CmdOrder(nameof(CreateRoomPopup),CMD_SWITCH_STAGE, id, star);
+        var order = new CmdOrder(nameof(CreateRoomPopup), CMD_SWITCH_STAGE, id, star);
         PhotonManager.s.CmdCallFunction(order);
     }
 
-    void RpcSwitchStage(int id, int star){
+    void RpcSwitchStage(int id, int star)
+    {
         Debug.Log("RpcSwitchStage " + id);
         currentSceneId = id;
         var stageData = GameData.s.GetStage(id);
-        foreach(var stage in stageUIs){
-            if(stage.stageData.levelId == stageData.levelId)
+        foreach (var stage in stageUIs)
+        {
+            if (stage.stageData.levelId == stageData.levelId)
                 stage.SetSelect();
             else
                 stage.Unselect();
@@ -190,35 +221,39 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>{
         selectStage = stageData;
 
         var rootScale = 2.225f;
-        
+
         previewImageParent.transform.DOScale(rootScale, 0.25f).From(0).SetEase(Ease.OutBack);
     }
 
-    public void RefreshUI(){
+    public void RefreshUI()
+    {
         changeSkinColorButtonImage.color = UserSetting.colorSkin.color;
-        foreach(var i in playerUIElements){
+        foreach (var i in playerUIElements)
+        {
             i.gameObject.SetActive(false);
         }
 
         var roomPlayer = PhotonNetwork.PlayerList.Length;
-        
-        for(int i = 0; i< roomPlayer; i++){
+
+        for (int i = 0; i < roomPlayer; i++)
+        {
             playerUIElements[i].gameObject.SetActive(true);
             //playerUIElements[i].transform.localScale = Vector3.zero;
             playerUIElements[i].transform.DOScale(1f, 0.25f).From(0).SetEase(Ease.OutBack);
-            
+
             playerUIElements[i].SetData(PhotonNetwork.PlayerList[i]);
         }
 
         var enoughPlayer = roomPlayer == _roomPlayer;
         var activateStartButton = enoughPlayer && PhotonNetwork.IsMasterClient;
-        
+
         startButton.gameObject.SetActive(activateStartButton);
         text.SetActive(!enoughPlayer);
-        roomName.text = "ID: "+PhotonNetwork.CurrentRoom.Name;
+        roomName.text = "ID: " + PhotonNetwork.CurrentRoom.Name;
     }
 
-    public void OnClickChangeColor(){
+    public void OnClickChangeColor()
+    {
         ChoseColorPopup.ShowPopup();
     }
 }
