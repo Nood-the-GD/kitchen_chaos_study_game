@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Codice.CM.SEIDInfo;
 using MoreMountains.Feedbacks;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -12,16 +14,40 @@ public class PointUI : MonoBehaviour
 
     void Awake()
     {
-        if(Instance != null)
+        if (Instance != null)
         {
             Destroy(Instance.gameObject);
         }
         Instance = this;
+
+        PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
+    }
+    void OnDestroy()
+    {
+        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
+    }
+
+    private void OnCallAnyCmdFunction(CmdOrder order)
+    {
+        if (order.receiver == nameof(PointUI) && order.functionName == nameof(RpcUpdateUI))
+        {
+            RpcUpdateUI(order.data[0].ToString());
+        }
     }
 
     public void UpdateUI()
     {
-        pointText.text =  DeliveryManager.Instance.GetSuccessfulRecipePoint().ToString();
+        CmdUpdateUI(DeliveryManager.Instance.GetSuccessfulRecipePoint().ToString());
+    }
+
+    private void CmdUpdateUI(string point)
+    {
+        PhotonManager.s.CmdCallFunction(new CmdOrder(nameof(PointUI), nameof(RpcUpdateUI), point));
+    }
+
+    private void RpcUpdateUI(string point)
+    {
+        pointText.text = point;
         pointFeedback?.PlayFeedbacks();
     }
 }
