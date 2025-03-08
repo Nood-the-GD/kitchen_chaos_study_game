@@ -3138,6 +3138,7 @@ GameObject:
   - component: {fileID: 1211752477}
   - component: {fileID: 1211752476}
   - component: {fileID: 1211752475}
+  - component: {fileID: 1211752479}
   m_Layer: 5
   m_Name: DiscordBtn
   m_TagString: Untagged
@@ -3260,6 +3261,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211752473}
   m_CullTransparentMesh: 1
+--- !u!114 &1211752479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211752473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 584441653}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &1276389657
 GameObject:
   m_ObjectHideFlags: 0
