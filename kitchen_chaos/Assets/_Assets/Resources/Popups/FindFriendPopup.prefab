@@ -572,6 +572,7 @@ GameObject:
   - component: {fileID: 521065198251341039}
   - component: {fileID: 7541697618402704949}
   - component: {fileID: 7113638811355060731}
+  - component: {fileID: 891221156602358592}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -693,6 +694,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &891221156602358592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504804190883191427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 6487879567714088331}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &3372193867879522771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,8 +1800,9 @@ GameObject:
   - component: {fileID: 4148008257934906625}
   - component: {fileID: 9000226107310465996}
   - component: {fileID: 2648103004264860397}
+  - component: {fileID: 3052658244505637620}
   m_Layer: 5
-  m_Name: Image
+  m_Name: FindBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1894,6 +1910,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3052658244505637620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6567530174611320820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 6244002193874376988}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &8299829417532143934
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,8 +2060,9 @@ GameObject:
   - component: {fileID: 3144403004344990721}
   - component: {fileID: 1205526283317368441}
   - component: {fileID: 5681402975387144009}
+  - component: {fileID: 4919590008752158146}
   m_Layer: 5
-  m_Name: w
+  m_Name: AddFriendBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2169,6 +2200,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4919590008752158146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9141769422099747746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 445770692281954093}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &9195128715539561646
 GameObject:
   m_ObjectHideFlags: 0

@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 4445345778210075797}
   - component: {fileID: 4543427338065343176}
   - component: {fileID: 3601043902139591215}
+  - component: {fileID: 3184480201681991298}
   m_Layer: 5
   m_Name: GameObject
   m_TagString: Untagged
@@ -561,6 +562,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorImage: {fileID: 1557369908970218172}
+--- !u!114 &3184480201681991298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1974736145987098589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 5691131673801914214}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &3724833864214735677
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,6 +770,7 @@ GameObject:
   - component: {fileID: 2032750208350832591}
   - component: {fileID: 4139301559138424375}
   - component: {fileID: 8687735562070842772}
+  - component: {fileID: 2116882885835736853}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -876,6 +892,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2116882885835736853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7273375181794229575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 5805576281812715830}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &7735414445348503569
 GameObject:
   m_ObjectHideFlags: 0

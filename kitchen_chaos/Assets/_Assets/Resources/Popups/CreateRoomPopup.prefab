@@ -1120,6 +1120,7 @@ GameObject:
   - component: {fileID: 4630719298954690535}
   - component: {fileID: 7750550578053940309}
   - component: {fileID: 2229532925134496284}
+  - component: {fileID: 5302416756466586722}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -1241,6 +1242,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5302416756466586722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2925767510803448694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 7633258798503844290}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &3139144190649096430
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,6 +2140,7 @@ GameObject:
   - component: {fileID: 7032952723288509510}
   - component: {fileID: 5430501432936720981}
   - component: {fileID: 7863027061239448150}
+  - component: {fileID: 6811362440293137339}
   m_Layer: 5
   m_Name: Level
   m_TagString: Untagged
@@ -2190,7 +2206,6 @@ MonoBehaviour:
     sceneName: Level_1
     pointTarget: 000000000000000000000000
     previewImage: {fileID: 21300000, guid: 9213126f41c37f04284c91247e5885a8, type: 3}
-    tutorialImages: []
   levelStarController: {fileID: 7863027061239448150}
 --- !u!114 &5430501432936720981
 MonoBehaviour:
@@ -2267,6 +2282,20 @@ MonoBehaviour:
   pointList: []
   _starSprite: {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
   _nonStarSprite: {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
+--- !u!114 &6811362440293137339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4265448295864779812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 7140785378813363935}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &4528004875276242655
 GameObject:
   m_ObjectHideFlags: 0
@@ -3679,7 +3708,6 @@ MonoBehaviour:
     sceneName: 
     pointTarget: 000000000000000000000000
     previewImage: {fileID: 0}
-    tutorialImages: []
   stageParent: {fileID: 2725029679139810495}
   changeSkinColorButtonImage: {fileID: 2205701629150461341}
 --- !u!114 &596262831874706050
@@ -3717,6 +3745,7 @@ GameObject:
   - component: {fileID: 2205701629150461341}
   - component: {fileID: 1269370815789131790}
   - component: {fileID: 163464221929614904}
+  - component: {fileID: 2505549981103360551}
   m_Layer: 5
   m_Name: Cloth Button
   m_TagString: Untagged
@@ -3868,6 +3897,20 @@ MonoBehaviour:
   baked: 0
   modifiedFromInspector: 0
   bakedShadows: []
+--- !u!114 &2505549981103360551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7543865528447579245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 6897701470997848188}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &7851762337861433256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4908,7 +4951,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 776979154425011543, guid: 62cad46b3d162490783e0965dba3e0a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6010729284854519937}
   m_SourcePrefab: {fileID: 100100000, guid: 62cad46b3d162490783e0965dba3e0a4, type: 3}
 --- !u!224 &2318452012733289218 stripped
 RectTransform:
@@ -4922,3 +4969,17 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3090781881124458068}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6010729284854519937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2318452012733289219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 2318452012733289218}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}

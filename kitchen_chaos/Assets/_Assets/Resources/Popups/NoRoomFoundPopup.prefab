@@ -428,6 +428,7 @@ GameObject:
   - component: {fileID: 7967221922058737906}
   - component: {fileID: 9178803510490998881}
   - component: {fileID: 3821410103946653157}
+  - component: {fileID: 8464592476396782608}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -537,6 +538,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8464592476396782608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4315728498726279939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 484369680355288329}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &4320233271758415297
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,6 +1309,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: OKBtn
+      objectReference: {fileID: 0}
+    - target: {fileID: 776979154425011543, guid: 62cad46b3d162490783e0965dba3e0a4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 776979154425011544, guid: 62cad46b3d162490783e0965dba3e0a4,
         type: 3}

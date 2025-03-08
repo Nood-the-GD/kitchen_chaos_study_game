@@ -666,6 +666,7 @@ GameObject:
   - component: {fileID: 692902245596748581}
   - component: {fileID: 5361801136263447433}
   - component: {fileID: 6290061915514254403}
+  - component: {fileID: 5741244928460605378}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -787,6 +788,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5741244928460605378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3597612789202536852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 104703315419686403}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &3926207559367661514
 GameObject:
   m_ObjectHideFlags: 0
@@ -2012,6 +2027,7 @@ GameObject:
   - component: {fileID: 8089316467732309754}
   - component: {fileID: 8246728931139370666}
   - component: {fileID: 8892201387990424236}
+  - component: {fileID: 7340347987604367293}
   m_Layer: 5
   m_Name: Button01_BtnText_Blue
   m_TagString: Untagged
@@ -2121,6 +2137,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7340347987604367293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8225027029592513880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683f1e85d538d4d56bf9b59aff781b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animateTransform: {fileID: 158424634715881641}
+  _animateScale: {x: -0.1, y: -0.1, z: -0.1}
 --- !u!1 &8431579456985085753
 GameObject:
   m_ObjectHideFlags: 0

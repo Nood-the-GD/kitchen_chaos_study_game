@@ -59,6 +59,8 @@ MonoBehaviour:
   - RpcSpawnCustomerGroup
   - RPCInteract
   - RpcAddPlate
+  - RpcFeedback
+  - RpcTryAddPlate
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
