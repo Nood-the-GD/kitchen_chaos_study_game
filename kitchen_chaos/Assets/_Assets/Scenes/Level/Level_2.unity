@@ -3918,6 +3918,11 @@ PrefabInstance:
       propertyPath: waitingTimeForEachRecipe
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5482900675777088078, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.25
+      objectReference: {fileID: 0}
     - target: {fileID: 5508198884652397355, guid: 0a0d484c9fb370c4a9bf9cb9f8dc9e0e,
         type: 3}
       propertyPath: sceneViewId

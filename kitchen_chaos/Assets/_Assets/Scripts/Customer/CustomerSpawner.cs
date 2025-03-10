@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,8 +15,10 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
 
     #region Variables
     private List<Customer> _customerList = new List<Customer>();
+    private List<CustomerOld> _customerOldList = new List<CustomerOld>();
     private PhotonView _photonView;
-    public int MaxCustomerSpawn = 2;
+    public int MaxCustomerSpawn = 5;
+    private Vector3 SpawnPos => this.transform.position + new Vector3(0, 0, 15f);
     #endregion
 
     #region Unity functions
@@ -23,11 +26,12 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     {
         base.Awake();
         _customerList = Resources.LoadAll<Customer>(CUSTOMER_FOLDER_PATH).ToList();
-        // _photonView = GetComponent<PhotonView>();
+        _photonView = GetComponent<PhotonView>();
     }
     protected override void Start()
     {
         base.Start();
+        SpawnLoop();
         // if (PhotonNetwork.IsMasterClient)
         //     DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
     }
@@ -41,18 +45,33 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     [Button]
     public void Spawn()
     {
-        int index = UnityEngine.Random.Range(0, _customerList.Count - 1);
-        int numberOfPeople = UnityEngine.Random.Range(1, 4);
-        RpcSpawnCustomerGroup(index, numberOfPeople);
+        CmdSpawnCustomer();
+    }
+
+    private async void SpawnLoop()
+    {
+        while (true)
+        {
+            if (_customerOldList.Count < MaxCustomerSpawn)
+            {
+                CmdSpawnCustomer();
+            }
+            await UniTask.WaitForSeconds(5f);
+        }
     }
 
     #region Support Functions
     private void SpawnCustomer(object sender, EventArgs e)
     {
-        int index = UnityEngine.Random.Range(0, _customerList.Count - 1);
-        int numberOfPeople = UnityEngine.Random.Range(1, MaxCustomerSpawn + 1);
-        RpcSpawnCustomerGroup(index, numberOfPeople);
-        // CmdSpawnCustomer();
+        CmdSpawnCustomer();
+    }
+    public bool IsTopList(CustomerOld customerOld)
+    {
+        return _customerOldList.IndexOf(customerOld) == 0;
+    }
+    public void RemoveCustomerOld(CustomerOld customerOld)
+    {
+        _customerOldList.Remove(customerOld);
     }
     #endregion
 
@@ -60,7 +79,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private void CmdSpawnCustomer()
     {
         int index = UnityEngine.Random.Range(0, _customerList.Count - 1);
-        _photonView.RPC(nameof(RpcSpawnCustomerGroup), RpcTarget.All, index);
+        // _photonView.RPC(nameof(RpcSpawnCustomerGroup), RpcTarget.All, new object[] { index, 1 });
+        _photonView.RPC(nameof(RpcSpawnCustomerOld), RpcTarget.All, index);
     }
     [PunRPC]
     private void RpcSpawnCustomerGroup(int id, int numberOfPeople)
@@ -71,11 +91,19 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         {
             Customer customer = GameData.s.GetCustomer(id);
             Customer spawnCustomer = Instantiate(customer, transform.position, this.transform.rotation);
-            customerGroup.Customers[i] = spawnCustomer;
-            spawnCustomer.transform.position = this.transform.position;
+            // customerGroup.Customers[i] = spawnCustomer;
+            spawnCustomer.transform.position = SpawnPos;
             CustomerManager.s.AddCustomer(spawnCustomer);
         }
         WaitingLine.s.AddCustomerGroup(customerGroup);
+    }
+    [PunRPC]
+    private void RpcSpawnCustomerOld(int id)
+    {
+        GameObject customerOld = Instantiate(GameData.s.GetCustomer(id).gameObject, SpawnPos, this.transform.rotation);
+        CustomerOld customerOldComponent = customerOld.GetComponent<CustomerOld>();
+        customerOldComponent.Move(this.transform.position);
+        _customerOldList.Add(customerOldComponent);
     }
     #endregion
 }

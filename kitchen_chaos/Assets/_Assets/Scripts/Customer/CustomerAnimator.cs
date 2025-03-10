@@ -10,6 +10,7 @@ public class CustomerAnimator : MonoBehaviour
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _icon;
     [SerializeField] private Sprite _perOrderIcon;
+    public Animator Animator => _anim;
     private bool _isAnimating;
 
     #region Unity Function
@@ -22,7 +23,6 @@ public class CustomerAnimator : MonoBehaviour
     #region Animation
     public void Walk()
     {
-        Debug.Log("Walk");
         if (_anim != null)
             _anim.Play("Walk");
     }
@@ -45,6 +45,10 @@ public class CustomerAnimator : MonoBehaviour
     {
         _canvas.gameObject.SetActive(false);
         _anim.Play("Eat");
+    }
+    public void Roll()
+    {
+        _anim.Play("Roll");
     }
     #endregion
 
