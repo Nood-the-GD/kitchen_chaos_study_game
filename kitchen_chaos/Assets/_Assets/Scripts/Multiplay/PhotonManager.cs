@@ -437,10 +437,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ko.kitchenObjectSO = CookingBookSO.s.kitchenObjectSOs[kitchenObjectSOId];
         ko.CmdSetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexes(ingredient);
-        if (ko.IsHavingPlate)
-        {
-            ko.TryAddPlate();
-        }
     }
 
     #region Callback

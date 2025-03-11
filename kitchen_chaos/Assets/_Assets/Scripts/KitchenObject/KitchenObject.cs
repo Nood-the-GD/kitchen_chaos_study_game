@@ -20,7 +20,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
 
     // Track last synced parent's PhotonView ID to avoid redundant updates.
     private int lastSyncedParentId = -1;
-    
+
     // Timestamp for tracking interaction order
     [HideInInspector] public long interactionTimestamp;
 
@@ -38,8 +38,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
         }
         else
         {
-            // For network, the RPC call will happen in CmdSetContainerParent when the parent changes.
-            photonView.RPC(nameof(RpcTryAddPlate), RpcTarget.MasterClient);
+            photonView.RPC(nameof(RpcTryAddPlate), RpcTarget.All);
         }
         return true;
     }
@@ -47,11 +46,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RpcTryAddPlate()
     {
-        // Called on the master client.
-        if (TryAddPlate())
-        {
-            // Optionally notify others about the plate addition if needed.
-        }
+        AddPlateLocal(-1);
     }
 
     public void AddPlateLocal(int viewId)
@@ -180,7 +175,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
         {
             interactionTimestamp = timestamp;
         }
-        
+
         PhotonView parentPhotonView = PhotonNetwork.GetPhotonView(photonId);
         if (parentPhotonView == null)
         {
@@ -245,7 +240,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
     {
         // Update the interaction timestamp
         interactionTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        
+
         if (SectionData.s.isSinglePlay)
         {
             SetContainerParentLocal(newContainer);

@@ -13,7 +13,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     private long _lastInteractionTimestamp;
     private IKitchenContainable _previousContainer;
-    
+
     PhotonView _photonView;
     public PhotonView photonView => _photonView;
 
@@ -60,7 +60,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 //holding plate
                 if (otherKO.IsPlate)
                 {
-                    if (kitchenObject.TryAddPlate())
+                    if (GetKitchenObject().TryAddPlate())
                     {
                         otherContainer.ClearKitchenObject();
                         return;
@@ -137,9 +137,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
     public void RPCInteract(int id, long timestamp)
     {
         var player = PhotonManager.s.GetPlayerView(id);
-        
+
         // Check for timestamp conflict - if another interaction happened very recently
-        if (HasKitchenObject() && _lastInteractionTimestamp > 0 && 
+        if (HasKitchenObject() && _lastInteractionTimestamp > 0 &&
             timestamp - _lastInteractionTimestamp < 100 && _previousContainer != null)
         {
             // We have a conflict - return the most recent object to its previous container
@@ -152,7 +152,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 return;
             }
         }
-        
+
         _lastInteractionTimestamp = timestamp;
         Interact(player);
     }
@@ -218,7 +218,6 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
     public void ClearKitchenObject(bool destroyKO = true)
     {
-
         if (kitchenObject != null && destroyKO)
             kitchenObject.DestroySelf();
 
