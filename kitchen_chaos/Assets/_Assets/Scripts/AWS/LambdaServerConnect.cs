@@ -372,7 +372,7 @@ public static class ServerConnect
                 // Switch to main thread for Unity operations
                 await UniTask.SwitchToMainThread();
                 var otherUid = usersCopy[0];
-                if(otherUid.ToString() != UserData.mineUid){
+                if(otherUid.ToString() == UserData.mineUid){
                     otherUid = usersCopy[1];
                 }
                 try {
@@ -402,7 +402,7 @@ public static class ServerConnect
 
                 
                     var otherUid = usersCopy[0];
-                    if(otherUid.ToString() != UserData.mineUid){
+                    if(otherUid.ToString() == UserData.mineUid){
                         otherUid = usersCopy[1];
                     }
 

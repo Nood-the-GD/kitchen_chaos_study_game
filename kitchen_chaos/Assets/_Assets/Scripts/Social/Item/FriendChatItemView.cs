@@ -10,8 +10,7 @@ public class FriendChatItemView : MonoBehaviour
     public Text message;
     public Image activeStatus;
 
-    private ChatSummary _chatSummary;
-    public ChatSummary chatSummary => _chatSummary;
+    public ChatSummary chatSummary => SocialData.GetChatSummaryFor(otherUid);
     
     public string otherUid;
     public Button button;
@@ -32,7 +31,6 @@ public class FriendChatItemView : MonoBehaviour
         var chatSummary = SocialData.GetChatSummaryFor(otherUid);
 
         if(chatSummary != null){
-            this._chatSummary = chatSummary;
             userName.text = "";
             message.text = chatSummary.message;
             Debug.Log("message with "+chatSummary.otherUid+" is: "+ message.text);
