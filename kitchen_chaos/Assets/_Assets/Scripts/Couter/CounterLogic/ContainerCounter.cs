@@ -13,6 +13,7 @@ public class ContainerCounter : BaseCounter
     {
         if (!KOParent.HasKitchenObject())
         {
+            
             //Player carrying nothing
             KitchenObject.SpawnKitchenObject(kitchenObjectSO, KOParent);
             //Debug.Log("Player grabbed object");

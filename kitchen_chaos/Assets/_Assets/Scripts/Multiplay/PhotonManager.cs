@@ -174,10 +174,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         if (prevRegion == null)
         {
-            Debug.Log("Region not found");
+            //Debug.Log("Region not found");
             return;
         }
-        Debug.Log("Refeshing ping");
+        //Debug.Log("Refeshing ping");
         OnRegionListReceived(prevRegion);
 
     }
@@ -208,8 +208,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             {
                 UserSetting.regionSelected = allRegionPing[0].region;
             }
-            Debug.Log("Region selected: " + UserSetting.regionSelected);
-            Debug.Log(PhotonNetwork.NetworkClientState);
+            //Debug.Log("Region selected: " + UserSetting.regionSelected);
+            //Debug.Log(PhotonNetwork.NetworkClientState);
 
             if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToNameServer)
             {

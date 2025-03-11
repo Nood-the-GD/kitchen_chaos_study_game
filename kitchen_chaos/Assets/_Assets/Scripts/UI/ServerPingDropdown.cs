@@ -16,6 +16,7 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
             var region = PhotonManager.s.allRegionPing[index].region;
             if(UserSetting.regionSelected != region){
                 PhotonManager.Disconnect();
+                Debug.Log("connect to new server: "+ region);
                 PhotonManager.ConnectToServer(region);
             }
             UserSetting.regionSelected = region;
