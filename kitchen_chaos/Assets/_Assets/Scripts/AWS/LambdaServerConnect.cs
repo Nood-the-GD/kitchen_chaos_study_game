@@ -371,14 +371,16 @@ public static class ServerConnect
                 // Create local copies of the data we need
                 var messageDataCopy = data["message"].ToObject<MessageData>();   
                 var conversationIdCopy = data["conversationId"].ToString();
-                
+                var usersCopy = data["users"];
                 // Switch to main thread for Unity operations
                 await UniTask.SwitchToMainThread();
-                
+                var otherUid = usersCopy[0];
+                if(otherUid.ToString() != UserData.mineUid){
+                    otherUid = usersCopy[1];
+                }
                 try {
-                    var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
                     SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
-                    ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy);
+                    ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy, otherUid.ToString());
                     
                     Debug.Log("updateChatMessage processed on main thread.");
                     OnChatMessage?.Invoke(messageDataCopy);
@@ -399,15 +401,16 @@ public static class ServerConnect
                 await UniTask.SwitchToMainThread();
                 
                 try {
-                    var messageChannel = new MessageDataChannel(conversationIdCopy, messageDataCopy);
+                    
 
-                    SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
+                
                     var otherUid = usersCopy[0];
                     if(otherUid.ToString() != UserData.mineUid){
                         otherUid = usersCopy[1];
                     }
 
                     SocialData.AddChatSummary(conversationIdCopy, messageDataCopy.content, otherUid.ToString());
+                    SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
                     ConversationData.AddNewConvo(conversationIdCopy, messageDataCopy, otherUid.ToString());
                     if(messageDataCopy.userId != UserData.mineUid){
                         //show noti here

@@ -172,12 +172,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [Button]
     public void RefeshPing()
     {
-        if (prevRegion == null)
-        {
-            //Debug.Log("Region not found");
-            return;
-        }
-        //Debug.Log("Refeshing ping");
+
+        // if (prevRegion == null)
+        // {
+        //     Debug.Log("Region not found");
+        //     return;
+        // }
+        Debug.Log("Refeshing ping");
         OnRegionListReceived(prevRegion);
 
     }

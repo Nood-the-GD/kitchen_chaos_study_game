@@ -86,19 +86,6 @@ public class MessageData
     }
 }
 
-[Serializable]
-public class MessageDataChannel
-{
-    public string channel;
-    public MessageData messageData;
-
-    // Constructor
-    public MessageDataChannel(string channel, MessageData messageData)
-    {
-        this.channel = channel;
-        this.messageData = messageData;
-    }
-}
 
 #endregion
 
@@ -245,13 +232,23 @@ public class SocialData
     /// </summary>
     public static void UpdateChatSummary(string id, string content)
     {
-        if (mySocialData == null || mySocialData.chatSummary == null)
+        if (mySocialData == null)
             return;
+
+        if (mySocialData.chatSummary == null)
+            mySocialData.chatSummary = new Dictionary<string, ChatSummary>();
 
         if (mySocialData.chatSummary.TryGetValue(id, out ChatSummary cs))
         {
             cs.message = TruncateString(content);
             // Optionally trigger an event to update UI, etc.
+        }
+        else
+        {
+            // Create a new ChatSummary if it doesn't exist
+            // Note: We need otherUid for a new ChatSummary, but we don't have it here
+            // Using empty string as placeholder, consider modifying method signature if needed
+            AddChatSummary(id, content, "");
         }
     }
 
@@ -573,7 +570,7 @@ public class ConversationData
     /// <summary>
     /// Adds a new message to an existing conversation.
     /// </summary>
-    public static void AddNewMessage(string convoId, MessageData message)
+    public static void AddNewMessage(string convoId, MessageData message, string otherUid)
     {
         if (conversationDatas == null)
             conversationDatas = new List<ConversationData>();
@@ -583,8 +580,19 @@ public class ConversationData
         {
             convo.messages[message.timestamp.ToString()] = message;
         }
-        else{
-            Debug.LogError("ConversationData not found for id: " + convoId);
+        else
+        {
+            // Create a new conversation if not found
+
+            
+            List<string> uids = new List<string> { otherUid, UserData.currentUser.uid };
+            Dictionary<string, MessageData> messages = new Dictionary<string, MessageData>();
+            messages[message.timestamp.ToString()] = message;
+            
+            ConversationData newConvo = new ConversationData(convoId, uids, messages);
+            conversationDatas.Add(newConvo);
+            
+            Debug.Log("Created new ConversationData for id: " + convoId);
         }
     }
 }
