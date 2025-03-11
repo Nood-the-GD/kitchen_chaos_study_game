@@ -21,7 +21,7 @@ public static class ServerConnect
     public static event Action<byte[]> OnDrawingImageReceived;
     public static event Action OnMyUserDataUpdate;
     public static event Action OnSocialDataUpdate;
-    public static Action<MessageData> OnChatMessage;
+    public static Action<MessageData, string> OnChatMessage;
     public static event Action<string> OnDrawingRaw;
     // (Add additional events as needed for chat messages, picture data, etc.)
 
@@ -371,16 +371,13 @@ public static class ServerConnect
                 var usersCopy = data["users"];
                 // Switch to main thread for Unity operations
                 await UniTask.SwitchToMainThread();
-                var otherUid = usersCopy[0];
-                if(otherUid.ToString() == UserData.mineUid){
-                    otherUid = usersCopy[1];
-                }
+                var senderUid = messageDataCopy.userId;
                 try {
                     SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);
-                    ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy, otherUid.ToString());
+                    ConversationData.AddNewMessage(conversationIdCopy, messageDataCopy, senderUid);
                     
                     Debug.Log("updateChatMessage processed on main thread.");
-                    OnChatMessage?.Invoke(messageDataCopy);
+                    OnChatMessage?.Invoke(messageDataCopy, conversationIdCopy);
                     
                 }
                 catch (Exception ex) {
@@ -417,7 +414,7 @@ public static class ServerConnect
                         //show noti here
                     }
  
-                    OnChatMessage.Invoke(messageDataCopy);
+                    OnChatMessage.Invoke(messageDataCopy, conversationIdCopy);
                 }
                 catch (Exception ex) {
                     Debug.LogError("Error processing chat message on main thread: " + ex.Message);

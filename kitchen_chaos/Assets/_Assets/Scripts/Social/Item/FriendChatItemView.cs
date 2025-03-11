@@ -28,7 +28,6 @@ public class FriendChatItemView : MonoBehaviour
             onClick(this);
         });
         this.otherUid = otherUid;
-        var chatSummary = SocialData.GetChatSummaryFor(otherUid);
 
         if(chatSummary != null){
             userName.text = "";

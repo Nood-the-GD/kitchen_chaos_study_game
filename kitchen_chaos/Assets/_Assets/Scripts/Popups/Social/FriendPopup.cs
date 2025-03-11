@@ -74,13 +74,15 @@ public class FriendPopup : BasePopup<FriendPopup>
         ServerConnect.OnSocialDataUpdate -= OnSocialDataUpdate;
     }
 
-    void OnReciveChatMessage(MessageData messageData){
+    void OnReciveChatMessage(MessageData messageData, string converstationId){
         if(messageData == null){
             Debug.LogError("MessageData is null");
             return;
         }
         Debug.Log(messageData.content.ToString());
-        AddMessage(messageData);
+        if(currentChat.chatSummary.id == converstationId){
+            AddMessage(messageData);
+        }
     }
 
     void Init()
