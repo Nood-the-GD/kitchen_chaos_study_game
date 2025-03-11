@@ -248,7 +248,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         s = null;
         PhotonNetwork.LeaveRoom();
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     #region Photon Control
