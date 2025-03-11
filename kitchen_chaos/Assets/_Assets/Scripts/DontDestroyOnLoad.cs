@@ -35,4 +35,8 @@ public class DontDestroyOnLoad : MonoBehaviour
             DestroyImmediate(gameObject);
         }
     }
+
+    void OnDisable(){
+        Debug.Log("Destroy DontDestroyOnLoad");
+    }
 }

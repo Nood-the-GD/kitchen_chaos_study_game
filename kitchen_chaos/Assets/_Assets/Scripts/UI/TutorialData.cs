@@ -31,7 +31,7 @@ public class TutorialData : MonoBehaviour
         {
             SectionData.s.isSinglePlay = true;
             PhotonManager.s.onCreatedRoom += OnCreatedRoom;
-            PhotonNetwork.CreateRoom("tutorial");
+            PhotonNetwork.CreateRoom("tutorial: "+ UserData.currentUser.uid);
         }
         PhotonManager.s.onConnectToServer -= OnConnectToServer;
     }
@@ -41,12 +41,23 @@ public class TutorialData : MonoBehaviour
         LoadTutorialLevel();
         PhotonManager.s.onCreatedRoom -= OnCreatedRoom;
     }
-
     private void LoadTutorialLevel()
     {
+        StartCoroutine(LoadTutorialLevelCoroutine());
+    }
+
+    private IEnumerator LoadTutorialLevelCoroutine()
+    {
+        while (!PhotonManager.s.isDoneInitServerList)
+        {
+            yield return null;
+        }
+
         GameManager.levelId = 0;
         PhotonNetwork.LoadLevel("Level_tutorial");
     }
+
+    
 
     private void OnJoinRoom()
     {

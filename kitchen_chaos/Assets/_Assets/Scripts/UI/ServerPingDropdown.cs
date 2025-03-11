@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using Sirenix.OdinInspector;
 
 [RequireComponent(typeof(Dropdown))]
 public class ServerPingDropdown : MonoBehaviourPunCallbacks
@@ -13,11 +14,10 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
     {
         serverDropdown.onValueChanged.AddListener((int index) =>
         {
-            var region = PhotonManager.s.allRegionPing[index].region;
+            var region = PhotonManager.allRegionPing[index].region;
             if(UserSetting.regionSelected != region){
                 PhotonManager.Disconnect();
-                Debug.Log("connect to new server: "+ region);
-                PhotonManager.ConnectToServer(region);
+                //photon manager will auto reconnect to the new server 
             }
             UserSetting.regionSelected = region;
             
@@ -25,12 +25,20 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
         StartCoroutine(UpdateTheList());
 
     }
+
+    [Button]
+    void LogTheRegion(){
+        Debug.Log("LogTheRegion");
+        foreach(var item in PhotonManager.allRegionPing){
+            Debug.Log(item.region + " " + item.ping);
+        }
+    }
     IEnumerator UpdateTheList()
     {
         while (true)
         {
 
-            var pings = PhotonManager.s.allRegionPing;
+            var pings = PhotonManager.allRegionPing;
             List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
             foreach (var item in pings)
             {

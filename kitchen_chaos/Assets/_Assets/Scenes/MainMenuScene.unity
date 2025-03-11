@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44393677, g: 0.49315345, b: 0.5721989, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2262,7 +2262,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _autoConnectToPhotonTest: 0
   defaultRoomName: TestRoom2
+  isDoneInitServerList: 0
   autoConncetToMaster: 1
+  allRegionPing: []
   currentGamePlayers: []
 --- !u!114 &860623927
 MonoBehaviour:
@@ -3358,7 +3360,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 665204470}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.8951704
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

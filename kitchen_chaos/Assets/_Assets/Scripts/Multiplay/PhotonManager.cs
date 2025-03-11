@@ -6,6 +6,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using System;
 using System.Linq;
+using DG.DemiEditor;
 
 
 public class CmdOrder
@@ -22,6 +23,7 @@ public class CmdOrder
     }
 }
 
+[System.Serializable]
 public class RegionPing
 {
     public string region;
@@ -52,6 +54,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             return _autoConnectToPhotonTest;
         }
     }
+    public bool isDoneInitServerList = false;
 
     public bool autoConncetToMaster = true;
 
@@ -74,11 +77,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public bool isServerConnected => PhotonNetwork.IsConnected;
     public Photon.Realtime.Player myPlayerPhoton => PhotonNetwork.LocalPlayer;
     public Action<CmdOrder> onCallAnyCmdFunction;
-    RegionHandler prevRegion;
-    public List<RegionPing> allRegionPing = new List<RegionPing>();
+    static RegionHandler prevRegion;
+    public static List<RegionPing> allRegionPing = new List<RegionPing>();
     Action<List<RegionPing>> doneRefeshRegionPing;
     [ReadOnly]
     public List<Player> currentGamePlayers;
+    string prevPing = null;
 
     public Player GetPlayerView(int viewId)
     {
@@ -172,27 +176,37 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [Button]
     public void RefeshPing()
     {
-
-        // if (prevRegion == null)
-        // {
-        //     Debug.Log("Region not found");
-        //     return;
-        // }
-        Debug.Log("Refeshing ping");
+        if (prevRegion == null)
+        {
+            Debug.Log("Region not found");
+            return;
+        }
+        //Debug.Log("Refeshing ping");
         OnRegionListReceived(prevRegion);
 
     }
     public override void OnRegionListReceived(RegionHandler regionHandler)
     {
         //Debug.Log("Region list received");
+       
         if (regionHandler == null)
             return;
         base.OnRegionListReceived(regionHandler);
         prevRegion = regionHandler;
-        var prevPing = regionHandler.SummaryToCache;
-        //Debug.Log(regionHandler.GetResults());
+
+        
+        if(prevPing == null){
+            prevPing = regionHandler.SummaryToCache;
+        }
+        //Debug.Log("prevPing: " + prevPing);
         regionHandler.PingMinimumOfRegions((callback) =>
         {
+           
+            //Debug.Log("Ping minimum of regions");
+            if(callback.EnabledRegions.Count == 0){
+                Debug.LogError("No region found");
+                return;
+            }
 
             allRegionPing.Clear();
             foreach (var i in callback.EnabledRegions)
@@ -217,10 +231,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
                 ConnectToPhoton(UserSetting.regionSelected);
             }
 
+            isDoneInitServerList = true;
+
             //OnRegionListReceived(callback);
         }, prevPing);
         //prevRegion = regionHandler;
-        //serverDropdown.AddOptions(options);
     }
 
     void SortPing()
@@ -295,6 +310,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         try
         {
+            Debug.Log("Connect to region: " + region);
             PhotonNetwork.ConnectToRegion(region);
         }
         catch (System.Exception e)

@@ -428,7 +428,7 @@ public class LambdaAPI : MonoBehaviour
         ServerRespone response = new ServerRespone();
         try
         {
-            JToken result = await CallLambdaBaseAsync("createUser", payload);
+            JToken result = await CallLambdaBaseAsync("createUser", payload, showNoti: true);
             response.jToken = result;
         }
         catch (Exception ex)
