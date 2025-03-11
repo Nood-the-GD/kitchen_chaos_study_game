@@ -31,8 +31,9 @@ public class FriendRequestItemView : MonoBehaviour
     async void OnAddFriend(){
         var p =await LambdaAPI.AcceptFriend(userData.uid);
         if(p.IsSuccess){
-            SocialData.AddFriend(userData.uid);
             SocialData.RemoveOtherRequest(userData.uid);
+            SocialData.AddFriend(userData.uid);
+           
             FriendRequestPopup.HidePopup();
         }
         

@@ -356,9 +356,6 @@ public static class ServerConnect
                 
                 await UniTask.SwitchToMainThread();
                 SocialData.UpdateMySocial(socialData);
-                if(FriendPopup.s != null){
-                    FriendPopup.s.RefeshCountRequest();
-                }
                 OnSocialDataUpdate?.Invoke();
             }
             else if (messageTypeStr == "updateChatMessage")
@@ -408,6 +405,10 @@ public static class ServerConnect
                     if(otherUid.ToString() != UserData.mineUid){
                         otherUid = usersCopy[1];
                     }
+
+                    Debug.Log("otherUid: " + otherUid);
+                    Debug.Log("conversationIdCopy: " + conversationIdCopy);
+                    Debug.Log("messageDataCopy: " + messageDataCopy.content);
 
                     SocialData.AddChatSummary(conversationIdCopy, messageDataCopy.content, otherUid.ToString());
                     SocialData.UpdateChatSummary(conversationIdCopy, messageDataCopy.content);

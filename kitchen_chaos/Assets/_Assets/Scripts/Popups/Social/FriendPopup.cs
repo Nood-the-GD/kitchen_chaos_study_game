@@ -100,6 +100,7 @@ public class FriendPopup : BasePopup<FriendPopup>
     }
 
     public void RefeshCountRequest(){
+        Debug.Log("RefeshCountRequest: " + SocialData.mySocialData.otherRequest.Count);
         requestNuber.text = SocialData.mySocialData.otherRequest.Count.ToString();
     }
 
@@ -381,6 +382,7 @@ public class FriendPopup : BasePopup<FriendPopup>
     {
         // Refresh the friend list
         RefreshFriendList();
+        RefeshCountRequest();
     }
 
     // Method to refresh the friend list
@@ -415,6 +417,7 @@ public class FriendPopup : BasePopup<FriendPopup>
         
         // Refresh the friend list UI
         RefreshFriendList();
+
         
         // If we have an active chat, reload it to reflect any changes
         if (currentChat != null && messagePanel.gameObject.activeInHierarchy)
