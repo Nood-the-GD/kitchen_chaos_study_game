@@ -183,7 +183,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     public override void OnRegionListReceived(RegionHandler regionHandler)
     {
-        Debug.Log("Region list received");
+        //Debug.Log("Region list received");
         if (regionHandler == null)
             return;
         base.OnRegionListReceived(regionHandler);

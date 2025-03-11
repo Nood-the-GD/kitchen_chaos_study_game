@@ -356,6 +356,9 @@ public static class ServerConnect
                 
                 await UniTask.SwitchToMainThread();
                 SocialData.UpdateMySocial(socialData);
+                if(FriendPopup.s != null){
+                    FriendPopup.s.RefeshCountRequest();
+                }
                 OnSocialDataUpdate?.Invoke();
             }
             else if (messageTypeStr == "updateChatMessage")
