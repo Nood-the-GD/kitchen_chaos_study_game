@@ -35,10 +35,17 @@ public class SeverPingDisplay : MonoBehaviourPunCallbacks
 
     private void UpdatePingAndServerInfo()
     {
+        var pings = PhotonManager.allRegionPing;
+        if (pings.Count == 0)
+        {
+            statusText.text = "Connecting...";
+            return;
+        }
+
         // Get the current ping
-        int ping = PhotonNetwork.GetPing();
+        int ping = pings.Find(x => x.region == UserSetting.regionSelected).ping;
         // Get the current server name
-        string serverRegion = PhotonNetwork.CloudRegion;
+        string serverRegion = UserSetting.regionSelected;
 
         // Display the server name and ping in the UI Text
         statusText.text = "Server: " + serverRegion + " " + ping + " ms";

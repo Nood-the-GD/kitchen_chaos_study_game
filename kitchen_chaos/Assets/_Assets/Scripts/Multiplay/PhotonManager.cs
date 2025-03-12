@@ -183,7 +183,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
         //Debug.Log("Refeshing ping");
         OnRegionListReceived(prevRegion);
-
     }
     public override void OnRegionListReceived(RegionHandler regionHandler)
     {

@@ -31,6 +31,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     protected override void Start()
     {
         base.Start();
+        if (UserData.IsFirstTutorialDone == false) return;
         SpawnLoop();
         // if (PhotonNetwork.IsMasterClient)
         //     DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
@@ -52,7 +53,9 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     {
         while (true)
         {
-            if (_customerOldList.Count < MaxCustomerSpawn)
+            CustomerOld lastCustomerOld = _customerOldList.Count > 0 ? _customerOldList.Last() : null;
+            var isLastCustomerOldInSpawnPos = lastCustomerOld != null && lastCustomerOld.transform.position.z >= SpawnPos.z;
+            if (_customerOldList.Count < MaxCustomerSpawn && !isLastCustomerOldInSpawnPos)
             {
                 CmdSpawnCustomer();
             }

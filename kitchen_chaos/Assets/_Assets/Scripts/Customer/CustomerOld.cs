@@ -12,7 +12,8 @@ public class CustomerOld : MonoBehaviour
     private CustomerAnimator _customerAnimator;
     private float _speed = 3f;
     private bool _isBlocked = false;
-    private bool _forceMove = false;
+    private bool _forceMove => CustomerSpawner.s.IsTopList(this);
+    private bool _isLeaving = false;
 
     void Awake()
     {
@@ -44,7 +45,7 @@ public class CustomerOld : MonoBehaviour
         var distance = Vector3.Distance(transform.position, position);
         while (distance > 0.1f)
         {
-            if (_isBlocked && _forceMove == false)
+            if (_isBlocked && _forceMove == false && _isLeaving == false)
             {
                 await UniTask.DelayFrame(10);
                 _customerAnimator.Stop();
@@ -70,9 +71,9 @@ public class CustomerOld : MonoBehaviour
 
     private async UniTask Leave()
     {
+        _isLeaving = true;
         _customerAnimator.Walk();
         DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
-        _forceMove = true;
         await Move(this.transform.position - new Vector3(0, 0, 20f));
         CmdDestroy();
     }
