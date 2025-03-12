@@ -6,7 +6,6 @@ public class MainMenuUI : MonoBehaviour
 {
     [SerializeField] private Button playBtn;
     [SerializeField] private GameObject loadingGO;
-    [SerializeField] private PhotonManager photonManager;
     [SerializeField] private Text username;
 
     private void Awake()
@@ -25,7 +24,7 @@ public class MainMenuUI : MonoBehaviour
 
     void OnEnable()
     {
-        photonManager.onConnectToServer += PhotonManager_OnConnectToServerHandler;
+        PhotonManager.s.onConnectToServer += PhotonManager_OnConnectToServerHandler;
     }
 
     void OnUpdateUserName()
@@ -38,7 +37,7 @@ public class MainMenuUI : MonoBehaviour
         {
             UserData.currentUser.OnUpdateUserName -= OnUpdateUserName;
         }
-        photonManager.onConnectToServer -= PhotonManager_OnConnectToServerHandler;
+        PhotonManager.s.onConnectToServer -= PhotonManager_OnConnectToServerHandler;
     }
     void Start()
     {

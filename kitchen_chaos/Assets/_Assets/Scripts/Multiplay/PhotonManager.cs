@@ -187,22 +187,24 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnRegionListReceived(RegionHandler regionHandler)
     {
         //Debug.Log("Region list received");
-       
+
         if (regionHandler == null)
             return;
         base.OnRegionListReceived(regionHandler);
         prevRegion = regionHandler;
 
-        
-        if(prevPing == null){
+
+        if (prevPing == null)
+        {
             prevPing = regionHandler.SummaryToCache;
         }
         //Debug.Log("prevPing: " + prevPing);
         regionHandler.PingMinimumOfRegions((callback) =>
         {
-           
+
             //Debug.Log("Ping minimum of regions");
-            if(callback.EnabledRegions.Count == 0){
+            if (callback.EnabledRegions.Count == 0)
+            {
                 Debug.LogError("No region found");
                 return;
             }
@@ -247,7 +249,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         s = null;
         PhotonNetwork.LeaveRoom();
 
-        //Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
     #region Photon Control

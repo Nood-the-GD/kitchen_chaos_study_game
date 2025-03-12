@@ -16,8 +16,8 @@ public class DontDestroyOnLoad : MonoBehaviour
     private void Awake()
     {
 
-                // Retrieve the scene's name
-        if(UserData.currentUser == null)
+        // Retrieve the scene's name
+        if (UserData.currentUser == null && SceneManager.GetActiveScene().name != "AppConfigScene")
         {
             SceneManager.LoadScene(SceneType.AppConfigScene.ToString());
             return;
@@ -36,7 +36,8 @@ public class DontDestroyOnLoad : MonoBehaviour
         }
     }
 
-    void OnDisable(){
+    void OnDisable()
+    {
         Debug.Log("Destroy DontDestroyOnLoad");
     }
 }

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class SectionData : Singleton<SectionData>
 {
-public bool isSinglePlay = false;    
+    public bool isSinglePlay = false;
 }
