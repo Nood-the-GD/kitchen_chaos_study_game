@@ -2766,7 +2766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d11da3b96de19e4b91f77e27a59109a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxCustomerSpawn: 2
+  MaxCustomerSpawn: 3
 --- !u!114 &6128533041139150215
 MonoBehaviour:
   m_ObjectHideFlags: 0

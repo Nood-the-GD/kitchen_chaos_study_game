@@ -138,7 +138,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public void Init()
     {
         //set name to player
-        PhotonNetwork.NickName = UserData.currentUser.username;
+        if (UserData.currentUser != null)
+            PhotonNetwork.NickName = UserData.currentUser.username;
 
         //PhotonNetwork.OfflineMode = autoConnectToPhoton;
         if (autoConnectToPhotonTest)
@@ -174,14 +175,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
     }
     [Button]
-    public void RefeshPing()
+    public void RefreshPing()
     {
         if (prevRegion == null)
         {
             Debug.Log("Region not found");
             return;
         }
-        //Debug.Log("Refeshing ping");
+        //Debug.Log("Refreshing ping");
         OnRegionListReceived(prevRegion);
     }
     public override void OnRegionListReceived(RegionHandler regionHandler)
@@ -246,7 +247,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void EndSession()
     {
-        s = null;
         PhotonNetwork.LeaveRoom();
 
         // Destroy(gameObject);

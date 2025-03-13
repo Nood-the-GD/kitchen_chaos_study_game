@@ -173,16 +173,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Customer_2
       objectReference: {fileID: 0}
-    - target: {fileID: 8785286187568957838, guid: f39e031f6390dc14195ae09ff81ee7fe,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 8785286187568957838, guid: f39e031f6390dc14195ae09ff81ee7fe,
-        type: 3}
-      propertyPath: m_Center.z
-      value: -0.09
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2432407896944759257, guid: f39e031f6390dc14195ae09ff81ee7fe, type: 3}

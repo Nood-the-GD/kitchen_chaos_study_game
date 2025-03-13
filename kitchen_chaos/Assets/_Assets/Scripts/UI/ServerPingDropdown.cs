@@ -15,21 +15,24 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
         serverDropdown.onValueChanged.AddListener((int index) =>
         {
             var region = PhotonManager.allRegionPing[index].region;
-            if(UserSetting.regionSelected != region){
+            if (UserSetting.regionSelected != region)
+            {
                 PhotonManager.Disconnect();
                 //photon manager will auto reconnect to the new server 
             }
             UserSetting.regionSelected = region;
-            
+
         });
         StartCoroutine(UpdateTheList());
 
     }
 
     [Button]
-    void LogTheRegion(){
+    void LogTheRegion()
+    {
         Debug.Log("LogTheRegion");
-        foreach(var item in PhotonManager.allRegionPing){
+        foreach (var item in PhotonManager.allRegionPing)
+        {
             Debug.Log(item.region + " " + item.ping);
         }
     }
@@ -37,7 +40,10 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-
+            if (PhotonNetwork.IsConnected == false)
+            {
+                continue;
+            }
             var pings = PhotonManager.allRegionPing;
             List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
             foreach (var item in pings)
@@ -64,7 +70,7 @@ public class ServerPingDropdown : MonoBehaviourPunCallbacks
             serverDropdown.RefreshShownValue();
             yield return new WaitForSeconds(2);
 
-            PhotonManager.s.RefeshPing();
+            PhotonManager.s.RefreshPing();
         }
     }
 

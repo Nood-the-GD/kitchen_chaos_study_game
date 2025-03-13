@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class CustomerOld : MonoBehaviour
 {
+    public PhotonView PhotonView => _photonView;
     private PhotonView _photonView;
     private CustomerAnimator _customerAnimator;
     private float _speed = 3f;

@@ -32,9 +32,12 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     {
         base.Start();
         if (UserData.IsFirstTutorialDone == false) return;
-        SpawnLoop();
-        // if (PhotonNetwork.IsMasterClient)
-        //     DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnLoop();
+            // if (PhotonNetwork.IsMasterClient)
+            //     DeliveryManager.Instance.OnRecipeAdded += SpawnCustomer;
+        }
     }
     void OnDisable()
     {
@@ -54,7 +57,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         while (true)
         {
             CustomerOld lastCustomerOld = _customerOldList.Count > 0 ? _customerOldList.Last() : null;
-            var isLastCustomerOldInSpawnPos = lastCustomerOld != null && lastCustomerOld.transform.position.z >= SpawnPos.z;
+            var isLastCustomerOldInSpawnPos = lastCustomerOld != null && lastCustomerOld.transform.position.z >= SpawnPos.z - 3;
             if (_customerOldList.Count < MaxCustomerSpawn && !isLastCustomerOldInSpawnPos)
             {
                 CmdSpawnCustomer();
@@ -82,8 +85,9 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private void CmdSpawnCustomer()
     {
         int index = UnityEngine.Random.Range(0, _customerPrefabList.Count - 1);
+        var viewId = PhotonNetwork.AllocateViewID(false);
         // _photonView.RPC(nameof(RpcSpawnCustomerGroup), RpcTarget.All, new object[] { index, 1 });
-        _photonView.RPC(nameof(RpcSpawnCustomerOld), RpcTarget.All, index);
+        _photonView.RPC(nameof(RpcSpawnCustomerOld), RpcTarget.All, index, viewId);
     }
     [PunRPC]
     private void RpcSpawnCustomerGroup(int id, int numberOfPeople)
@@ -101,11 +105,12 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         WaitingLine.s.AddCustomerGroup(customerGroup);
     }
     [PunRPC]
-    private void RpcSpawnCustomerOld(int id)
+    private void RpcSpawnCustomerOld(int id, int viewId)
     {
         GameObject customerOld = Instantiate(GameData.s.GetCustomer(id).gameObject, SpawnPos, this.transform.rotation);
         CustomerOld customerOldComponent = customerOld.GetComponent<CustomerOld>();
         customerOldComponent.Move(this.transform.position);
+        customerOldComponent.PhotonView.ViewID = viewId;
         _customerOldList.Add(customerOldComponent);
     }
     #endregion

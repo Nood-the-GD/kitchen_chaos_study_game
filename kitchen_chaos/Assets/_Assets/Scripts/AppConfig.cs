@@ -38,6 +38,7 @@ public class AppConfig : MonoBehaviour
     public Image progressBar;     // An Image that acts as a slider (set its Image Type to Filled)
     public Text progressText;     // Displays percentage of tasks completed
     public Text currentTaskText;  // Displays the name of the current task
+    public GameObject initObject;
 
     void Start()
     {
@@ -244,8 +245,16 @@ public class AppConfig : MonoBehaviour
         // Option 1: Load a different scene (recommended)
         // Replace "MainMenuScene" with the name of your target scene.
         Debug.Log("Going to MainMenuScene...");
+        initObject.SetActive(true);
         SceneManager.LoadScene(SceneType.MainMenuScene.ToString());
+        // AfterInitApp();
         // Option 2: If you intend to stay in the same scene, disable this script to avoid re-running.
         // this.enabled = false;
+    }
+
+    async void AfterInitApp()
+    {
+        await UniTask.WaitUntil(() => SceneManager.GetActiveScene().name == SceneType.MainMenuScene.ToString());
+        initObject.SetActive(true);
     }
 }

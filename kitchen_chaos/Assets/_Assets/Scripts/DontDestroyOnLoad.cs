@@ -17,11 +17,11 @@ public class DontDestroyOnLoad : MonoBehaviour
     {
 
         // Retrieve the scene's name
-        if (UserData.currentUser == null && SceneManager.GetActiveScene().name != "AppConfigScene")
-        {
-            SceneManager.LoadScene(SceneType.AppConfigScene.ToString());
-            return;
-        }
+        // if (UserData.currentUser == null && SceneManager.GetActiveScene().name != "AppConfigScene")
+        // {
+        //     SceneManager.LoadScene(SceneType.AppConfigScene.ToString());
+        //     return;
+        // }
         // Check if an instance already exists
         if (instance == null)
         {

@@ -547,6 +547,7 @@ MonoBehaviour:
   progressBar: {fileID: 581374567}
   progressText: {fileID: 687382811}
   currentTaskText: {fileID: 1991737181}
+  initObject: {fileID: 1417087650}
 --- !u!114 &353755669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1113,7 +1114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1417087652
 MonoBehaviour:
   m_ObjectHideFlags: 0
