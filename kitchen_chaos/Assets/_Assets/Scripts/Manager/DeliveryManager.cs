@@ -188,8 +188,7 @@ public class DeliveryManager : MonoBehaviour
             {
                 // Remove the recipe from the waiting list
                 RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
-                // Invoke the OnRecipeSuccess event
-                OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+                CmdOnDeliverySuccess();
                 // Add the point of the recipe to the delivered point
                 recipeDeliveredPoint += recipe.point;
                 // Update the UI
@@ -203,6 +202,15 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         // Return false
         return false;
+    }
+    public void CmdOnDeliverySuccess()
+    {
+        photonView.RPC(nameof(RpcOnDeliverySuccess), RpcTarget.All);
+    }
+    [PunRPC]
+    public void RpcOnDeliverySuccess()
+    {
+        OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
     }
     #endregion
 
