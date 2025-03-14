@@ -31,16 +31,6 @@ public class CustomerOld : MonoBehaviour
         _isBlocked = false;
     }
 
-    private async void OnRecipeSuccess(object sender, EventArgs e)
-    {
-        if (CustomerSpawner.s.IsTopList(this))
-        {
-            CustomerSpawner.s.RemoveCustomerOld(this);
-            await Eat();
-            Leave();
-        }
-    }
-
     public async UniTask Move(Vector3 position)
     {
         var distance = Vector3.Distance(transform.position, position);
@@ -60,8 +50,39 @@ public class CustomerOld : MonoBehaviour
             await UniTask.DelayFrame(1);
         }
         if (PhotonNetwork.IsMasterClient)
+        {
             DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
+        }
         _customerAnimator.Stop();
+    }
+
+    private async void OnRecipeSuccess(object sender, EventArgs e)
+    {
+        if (CustomerSpawner.s.IsTopList(this))
+        {
+            CustomerSpawner.s.RemoveCustomerOld(this);
+            
+            _photonView.RPC(nameof(RpcEatAndLeave), RpcTarget.All);
+            
+            if (PhotonNetwork.IsMasterClient)
+            {
+                DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
+            }
+        }
+    }
+
+    [PunRPC]
+    private async void RpcEatAndLeave()
+    {
+        await Eat();
+        _isLeaving = true;
+        _customerAnimator.Walk();
+        await Move(this.transform.position - new Vector3(0, 0, 20f));
+        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CmdDestroy();
+        }
     }
 
     public async UniTask Eat()
@@ -70,13 +91,20 @@ public class CustomerOld : MonoBehaviour
         await UniTask.WaitForSeconds(_customerAnimator.Animator.GetAnimationLength("Roll"));
     }
 
+    // This method is now only used internally by the master client if needed
     private async UniTask Leave()
     {
         _isLeaving = true;
         _customerAnimator.Walk();
-        DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
+        }
         await Move(this.transform.position - new Vector3(0, 0, 20f));
-        CmdDestroy();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CmdDestroy();
+        }
     }
 
     private void CmdDestroy()
