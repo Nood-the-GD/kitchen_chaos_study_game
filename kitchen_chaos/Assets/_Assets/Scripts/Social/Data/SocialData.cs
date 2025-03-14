@@ -495,6 +495,12 @@ public class ConversationData
         this.messages = messages;
     }
 
+    public void UpdateTimeConverstaiton(){
+        foreach(var message in messages){
+            message.Value.timestamp = long.Parse(message.Key);
+        }
+    }
+
 
 
     /// <summary>
@@ -539,6 +545,7 @@ public class ConversationData
 
         if (conversationDatas == null)
             conversationDatas = new List<ConversationData>();
+
         conversationDatas.Add(convo);
         return convo;
     }

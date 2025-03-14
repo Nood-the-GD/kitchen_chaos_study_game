@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Linq;
 
 public class FriendPopup : BasePopup<FriendPopup>
 {
@@ -154,8 +155,12 @@ public class FriendPopup : BasePopup<FriendPopup>
             Debug.LogError("Conversation not found");
             return;
         }
+        convo.UpdateTimeConverstaiton();
 
-        foreach(var i in convo.messages){
+        //sort the time
+        var sortedMessages = convo.messages.OrderBy(x => x.Value.timestamp).ToList();
+
+        foreach(var i in sortedMessages){
             Debug.Log("Message: " + i.Value.content.ToString());
             AddMessage(i.Value, false); // Don't scroll for each message during initialization
         }
