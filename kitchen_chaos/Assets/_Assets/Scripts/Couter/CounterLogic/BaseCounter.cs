@@ -84,6 +84,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
                     var recipe = combineResult.recipe;
                     var isHavingPlate = (kitchenObject != null && kitchenObject.IsHavingPlate) || (otherKO != null && otherKO.IsHavingPlate);
+                    Debug.Log("is having plate: " + isHavingPlate);
                     if (kitchenObject.GetKitchenObjectSO() != recipe.output)
                     {
                         ClearKitchenObject();
@@ -102,13 +103,13 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
 
                             Debug.Log("Ingredient: " + ingredient);
                         }
+                        
                         KitchenObject.SpawnKitchenObject(recipe.output, this, combineResult.GetListOfIngredientsIndex(), isHavingPlate);
                     }
                     else
                     {
                         kitchenObject.AddIngredient(otherKO.GetKitchenObjectSO(), isHavingPlate);
-                        // Don't clear the kitchen object, as it would destroy the object we just modified
-                        // ClearKitchenObject();
+                        ClearKitchenObject();
                     }
 
                 }
