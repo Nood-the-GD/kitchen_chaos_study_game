@@ -107,7 +107,8 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                     else
                     {
                         kitchenObject.AddIngredient(otherKO.GetKitchenObjectSO(), isHavingPlate);
-                        ClearKitchenObject();
+                        // Don't clear the kitchen object, as it would destroy the object we just modified
+                        // ClearKitchenObject();
                     }
 
                 }
