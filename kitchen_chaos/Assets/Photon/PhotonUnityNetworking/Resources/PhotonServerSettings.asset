@@ -63,6 +63,8 @@ MonoBehaviour:
   - RpcTryAddPlate
   - RpcUpdateUI
   - RpcSpawnCustomerOld
+  - RpcOnDeliveryFailed
+  - RpcOnDeliverySuccess
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

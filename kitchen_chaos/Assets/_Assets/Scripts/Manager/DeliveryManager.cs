@@ -199,7 +199,7 @@ public class DeliveryManager : MonoBehaviour
         }
         Debug.Log("Failed: " + kitchenObject.GetKitchenObjectSO().name);
         // None of the recipe match
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+        CmdOnDeliveryFailed();
         // Return false
         return false;
     }
@@ -211,6 +211,15 @@ public class DeliveryManager : MonoBehaviour
     public void RpcOnDeliverySuccess()
     {
         OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+    }
+    public void CmdOnDeliveryFailed()
+    {
+        photonView.RPC(nameof(RpcOnDeliveryFailed), RpcTarget.All);
+    }
+    [PunRPC]
+    public void RpcOnDeliveryFailed()
+    {
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
     #endregion
 
