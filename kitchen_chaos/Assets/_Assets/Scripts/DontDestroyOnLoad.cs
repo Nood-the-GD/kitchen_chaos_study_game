@@ -15,13 +15,6 @@ public class DontDestroyOnLoad : MonoBehaviour
     // Awake is called when the script instance is being loaded
     private void Awake()
     {
-
-        // Retrieve the scene's name
-        // if (UserData.currentUser == null && SceneManager.GetActiveScene().name != "AppConfigScene")
-        // {
-        //     SceneManager.LoadScene(SceneType.AppConfigScene.ToString());
-        //     return;
-        // }
         // Check if an instance already exists
         if (instance == null)
         {

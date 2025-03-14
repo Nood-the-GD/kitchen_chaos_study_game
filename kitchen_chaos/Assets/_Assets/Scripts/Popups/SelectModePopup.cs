@@ -28,11 +28,13 @@ public class SelectModePopup : BasePopup<SelectModePopup>
     public void RandomMatch()
     {
 
+        SectionData.s.isSinglePlay = false;
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void FindRoom()
     {
+        SectionData.s.isSinglePlay = false;
         FindRoomPopup.ShowPopup();
     }
 
@@ -57,10 +59,8 @@ public class SelectModePopup : BasePopup<SelectModePopup>
 
     public void CreateRoom()
     {
-
+        SectionData.s.isSinglePlay = false;
         PhotonNetwork.CreateRoom(RandomStringGenerator.GenerateRandomString(7));
-
-
     }
 
 
