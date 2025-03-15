@@ -47,9 +47,16 @@ public class CustomerOld : MonoBehaviour
             transform.position += dir * Time.deltaTime * _speed;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * _speed);
             distance = Vector3.Distance(transform.position, position);
-            await UniTask.DelayFrame(1);
+            try
+            {
+                await UniTask.DelayFrame(1, cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
         }
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && _isLeaving == false)
         {
             DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
         }
@@ -61,9 +68,9 @@ public class CustomerOld : MonoBehaviour
         if (CustomerSpawner.s.IsTopList(this))
         {
             CustomerSpawner.s.RemoveCustomerOld(this);
-            
+
             _photonView.RPC(nameof(RpcEatAndLeave), RpcTarget.All);
-            
+
             if (PhotonNetwork.IsMasterClient)
             {
                 DeliveryManager.Instance.OnRecipeSuccess -= OnRecipeSuccess;
@@ -78,7 +85,7 @@ public class CustomerOld : MonoBehaviour
         _isLeaving = true;
         _customerAnimator.Walk();
         await Move(this.transform.position - new Vector3(0, 0, 20f));
-        
+
         if (PhotonNetwork.IsMasterClient)
         {
             CmdDestroy();

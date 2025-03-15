@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using MoreMountains.Feedbacks;
 using Photon.Pun;
 using UnityEngine;
@@ -38,13 +39,24 @@ public class DeliveryCounter : BaseCounter
                 {
                     message = "Need plate";
                 }
-                deliveryCounterVisual.ShowMessage(message);
+                CmdShowMessage(message);
             }
         }
         else
         {
             Debug.Log("Player is not carrying anything");
         }
+    }
+
+    private void CmdShowMessage(string message)
+    {
+        photonView.RPC(nameof(RpcShowMessage), RpcTarget.All, message);
+    }
+
+    [PunRPC]
+    private void RpcShowMessage(string message)
+    {
+        deliveryCounterVisual.ShowMessage(message);
     }
 
     private void CmdFeedback()
