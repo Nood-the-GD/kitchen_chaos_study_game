@@ -11,14 +11,11 @@ public class FirstTutorialController : MonoBehaviour
     private int _currentDestinationIndex = 0;
 
     #region Unity Functions
-    void Awake()
-    {
-        _tutorialDialogue.OnDialogDone += OnDialogDone;
-        BaseCounter.OnInteract += OnInteract;
-        DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
-    }
     void Start()
     {
+        BaseCounter.OnInteract += OnInteract;
+        DeliveryManager.Instance.OnRecipeSuccess += OnRecipeSuccess;
+        _tutorialDialogue.OnDialogDone += OnDialogDone;
         _tutorialDialogue.StartDialogue();
     }
     void OnDestroy()

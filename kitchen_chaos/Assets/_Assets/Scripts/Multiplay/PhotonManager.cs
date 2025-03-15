@@ -6,7 +6,6 @@ using Photon.Realtime;
 using Photon.Pun;
 using System;
 using System.Linq;
-using DG.DemiEditor;
 
 
 public class CmdOrder
@@ -455,7 +454,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ko.kitchenObjectSO = CookingBookSO.s.kitchenObjectSOs[kitchenObjectSOId];
         ko.CmdSetContainerParent(kitchenObjectParent);
         ko.AddIngredientIndexes(ingredient);
-        if(isHavingPlate){
+        if (isHavingPlate)
+        {
             ko.TryAddPlate();
         }
     }
