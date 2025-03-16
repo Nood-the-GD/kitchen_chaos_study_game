@@ -88,6 +88,8 @@ public class Player : MonoBehaviour, IPlayer
     {
         if (SectionData.s.isSinglePlay)
             SinglePlayManager.s.OnPlayerChange -= OnPlayerChangeHandler;
+
+        PhotonManager.s.currentGamePlayers.Remove(this);
     }
     #endregion
 
