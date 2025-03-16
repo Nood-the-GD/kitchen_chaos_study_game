@@ -8,6 +8,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3552089969250203106, guid: f39e031f6390dc14195ae09ff81ee7fe,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4218189089368124725, guid: f39e031f6390dc14195ae09ff81ee7fe,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4314107988302875508, guid: f39e031f6390dc14195ae09ff81ee7fe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -58,10 +68,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5352282660045775590, guid: f39e031f6390dc14195ae09ff81ee7fe,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5753404467430329379, guid: f39e031f6390dc14195ae09ff81ee7fe,
         type: 3}
       propertyPath: m_Name
-      value: Customer
+      value: Customer_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6185498136140152129, guid: f39e031f6390dc14195ae09ff81ee7fe,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
