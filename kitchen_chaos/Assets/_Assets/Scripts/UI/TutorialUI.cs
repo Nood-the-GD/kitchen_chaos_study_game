@@ -29,7 +29,7 @@ public class TutorialUI : MonoBehaviour
         _confirmBtn.onClick.AddListener(() =>
         {
             _confirmBtn.gameObject.SetActive(false);
-            CmdConfirm();
+            Confirm();
         });
         _tutorialSprites = GameData.s.GetTutorialImages(GameManager.levelId);
         _tutorialIndex = 0;
@@ -68,12 +68,6 @@ public class TutorialUI : MonoBehaviour
         {
             NextTutorial();
         }
-    }
-
-    void CmdConfirm()
-    {
-        var order = new CmdOrder(nameof(TutorialUI), nameof(Confirm));
-        PhotonManager.s.CmdCallFunction(order);
     }
     #endregion
 
