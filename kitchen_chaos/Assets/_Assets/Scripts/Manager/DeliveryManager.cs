@@ -188,11 +188,7 @@ public class DeliveryManager : MonoBehaviour
             {
                 // Remove the recipe from the waiting list
                 RemoveOrder(waitingRecipeSOList.IndexOf(recipe));
-                CmdOnDeliverySuccess();
-                // Add the point of the recipe to the delivered point
-                recipeDeliveredPoint += recipe.point;
-                // Update the UI
-                PointUI.Instance.UpdateUI();
+                CmdOnDeliverySuccess(recipe.point);
                 // Return true
                 return true;
             }
@@ -203,13 +199,17 @@ public class DeliveryManager : MonoBehaviour
         // Return false
         return false;
     }
-    public void CmdOnDeliverySuccess()
+    public void CmdOnDeliverySuccess(int point)
     {
-        photonView.RPC(nameof(RpcOnDeliverySuccess), RpcTarget.All);
+        photonView.RPC(nameof(RpcOnDeliverySuccess), RpcTarget.All, point);
     }
     [PunRPC]
-    public void RpcOnDeliverySuccess()
+    public void RpcOnDeliverySuccess(int point)
     {
+        // Add the point of the recipe to the delivered point
+        recipeDeliveredPoint += point;
+        // Update the UI
+        PointUI.Instance.UpdateUI();
         OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
     }
     public void CmdOnDeliveryFailed()
