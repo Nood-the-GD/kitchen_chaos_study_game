@@ -170,9 +170,14 @@ public class KitchenObject : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RpcSetParentWithPhotonId(int photonId, long timestamp = 0)
     {
+
+        if(timestamp < interactionTimestamp){
+            return;
+        }
+
         // Update interaction timestamp if provided
         if (timestamp > 0)
-        {
+        {    
             interactionTimestamp = timestamp;
         }
 
