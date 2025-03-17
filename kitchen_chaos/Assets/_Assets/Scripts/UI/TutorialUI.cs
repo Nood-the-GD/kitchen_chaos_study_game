@@ -25,6 +25,9 @@ public class TutorialUI : MonoBehaviour
     #region Unity functions
     private void Start()
     {
+        // Subscribe to the event fired when confirmation is complete.
+        TutorialData.OnTutorialSyncConfirmed += HandleTutorialSyncConfirmed;
+
         _checkImage.gameObject.SetActive(false);
         _confirmBtn.onClick.AddListener(() =>
         {
@@ -37,41 +40,52 @@ public class TutorialUI : MonoBehaviour
         {
             _tutorialImage.gameObject.SetActive(false);
             _confirmBtn.gameObject.SetActive(false);
-            StartCoroutine(DelayEvent()); // Make sure all script has subscribe to event
+            StartCoroutine(DelayEvent()); // in case other scripts are subscribed to the complete event
         }
         else
         {
             _tutorialImage.sprite = _tutorialSprites[_tutorialIndex];
         }
     }
-    void OnDestroy()
+
+    private void OnDestroy()
     {
+        TutorialData.OnTutorialSyncConfirmed -= HandleTutorialSyncConfirmed;
         if (PhotonManager.s == null) return;
     }
+
     IEnumerator DelayEvent()
     {
         yield return new WaitForSeconds(0.5f);
         OnTutorialComplete?.Invoke();
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     #endregion
 
     #region Multiplayer functions
     private void Confirm()
     {
+        // The UI only sends the confirm command.
         TutorialData.Instance.CmdConfirmTutorial();
+
+        // Also, update the local UI (e.g. show a check image) immediately.
         Image checkImage = Instantiate(_checkImage, _checkImageHolder);
         checkImage.gameObject.SetActive(true);
         _checkImageList.Add(checkImage);
-
-        if (TutorialData.Instance.GetConfirmTutorialNumber() >= 2)
-        {
-            NextTutorial();
-        }
     }
     #endregion
 
     #region Private functions
+    private void HandleTutorialSyncConfirmed()
+    {
+        // When the data layer (TutorialData) has reached the required amount of confirms,
+        // all clients receive this event and proceed to the next step.
+        if (gameObject.activeSelf)
+        {
+            NextTutorial();
+        }
+    }
+
     private void NextTutorial()
     {
         _tutorialIndex++;

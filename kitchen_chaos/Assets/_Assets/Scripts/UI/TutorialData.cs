@@ -12,6 +12,9 @@ public class TutorialData : MonoBehaviour
     private int confirmTutorialNumber = 0;
     public static TutorialData Instance;
 
+    // This event is raised when the tutorial confirmation count has reached the threshold.
+    public static event Action OnTutorialSyncConfirmed;
+
     void Start()
     {
         skipTutorialNumber = 0;
@@ -96,12 +99,23 @@ public class TutorialData : MonoBehaviour
         }
         if (skipTutorialNumber < 0) skipTutorialNumber = 0;
     }
+    
     public void ConfirmTutorial()
     {
         confirmTutorialNumber++;
+
+        // In singleplay mode we count using double increment so that it immediately
+        // triggers the confirmation threshold.
         if (SectionData.s.isSinglePlay)
         {
             confirmTutorialNumber++;
+        }
+
+        if (confirmTutorialNumber >= 2)
+        {
+            // When the required number of confirmations is reached,
+            // the data layer tells everyone to proceed.
+            OnTutorialSyncConfirmed?.Invoke();
         }
     }
 
@@ -114,6 +128,7 @@ public class TutorialData : MonoBehaviour
     {
         return skipTutorialNumber;
     }
+
     public int GetConfirmTutorialNumber()
     {
         return confirmTutorialNumber;
