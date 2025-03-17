@@ -32,7 +32,6 @@ public class TutorialUI : MonoBehaviour
             CmdConfirm();
         });
         _tutorialSprites = GameData.s.GetTutorialImages(GameManager.levelId);
-        PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
         _tutorialIndex = 0;
         if (_tutorialSprites.Count == 0 || TutorialData.Instance.GetSkipTutorialNumber() == 2)
         {
@@ -48,7 +47,6 @@ public class TutorialUI : MonoBehaviour
     void OnDestroy()
     {
         if (PhotonManager.s == null) return;
-        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
     }
     IEnumerator DelayEvent()
     {
@@ -59,18 +57,9 @@ public class TutorialUI : MonoBehaviour
     #endregion
 
     #region Multiplayer functions
-    void OnCallAnyCmdFunction(CmdOrder order)
-    {
-        if (order.receiver != nameof(TutorialUI)) return;
-
-        if (order.functionName == nameof(Confirm))
-        {
-            Confirm();
-        }
-    }
     private void Confirm()
     {
-        TutorialData.Instance.ConfirmTutorial();
+        TutorialData.Instance.CmdConfirmTutorial();
         Image checkImage = Instantiate(_checkImage, _checkImageHolder);
         checkImage.gameObject.SetActive(true);
         _checkImageList.Add(checkImage);

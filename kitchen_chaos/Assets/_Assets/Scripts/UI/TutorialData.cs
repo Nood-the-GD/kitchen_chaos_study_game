@@ -21,8 +21,14 @@ public class TutorialData : MonoBehaviour
             Debug.LogError("PhotonManager is null");
             return;
         }
+        PhotonManager.s.onCallAnyCmdFunction += OnCallAnyCmdFunction;
         PhotonManager.s.onJoinRoom += OnJoinRoom;
         PhotonManager.s.onConnectToServer += OnConnectToServer;
+    }
+
+    void OnDestroy()
+    {
+        PhotonManager.s.onCallAnyCmdFunction -= OnCallAnyCmdFunction;
     }
 
     private void OnConnectToServer()
@@ -31,9 +37,25 @@ public class TutorialData : MonoBehaviour
         {
             SectionData.s.isSinglePlay = true;
             PhotonManager.s.onCreatedRoom += OnCreatedRoom;
-            PhotonNetwork.CreateRoom("tutorial: "+ UserData.currentUser.uid);
+            PhotonNetwork.CreateRoom("tutorial: " + UserData.currentUser.uid);
         }
         PhotonManager.s.onConnectToServer -= OnConnectToServer;
+    }
+
+    public void CmdConfirmTutorial()
+    {
+        var order = new CmdOrder(nameof(TutorialData), nameof(ConfirmTutorial));
+        PhotonManager.s.CmdCallFunction(order);
+    }
+
+    private void OnCallAnyCmdFunction(CmdOrder order)
+    {
+        if (order.receiver != nameof(TutorialData)) return;
+
+        if (order.functionName == nameof(ConfirmTutorial))
+        {
+            ConfirmTutorial();
+        }
     }
 
     private void OnCreatedRoom()
@@ -56,8 +78,6 @@ public class TutorialData : MonoBehaviour
         GameManager.levelId = 0;
         PhotonNetwork.LoadLevel("Level_tutorial");
     }
-
-    
 
     private void OnJoinRoom()
     {
