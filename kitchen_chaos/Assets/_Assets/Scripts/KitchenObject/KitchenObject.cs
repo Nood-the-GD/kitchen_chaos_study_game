@@ -5,6 +5,7 @@ using Photon.Pun;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 
 public class KitchenObject : MonoBehaviourPunCallbacks
 {
@@ -22,7 +23,7 @@ public class KitchenObject : MonoBehaviourPunCallbacks
     private int lastSyncedParentId = -1;
 
     // Timestamp for tracking interaction order
-    [HideInInspector] public long interactionTimestamp;
+    [HideInInspector] public long interactionTimestamp =-1;
 
     public bool IsHavingPlate => platePoint != null;
     public bool IsPlate => kitchenObjectSO.name == "Plate";
@@ -167,20 +168,24 @@ public class KitchenObject : MonoBehaviourPunCallbacks
     // Removed the OnSync coroutine
     // Instead, rely on immediate RPC calls when a change happens
 
+    // async func reset interaction timestamp after 50ms using thread delay
+    public async void ResetInteractionTimestamp()
+    {
+        await UniTask.Delay(50);
+        interactionTimestamp = -1;
+    }
+
     [PunRPC]
     public void RpcSetParentWithPhotonId(int photonId, long timestamp = 0)
     {
 
-        if(timestamp < interactionTimestamp){
+        if(timestamp < interactionTimestamp && interactionTimestamp != -1){
+            ResetInteractionTimestamp();
             return;
         }
 
-        // Update interaction timestamp if provided
-        if (timestamp > 0)
-        {    
-            interactionTimestamp = timestamp;
-        }
-
+        interactionTimestamp = timestamp;
+ 
         PhotonView parentPhotonView = PhotonNetwork.GetPhotonView(photonId);
         if (parentPhotonView == null)
         {
