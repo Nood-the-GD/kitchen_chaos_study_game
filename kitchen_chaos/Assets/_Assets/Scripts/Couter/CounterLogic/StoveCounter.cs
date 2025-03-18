@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using UnityEngine;
 
@@ -35,7 +37,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     {
         _currentState = State.Idle;
     }
-    private void Update()
+    private async void Update()
     {
         switch (_currentState)
         {
@@ -59,7 +61,8 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     {
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(_curRecipe.output, this);
-                        CheckCanFried();
+                        await UniTask.DelayFrame(2);
+                        CmdCheckFried();
                     }
                 }
                 break;
@@ -77,17 +80,17 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     public override void Interact(IKitchenContainable player)
     {
         base.Interact(player);
-        CmdAfterInteract();
+        CmdCheckFried();
     }
     #endregion
 
-    private void CmdAfterInteract()
+    private void CmdCheckFried()
     {
-        photonView.RPC(nameof(RPCAfterInteract), RpcTarget.All);
+        photonView.RPC(nameof(RpcCheckFried), RpcTarget.All);
     }
 
     [PunRPC]
-    private void RPCAfterInteract()
+    private void RpcCheckFried()
     {
         if (HasKitchenObject())
         {
