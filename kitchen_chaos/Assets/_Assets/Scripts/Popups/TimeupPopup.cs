@@ -17,7 +17,7 @@ public class TimeupPopup : BasePopup<TimeupPopup>
                 tempStar = i + 1;
             }
         }
-
+        data.star = tempStar;
         starController.ShowStar(tempStar);
         starController.ShowPoint(data.pointTarget);
         if(score > data.score)

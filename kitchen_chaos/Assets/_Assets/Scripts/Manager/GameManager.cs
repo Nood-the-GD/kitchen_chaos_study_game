@@ -101,7 +101,7 @@ public class GameManager : Singleton<GameManager>
                 {
                     isGameOver = true;
                     ChangeState(State.GameOver);
-                    PhotonManager.s.RPCEndGame();
+                    TimeupPopup.ShowPopup().SetData(getStageData, DeliveryManager.recipeDeliveredPoint);
                 }
                 break;
             case State.GameOver:

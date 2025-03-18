@@ -175,9 +175,6 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>
         for (int i = 0; i < stages.Count; i++)
         {
             var stageData = stages[i];
-            // Make sure we have the latest score and star data from PlayerPrefs
-            int savedStar = PlayerPrefs.GetInt("level." + stageData.levelId, 0);
-            stageData.star = savedStar; // Update the star value
             Debug.Log("Setup stage " + stageData.levelId + " with star: " + stageData.star);
             stageUIs[i].SetData(stageData, OnSwitchStage);
         }
