@@ -26,10 +26,16 @@ public class TimeupPopup : BasePopup<TimeupPopup>
 
     protected override void OnDisable() {
         base.OnDisable();
-        // Error when return to main screen
-        //PhotonNetwork.JoinLobby();
+        
+        // Apply player data changes to persistence
+        if (GameManager.getStageData != null)
+        {
+            // Save player preferences to ensure data persistence
+            PlayerPrefs.Save();
+        }
+        
+        // End the photon session and return to main menu
         PhotonManager.s.EndSession();
         SceneManager.LoadScene("MainMenuScene");        
-
     }
 }

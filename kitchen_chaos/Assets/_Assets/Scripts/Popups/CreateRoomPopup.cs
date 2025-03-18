@@ -171,23 +171,29 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>
             }
         }
 
+        // Force reload stage data from PlayerPrefs
         for (int i = 0; i < stages.Count; i++)
         {
             var stageData = stages[i];
-            Debug.Log("Setup stage " + stageData.levelId);
+            // Make sure we have the latest score and star data from PlayerPrefs
+            int savedStar = PlayerPrefs.GetInt("level." + stageData.levelId, 0);
+            stageData.star = savedStar; // Update the star value
+            Debug.Log("Setup stage " + stageData.levelId + " with star: " + stageData.star);
             stageUIs[i].SetData(stageData, OnSwitchStage);
         }
 
         foreach (var i in stageUIs)
         {
-
             i.gameObject.SetActive(true);
             i.transform.DOScale(Vector3.zero, 0.25f).From().SetEase(Ease.OutBack);
             await Task.Delay(100);
-
         }
 
-        CmdSwitchStage(stages[0].levelId, stages[0].star);
+        // Start with the first stage
+        if (stages.Count > 0)
+        {
+            CmdSwitchStage(stages[0].levelId, stages[0].star);
+        }
     }
 
     void OnSwitchStage(StageData stageData)
@@ -207,6 +213,13 @@ public class CreateRoomPopup : BasePopup<CreateRoomPopup>
         Debug.Log("RpcSwitchStage " + id);
         currentSceneId = id;
         var stageData = GameData.s.GetStage(id);
+        
+        // Make sure we have the latest score from PlayerPrefs
+        int savedStar = PlayerPrefs.GetInt("level." + id, 0);
+        if (savedStar > star) {
+            star = savedStar; // Use the higher value
+        }
+        
         foreach (var stage in stageUIs)
         {
             if (stage.stageData.levelId == stageData.levelId)
