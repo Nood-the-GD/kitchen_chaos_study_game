@@ -27,17 +27,12 @@ public class DeliveryCounter : BaseCounter
             else
             {
                 string message = "";
-                if (KOParent.GetKitchenObject().IsHaveEnoughIngredient() == false)
-                {
-                    message = "Not enough ingredient";
-                }
-                else if (DeliveryManager.Instance.OrderList.Contains(KOParent.GetKitchenObject().GetKitchenObjectSO()) == false)
-                {
-                    message = "Not in the order list";
-                }
-                else if (KOParent.GetKitchenObject().IsHavingPlate == false)
+                if (KOParent.GetKitchenObject().IsHavingPlate == false)
                 {
                     message = "Need plate";
+                }
+                else{
+                    message = "Not in the order list";
                 }
                 CmdShowMessage(message);
             }
