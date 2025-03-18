@@ -77,6 +77,18 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     public override void Interact(IKitchenContainable player)
     {
         base.Interact(player);
+        CmdAfterInteract();
+    }
+    #endregion
+
+    private void CmdAfterInteract()
+    {
+        photonView.RPC(nameof(RPCAfterInteract), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void RPCAfterInteract()
+    {
         if (HasKitchenObject())
         {
             CheckCanFried();
@@ -90,9 +102,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
             _fryingTimer = 0;
             ChangeState(State.Idle);
         }
-
     }
-    #endregion
 
     private void CheckCanFried()
     {
