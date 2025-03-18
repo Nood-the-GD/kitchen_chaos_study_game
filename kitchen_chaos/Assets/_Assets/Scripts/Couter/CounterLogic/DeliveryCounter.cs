@@ -31,7 +31,8 @@ public class DeliveryCounter : BaseCounter
                 {
                     message = "Need plate";
                 }
-                else{
+                else
+                {
                     message = "Not in the order list";
                 }
                 CmdShowMessage(message);
