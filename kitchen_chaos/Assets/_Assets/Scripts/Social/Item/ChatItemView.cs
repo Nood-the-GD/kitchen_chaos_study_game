@@ -24,9 +24,8 @@ public class ChatItemView : MonoBehaviour
         // Convert the Unix timestamp (in milliseconds) to a DateTime in local time
         DateTime localDateTime = DateTimeOffset.FromUnixTimeSeconds(data.timestamp).LocalDateTime;
         
-        // Format the DateTime as "hh:mm" (12-hour format) or "HH:mm" for 24-hour format.
-        // Here we'll use "hh:mm" as requested.
-        this.time.text = localDateTime.ToString("hh:mm");
+        // Format the DateTime as "hh:mm tt" (12-hour format with AM/PM)
+        this.time.text = localDateTime.ToString("hh:mm tt");
         var p = await UserManager.GetUser(data.userId);
         this.userName.text = p.username;
 
