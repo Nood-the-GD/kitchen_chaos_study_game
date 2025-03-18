@@ -87,7 +87,7 @@ public class Player : MonoBehaviour, IPlayer
     void OnDestroy()
     {
         PhotonManager.s.currentGamePlayers.Remove(this);
-        if (SectionData.s.isSinglePlay && SinglePlayManager.s != null)
+        if (SinglePlayManager.s != null && SectionData.s.isSinglePlay)
             SinglePlayManager.s.OnPlayerChange -= OnPlayerChangeHandler;
     }
     #endregion

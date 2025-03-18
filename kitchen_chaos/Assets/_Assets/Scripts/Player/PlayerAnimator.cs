@@ -29,7 +29,7 @@ public class PlayerAnimator : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (SectionData.s.isSinglePlay && SinglePlayManager.s != null)
+        if (SinglePlayManager.s != null && SectionData.s.isSinglePlay)
             SinglePlayManager.s.OnPlayerChange -= SinglePlayManager_OnPlayerChange;
     }
     void Start()
