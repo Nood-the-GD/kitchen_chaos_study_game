@@ -22,7 +22,8 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     {
         Idle,
         Frying,
-        Complete
+        Complete,
+        Checking
     }
     #endregion
 
@@ -37,7 +38,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
     {
         _currentState = State.Idle;
     }
-    private async void Update()
+    private void Update()
     {
         switch (_currentState)
         {
@@ -61,7 +62,7 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                     {
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(_curRecipe.output, this);
-                        await UniTask.DelayFrame(2);
+                        ChangeState(State.Checking);
                         CmdCheckFried();
                     }
                 }
@@ -71,6 +72,10 @@ public class StoveCounter : BaseCounter, IHasProgressBar
                 {
                     processNormalize = 0f
                 });
+                break;
+            case State.Checking:
+                break;
+            default:
                 break;
         }
     }

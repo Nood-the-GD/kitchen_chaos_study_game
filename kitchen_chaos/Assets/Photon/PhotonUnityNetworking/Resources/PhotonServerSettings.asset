@@ -69,6 +69,7 @@ MonoBehaviour:
   - RpcShowMessage
   - RPCResetCuttingProcess
   - RPCAfterInteract
+  - RpcCheckFried
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
