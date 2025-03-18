@@ -30,26 +30,13 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     {
         base.Interact(otherContainer);
 
-        if (!HasKitchenObject() && otherContainer.HasKitchenObject() && GetKitchenObject() != null)
-        {
-            if (GetKitchenObjectSO().CanCut())
-            {
-                _cuttingProcess = 0;
-                _isComplete = false;
-            }
-        }
-
-        if (!HasKitchenObject())
-        {
-            _cuttingProcess = 0;
-            _isComplete = false;
-            OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
-            {
-                processNormalize = 1
-            });
-        }
+        CmdResetCuttingProcess();
     }
 
+    public void CmdResetCuttingProcess()
+    {
+        photonView.RPC(nameof(RPCResetCuttingProcess), RpcTarget.All);
+    }
     public void CmdChop(int id)
     {
         photonView.RPC(nameof(RPCChop), RpcTarget.All, id);
@@ -60,6 +47,16 @@ public class CuttingCounter : BaseCounter, IHasProgressBar, IAltInteractable
     {
         var player = PhotonManager.s.GetPlayerView(id);
         Chop(player);
+    }
+    [PunRPC]
+    public void RPCResetCuttingProcess()
+    {
+        _cuttingProcess = 0;
+        _isComplete = false;
+        OnProcessChanged?.Invoke(this, new IHasProgressBar.OnProcessChangedEvenArgs
+        {
+            processNormalize = 1
+        });
     }
 
     public void Chop(IKitchenContainable KOParent)
