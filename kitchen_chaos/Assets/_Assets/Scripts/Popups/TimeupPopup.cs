@@ -17,11 +17,16 @@ public class TimeupPopup : BasePopup<TimeupPopup>
                 tempStar = i + 1;
             }
         }
-        data.star = tempStar;
         starController.ShowStar(tempStar);
         starController.ShowPoint(data.pointTarget);
-        if(score > data.score)
-            data.ApplyNewScore(score);
+
+        if(tempStar > data.star){
+            data.SaveNewScore(score);
+            Debug.Log("New score saved");
+        }
+        else{
+            Debug.Log("No new score");
+        }
     }
 
     protected override void OnDisable() {

@@ -40,7 +40,7 @@ public class StageData
 
     public Sprite previewImage;
 
-    public void ApplyNewScore(int score)
+    public void SaveNewScore(int score)
     {
         this.score = score;
         for (int i = 0; i < pointTarget.Length; i++)
