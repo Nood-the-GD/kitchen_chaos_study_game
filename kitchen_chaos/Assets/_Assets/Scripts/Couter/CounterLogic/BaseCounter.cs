@@ -76,7 +76,7 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                 }
 
                 var combineResult = CookingBookSO.s.TryCombine(otherKO, GetKitchenObject());
-                // Debug.Log("Combine result: " + combineResult.recipe.name);
+                Debug.Log("Combine result: " + combineResult.recipe.name);
 
                 if (combineResult != null)
                 {
@@ -108,8 +108,9 @@ public class BaseCounter : MonoBehaviour, IKitchenContainable
                     }
                     else
                     {
-                        kitchenObject.AddIngredient(otherKO.GetKitchenObjectSO(), isHavingPlate);
-                        ClearKitchenObject();
+
+                        kitchenObject.TryAddIngredient(otherKO.GetKitchenObjectSO(), isHavingPlate);
+                        //ClearKitchenObject();
                     }
 
                 }

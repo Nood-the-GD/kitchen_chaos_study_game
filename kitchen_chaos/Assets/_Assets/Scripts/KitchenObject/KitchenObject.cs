@@ -71,6 +71,47 @@ public class KitchenObject : MonoBehaviourPunCallbacks
         onAddIngredient?.Invoke(ingredients);
     }
 
+    public bool TryAddIngredient(KitchenObjectSO ingredient, bool addPlate = false)
+    {
+        if (ingredients.Contains(ingredient))
+            return false;
+            
+        if (SectionData.s.isSinglePlay)
+        {
+            AddIngredientLocal(ingredient, addPlate);
+        }
+        else
+        {
+            int ingredientId = CookingBookSO.s.GetKitchenObjectSoId(ingredient);
+            photonView.RPC(nameof(RpcTryAddIngredient), RpcTarget.All, ingredientId, addPlate);
+        }
+        return true;
+    }
+
+    [PunRPC]
+    private void RpcTryAddIngredient(int ingredientId, bool addPlate)
+    {
+        if (ingredientId >= 0 && ingredientId < CookingBookSO.s.kitchenObjectSOs.Count)
+        {
+            KitchenObjectSO ingredient = CookingBookSO.s.kitchenObjectSOs[ingredientId];
+            AddIngredientLocal(ingredient, addPlate);
+        }
+    }
+
+    private void AddIngredientLocal(KitchenObjectSO ingredient, bool addPlate)
+    {
+        if (!ingredients.Contains(ingredient))
+        {
+            ingredients.Add(ingredient);
+            SetActiveIngredient(ingredient);
+            if (addPlate)
+            {
+                TryAddPlate();
+            }
+            onAddIngredient?.Invoke(ingredients);
+        }
+    }
+
     public void AddIngredientIndexes(int[] ingredientIndex)
     {
         Debug.Log("AddIngredientIndexes: " + ingredientIndex.Length);
