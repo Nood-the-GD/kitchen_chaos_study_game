@@ -274,10 +274,15 @@ public class LambdaAPI : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError(ex.Message);
+            var message = ex.Message;
+            message = message.Replace("HTTP/1.1 571 Unknown HTTP status", "").Replace("\n", "").Replace("\r", "");
+            if (message.Contains("username_exit"))
+            {
+                message = "Username already exists";
+            }
             if (showNoti)
             {
-
-                Notification(ex.Message);
+                Notification(message);
             }
             throw;
         }
@@ -388,7 +393,7 @@ public class LambdaAPI : MonoBehaviour
         ServerRespone response = new ServerRespone();
         try
         {
-            JToken result = await CallLambdaBaseAsync("login", payload);
+            JToken result = await CallLambdaBaseAsync("login", payload, true);
             response.jToken = result;
         }
         catch (Exception ex)
@@ -449,7 +454,7 @@ public class LambdaAPI : MonoBehaviour
         ServerRespone response = new ServerRespone();
         try
         {
-            JToken result = await CallLambdaBaseAsync("getUser", payload);
+            JToken result = await CallLambdaBaseAsync("getUser", payload, true);
             response.jToken = result;
         }
         catch (Exception ex)
